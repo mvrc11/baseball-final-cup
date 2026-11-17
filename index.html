@@ -279,7 +279,7 @@
             <!-- Rotating Daily / Session Tip Note -->
             <div class="max-w-sm mx-auto px-4 py-2.5 rounded-xl bg-[var(--bg-surface)]/80 border border-[var(--border-subtle)] text-center space-y-0.5">
                 <span class="text-[10px] font-bold uppercase tracking-widest text-amber-400 block">Nota del Manager</span>
-                <p id="splash-random-tip" class="text-xs text-[var(--text-muted)] leading-relaxed">Completa las 11 posiciones para descubrir el OVR oculto de tu alineación.</p>
+                <p id="splash-random-tip" class="text-xs text-[var(--text-muted)] leading-relaxed">Completa las 12 posiciones para descubrir el OVR oculto de tu alineación.</p>
             </div>
         </section>
 
@@ -420,7 +420,7 @@
                 <div class="card-minimal rounded-2xl p-5 flex flex-col justify-between gap-4">
                     <div class="flex items-center justify-between">
                         <div>
-                            <span class="text-[10px] font-bold uppercase tracking-widest text-amber-400">Grandes Ligas • 11 Posiciones</span>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-amber-400">Grandes Ligas • 12 Posiciones</span>
                             <h3 class="font-display text-2xl font-bold uppercase text-amber-400">[MLB]</h3>
                         </div>
                         <span class="text-[11px] font-semibold text-[var(--text-muted)]">Elige Época</span>
@@ -439,7 +439,7 @@
                 <div class="card-minimal rounded-2xl p-5 flex flex-col justify-between gap-4">
                     <div class="flex items-center justify-between">
                         <div>
-                            <span class="text-[10px] font-bold uppercase tracking-widest text-sky-400">Selecciones WBC • 11 Posiciones</span>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-sky-400">Selecciones WBC • 12 Posiciones</span>
                             <h3 class="font-display text-2xl font-bold uppercase text-sky-400">[WORLD CLASSIC]</h3>
                         </div>
                         <span class="text-[11px] font-semibold text-[var(--text-muted)]">Elige Época</span>
@@ -458,7 +458,7 @@
                 <div class="card-minimal rounded-2xl p-5 flex flex-col justify-between gap-4">
                     <div class="flex items-center justify-between">
                         <div>
-                            <span class="text-[10px] font-bold uppercase tracking-widest text-rose-400">Liga Invernal RD • 11 Posiciones</span>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-rose-400">Liga Invernal RD • 12 Posiciones</span>
                             <h3 class="font-display text-2xl font-bold uppercase text-rose-400">[LIDOM]</h3>
                         </div>
                         <span class="text-[11px] font-semibold text-[var(--text-muted)]">Elige Época</span>
@@ -526,7 +526,7 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
-                    <span class="text-xs font-semibold text-[var(--text-muted)]">Completado: <strong id="lineup-progress" class="text-[var(--text-primary)]">0/11</strong></span>
+                    <span class="text-xs font-semibold text-[var(--text-muted)]">Completado: <strong id="lineup-progress" class="text-[var(--text-primary)]">0/12</strong></span>
                     <button id="btn-finish-lineup" onclick="handleLineupSubmit()" disabled class="px-4 py-2 rounded-xl btn-primary-gold text-xs uppercase tracking-wider disabled:opacity-35 disabled:cursor-not-allowed transition">
                         Simular Serie
                     </button>
@@ -678,11 +678,11 @@
 
             <!-- League Tiers Legend -->
             <div class="card-minimal rounded-2xl p-3.5 grid grid-cols-5 gap-1.5 text-center text-[10px] font-display font-bold uppercase">
-                <div class="p-1.5 rounded-lg tier-rookie">Rookie<span class="block text-[9px] opacity-80">0-9 Coronas</span></div>
-                <div class="p-1.5 rounded-lg tier-pro">Pro<span class="block text-[9px] opacity-80">10-24 Coronas</span></div>
-                <div class="p-1.5 rounded-lg tier-mvp">MVP<span class="block text-[9px] opacity-80">25-49 Coronas</span></div>
-                <div class="p-1.5 rounded-lg tier-legend">Leyenda<span class="block text-[9px] opacity-80">50-99 Coronas</span></div>
-                <div class="p-1.5 rounded-lg tier-hof">Hall of Fame<span class="block text-[9px] opacity-80">100+ Coronas</span></div>
+                <div class="p-1.5 rounded-lg tier-rookie">Rookie<span class="block text-[9px] opacity-80">0-4 Coronas</span></div>
+                <div class="p-1.5 rounded-lg tier-pro">Pro<span class="block text-[9px] opacity-80">5-11 Coronas</span></div>
+                <div class="p-1.5 rounded-lg tier-mvp">MVP<span class="block text-[9px] opacity-80">12-24 Coronas</span></div>
+                <div class="p-1.5 rounded-lg tier-legend">Leyenda<span class="block text-[9px] opacity-80">25-44 Coronas</span></div>
+                <div class="p-1.5 rounded-lg tier-hof">Hall of Fame<span class="block text-[9px] opacity-80">45+ Coronas</span></div>
             </div>
 
             <div id="ranking-list" class="space-y-2.5"></div>
@@ -863,38 +863,102 @@
     </div>
 
     <!-- ================= MODAL: SETTINGS & HOW TO PLAY ================= -->
-    <div id="settings-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="card-minimal rounded-2xl max-w-lg w-full p-5 space-y-5 shadow-2xl max-h-[88vh] overflow-y-auto custom-scroll">
-            <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3">
-                <h3 class="font-display text-lg font-bold uppercase text-amber-400">Ajustes y Cómo Jugar</h3>
-                <button onclick="closeSettingsModal()" class="w-8 h-8 rounded-lg bg-[var(--bg-elevated)] flex items-center justify-center text-sm font-bold hover:text-amber-400">✕</button>
+    <div id="settings-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-[var(--bg-primary)] border border-amber-400/35 rounded-2xl max-w-xl w-full p-5 sm:p-6 space-y-6 shadow-2xl max-h-[88vh] overflow-y-auto custom-scroll">
+            <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3.5">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-amber-400/15 border border-amber-400/35 flex items-center justify-center text-amber-400">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-display text-lg font-bold uppercase tracking-wider text-amber-400 leading-none">Ajustes y Manual Oficial</h3>
+                        <span class="text-[10px] uppercase tracking-widest text-[var(--text-muted)]">Preferencias de pantalla y reglamento</span>
+                    </div>
+                </div>
+                <button onclick="closeSettingsModal()" class="w-8 h-8 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border-subtle)] flex items-center justify-center text-sm font-bold hover:text-amber-400 hover:border-amber-400/50 transition">✕</button>
             </div>
 
-            <!-- Display Customization -->
-            <div class="space-y-3">
-                <span class="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] block">Apariencia y Texto</span>
-                <div class="grid grid-cols-2 gap-2">
-                    <button onclick="setThemeMode('dark')" class="py-2 px-3 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-xs font-semibold hover:border-amber-400">Modo Oscuro</button>
-                    <button onclick="setThemeMode('light')" class="py-2 px-3 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-xs font-semibold hover:border-amber-400">Modo Claro</button>
+            <!-- SECTION 1: DISPLAY & INTERFACE CONTROLS (Clearly Separated Card) -->
+            <div class="card-minimal rounded-2xl p-4 space-y-4 border-sky-400/25 shadow-md">
+                <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-2">
+                    <span class="font-display text-xs font-bold uppercase tracking-widest text-sky-400">1. Configuración Visual</span>
+                    <span class="text-[10px] text-[var(--text-muted)]">Personaliza tu interfaz</span>
                 </div>
-                <div class="grid grid-cols-3 gap-2">
-                    <button onclick="setFontSize('sm')" class="py-2 px-2 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-xs font-semibold">Letra Pequeña</button>
-                    <button onclick="setFontSize('md')" class="py-2 px-2 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-xs font-semibold">Letra Normal</button>
-                    <button onclick="setFontSize('lg')" class="py-2 px-2 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-xs font-semibold">Letra Grande</button>
+
+                <div class="space-y-1.5">
+                    <span class="text-[11px] font-semibold text-[var(--text-muted)] block">Tema de Pantalla</span>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <button onclick="setThemeMode('dark')" class="py-2.5 px-3 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-xs font-display font-bold uppercase tracking-wider hover:border-amber-400 hover:text-amber-400 transition">Modo Oscuro</button>
+                        <button onclick="setThemeMode('light')" class="py-2.5 px-3 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-xs font-display font-bold uppercase tracking-wider hover:border-amber-400 hover:text-amber-400 transition">Modo Claro</button>
+                    </div>
                 </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <button onclick="setFontWeight('normal')" class="py-2 px-3 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-xs font-semibold">Grosor Normal</button>
-                    <button onclick="setFontWeight('bold')" class="py-2 px-3 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-xs font-bold">Texto Negrita</button>
+
+                <div class="space-y-1.5">
+                    <span class="text-[11px] font-semibold text-[var(--text-muted)] block">Tamaño de Letra</span>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="setFontSize('sm')" class="py-2 px-2 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-xs font-display font-bold uppercase hover:border-amber-400 transition">Pequeña</button>
+                        <button onclick="setFontSize('md')" class="py-2 px-2 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-xs font-display font-bold uppercase hover:border-amber-400 transition">Normal</button>
+                        <button onclick="setFontSize('lg')" class="py-2 px-2 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-xs font-display font-bold uppercase hover:border-amber-400 transition">Grande</button>
+                    </div>
+                </div>
+
+                <div class="space-y-1.5">
+                    <span class="text-[11px] font-semibold text-[var(--text-muted)] block">Grosor Tipográfico</span>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <button onclick="setFontWeight('normal')" class="py-2 px-3 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-xs font-display font-bold uppercase hover:border-amber-400 transition">Estándar</button>
+                        <button onclick="setFontWeight('bold')" class="py-2 px-3 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-xs font-display font-bold uppercase hover:border-amber-400 transition">Negrita</button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Cómo Jugar Guide -->
-            <div class="space-y-2.5 pt-3 border-t border-[var(--border-subtle)] text-xs text-[var(--text-muted)] leading-relaxed">
-                <span class="text-xs font-bold uppercase tracking-wider text-amber-400 block">Guía Rápida — Cómo Jugar</span>
-                <p><strong class="text-[var(--text-primary)]">1. Arma tu Alineación de 11 Puestos:</strong> Selecciona Catcher (C), 1B, 2B, SS, 3B, LF, CF, RF, Abridor (SP1), Relevista (RP) y Cerrador (CP). Una vez elegido un jugador, no puede eliminarse, pero si es multiposición puedes moverlo a otro puesto válido.</p>
-                <p><strong class="text-[var(--text-primary)]">2. Valoración Oculta:</strong> Las medias (OVR) de los peloteros permanecen ocultas durante la selección y se revelan al finalizar la Serie Final al mejor de 7 juegos.</p>
-                <p><strong class="text-[var(--text-primary)]">3. Ligas y Modo [162-0]:</strong> Compite en MLB, World Classic, LIDOM o en el draft aleatorio [162-0] (sin diagrama de estadio, usando tus 3 comodines de equipo y 3 de década).</p>
-                <p><strong class="text-[var(--text-primary)]">4. Coronas, Estrellas y Reinicio Mensual:</strong> Ganar otorga +3 Coronas y +50 Estrellas; perder resta -2 Coronas. Cada mes la liga se reinicia conservando el 30% de tus coronas.</p>
+            <!-- VISUAL SEPARATOR -->
+            <div class="flex items-center gap-3">
+                <div class="h-px flex-1 bg-gradient-to-r from-transparent via-amber-400/40 to-transparent"></div>
+                <span class="font-display text-[11px] font-bold uppercase tracking-[0.22em] text-amber-400">Reglamento del Campeonato</span>
+                <div class="h-px flex-1 bg-gradient-to-r from-transparent via-amber-400/40 to-transparent"></div>
+            </div>
+
+            <!-- SECTION 2: OFFICIAL GAME MANUAL (Championship Aesthetic Cards) -->
+            <div class="card-minimal rounded-2xl p-4 sm:p-5 space-y-3.5 border-amber-400/35 bg-gradient-to-b from-[var(--bg-surface)] to-[var(--bg-elevated)]">
+                <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-2.5">
+                    <span class="font-display text-sm font-bold uppercase tracking-wider text-amber-400">Manual Oficial — Baseball Final Cup</span>
+                    <span class="px-2 py-0.5 rounded bg-amber-400/15 text-amber-400 text-[10px] font-display font-bold uppercase">Guía Completa</span>
+                </div>
+
+                <div class="space-y-2.5 text-xs leading-relaxed">
+                    <div class="p-3 rounded-xl bg-[var(--bg-primary)]/70 border border-[var(--border-subtle)] space-y-1">
+                        <span class="font-display text-xs font-bold uppercase tracking-wider text-amber-400 block">I. Construcción de Alineación (12 Puestos)</span>
+                        <p class="text-[var(--text-muted)]">Debes completar los <strong class="text-[var(--text-primary)]">12 puestos oficiales</strong>: Receptor (C), Primera Base (1B), Segunda Base (2B), Campocorto (SS), Tercera Base (3B), Jardín Izquierdo (LF), Jardín Central (CF), Jardín Derecho (RF), Bateador Designado (DH), Abridor (SP1), Relevista (RP) y Cerrador (CP).</p>
+                        <p class="text-[var(--text-muted)]"><strong class="text-amber-300">Regla de Bloqueo:</strong> Una vez que fichas a un pelotero queda fijado en tu equipo y no puede borrarse. Solo podrás moverlo o intercambiarlo si es elegible en otra posición del diamante.</p>
+                    </div>
+
+                    <div class="p-3 rounded-xl bg-[var(--bg-primary)]/70 border border-[var(--border-subtle)] space-y-1">
+                        <span class="font-display text-xs font-bold uppercase tracking-wider text-sky-400 block">II. Valoración Oculta y Serie Final al Mejor de 7</span>
+                        <p class="text-[var(--text-muted)]">Durante el armado de tu equipo, las medias (<strong class="text-[var(--text-primary)]">OVR</strong>) de todos los jugadores permanecen ocultas para premiar tu conocimiento beisbolero. Al completar los 12 puestos se disputa una <strong class="text-[var(--text-primary)]">Serie Final a 7 juegos</strong> (el primero en ganar 4 se corona campeón), revelando las medias individuales, el OVR global, el <strong class="text-amber-300">MVP</strong> y el premio <strong class="text-sky-300">Cy Young</strong>.</p>
+                    </div>
+
+                    <div class="p-3 rounded-xl bg-[var(--bg-primary)]/70 border border-[var(--border-subtle)] space-y-1">
+                        <span class="font-display text-xs font-bold uppercase tracking-wider text-emerald-400 block">III. Modos de Juego, Épocas y Draft [162-0]</span>
+                        <p class="text-[var(--text-muted)]">Compite en <strong class="text-[var(--text-primary)]">SOLO</strong> (vs CPU en dificultad Rookie, MVP o Hall of Fame) o en <strong class="text-[var(--text-primary)]">VS</strong> enviando retos a tus amigos. Dentro de <strong class="text-[var(--text-primary)]">[MLB]</strong>, <strong class="text-[var(--text-primary)]">[WORLD CLASSIC]</strong> y <strong class="text-[var(--text-primary)]">[LIDOM]</strong> puedes elegir entre <strong class="text-amber-300">ALL TIME</strong> (leyendas + actuales) o <strong class="text-amber-300">ACTUAL</strong> (temporada vigente).</p>
+                        <p class="text-[var(--text-muted)]">En el desafío <strong class="text-emerald-300">[162-0]</strong> recibirás un equipo y década aleatoria por turno, contando con <strong class="text-[var(--text-primary)]">3 comodines de equipo</strong> y <strong class="text-[var(--text-primary)]">3 comodines de década</strong>.</p>
+                    </div>
+
+                    <div class="p-3 rounded-xl bg-[var(--bg-primary)]/70 border border-[var(--border-subtle)] space-y-1">
+                        <span class="font-display text-xs font-bold uppercase tracking-wider text-rose-400 block">IV. Sistema de Coronas, Divisiones y Temporadas</span>
+                        <p class="text-[var(--text-muted)]">Ganar una Serie Final otorga <strong class="text-emerald-400">+3 Coronas y +50 Estrellas</strong>; perder resta <strong class="text-rose-400">-2 Coronas</strong> (y otorga +15 Estrellas de participación). Asciende por las 5 divisiones:</p>
+                        <div class="grid grid-cols-5 gap-1 pt-1 text-center text-[9px] font-display font-bold uppercase">
+                            <span class="py-1 rounded tier-rookie">Rookie<br>0-4</span>
+                            <span class="py-1 rounded tier-pro">Pro<br>5-11</span>
+                            <span class="py-1 rounded tier-mvp">MVP<br>12-24</span>
+                            <span class="py-1 rounded tier-legend">Leyenda<br>25-44</span>
+                            <span class="py-1 rounded tier-hof">HOF<br>45+</span>
+                        </div>
+                        <p class="text-[var(--text-muted)] pt-1">Al comenzar cada mes la temporada se reinicia conservando el <strong class="text-[var(--text-primary)]">30% de tus coronas</strong>. Usa tus Estrellas en la <strong class="text-amber-300">Tienda</strong> para desbloquear emblemas oficiales de MLB, LIDOM y WBC.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -936,73 +1000,482 @@
         }
 
         // ================= CONSTANTS & PLAYER DATABASE =================
-        const POSITIONS = ['C', '1B', '2B', 'SS', '3B', 'LF', 'CF', 'RF', 'SP1', 'RP', 'CP'];
+        const POSITIONS = ['C', '1B', '2B', 'SS', '3B', 'LF', 'CF', 'RF', 'DH', 'SP1', 'RP', 'CP'];
         const DIAMOND_COORDS = {
-            CF:  { top: '16%', left: '50%' },
-            LF:  { top: '28%', left: '22%' },
-            RF:  { top: '28%', left: '78%' },
-            SS:  { top: '43%', left: '38%' },
-            '2B':{ top: '43%', left: '62%' },
-            '3B':{ top: '61%', left: '28%' },
-            '1B':{ top: '61%', left: '72%' },
-            SP1: { top: '61%', left: '50%' },
-            C:   { top: '86%', left: '50%' },
-            RP:  { top: '84%', left: '20%' },
-            CP:  { top: '84%', left: '80%' }
+            CF:  { top: '14%', left: '50%' },
+            LF:  { top: '26%', left: '21%' },
+            RF:  { top: '26%', left: '79%' },
+            SS:  { top: '42%', left: '37%' },
+            '2B':{ top: '42%', left: '63%' },
+            '3B':{ top: '59%', left: '26%' },
+            '1B':{ top: '59%', left: '74%' },
+            SP1: { top: '59%', left: '50%' },
+            C:   { top: '87%', left: '50%' },
+            DH:  { top: '74%', left: '50%' },
+            RP:  { top: '85%', left: '19%' },
+            CP:  { top: '85%', left: '81%' }
         };
 
         const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-        const BG_COLORS = ['#002D72', '#D50032', '#065F46', '#92400E', '#4C1D95', '#1E293B', '#0E7490', '#B45309', '#881337', '#1D4ED8'];
+        // COMPREHENSIVE MLB, WBC & LIDOM ROSTER DATABASE (ALL-TIME LEGENDS + 2026-2027 SEASON ACTIVE STARS)
+        const PLAYERS_DB = [
+            // ================= CATCHERS (C) =================
+            { id: 'p_bench', name: 'Johnny Bench', pos: ['C', '1B', 'DH'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'CIN', decade: '1970s' },
+            { id: 'p_pudge', name: 'Iván Rodríguez', pos: ['C', 'DH'], ovr: 97, active: false, mlb: true, wbc: true, lidom: false, team: 'TEX', decade: '1990s' },
+            { id: 'p_molina', name: 'Yadier Molina', pos: ['C'], ovr: 95, active: false, mlb: true, wbc: true, lidom: false, team: 'STL', decade: '2010s' },
+            { id: 'p_piazza', name: 'Mike Piazza', pos: ['C', '1B', 'DH'], ovr: 96, active: false, mlb: true, wbc: true, lidom: false, team: 'NYM', decade: '1990s' },
+            { id: 'p_berra', name: 'Yogi Berra', pos: ['C', 'LF', 'DH'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '1950s' },
+            { id: 'p_carter', name: 'Gary Carter', pos: ['C'], ovr: 94, active: false, mlb: true, wbc: false, lidom: false, team: 'NYM', decade: '1980s' },
+            { id: 'p_posey', name: 'Buster Posey', pos: ['C', '1B', 'DH'], ovr: 95, active: false, mlb: true, wbc: true, lidom: false, team: 'SF', decade: '2010s' },
+            { id: 'p_mauer', name: 'Joe Mauer', pos: ['C', '1B', 'DH'], ovr: 94, active: false, mlb: true, wbc: false, lidom: false, team: 'MIN', decade: '2000s' },
+            { id: 'p_pena', name: 'Tony Peña', pos: ['C'], ovr: 91, active: false, mlb: true, wbc: false, lidom: true, team: 'PIT', decade: '1980s' },
+            { id: 'p_fisk', name: 'Carlton Fisk', pos: ['C', 'DH'], ovr: 95, active: false, mlb: true, wbc: false, lidom: false, team: 'BOS', decade: '1970s' },
+            { id: 'p_munson', name: 'Thurman Munson', pos: ['C'], ovr: 93, active: false, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '1970s' },
+            { id: 'p_campanella', name: 'Roy Campanella', pos: ['C'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '1950s' },
+            { id: 'p_posada', name: 'Jorge Posada', pos: ['C', '1B', 'DH'], ovr: 92, active: false, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '2000s' },
+            // Active Catchers (2026-2027)
+            { id: 'p_rutschman', name: 'Adley Rutschman', pos: ['C', 'DH'], ovr: 93, active: true, mlb: true, wbc: true, lidom: false, team: 'BAL', decade: '2020s' },
+            { id: 'p_wcontreras', name: 'William Contreras', pos: ['C', 'DH'], ovr: 93, active: true, mlb: true, wbc: true, lidom: false, team: 'MIL', decade: '2020s' },
+            { id: 'p_will_smith', name: 'Will Smith', pos: ['C', 'DH'], ovr: 92, active: true, mlb: true, wbc: true, lidom: false, team: 'LAD', decade: '2020s' },
+            { id: 'p_salvy', name: 'Salvador Pérez', pos: ['C', '1B', 'DH'], ovr: 91, active: true, mlb: true, wbc: true, lidom: false, team: 'KC', decade: '2020s' },
+            { id: 'p_realmuto', name: 'J.T. Realmuto', pos: ['C', '1B'], ovr: 90, active: true, mlb: true, wbc: true, lidom: false, team: 'PHI', decade: '2020s' },
+            { id: 'p_raleigh', name: 'Cal Raleigh', pos: ['C', 'DH'], ovr: 92, active: true, mlb: true, wbc: true, lidom: false, team: 'SEA', decade: '2020s' },
+            { id: 'p_contreras_w', name: 'Willson Contreras', pos: ['C', '1B', 'DH'], ovr: 89, active: true, mlb: true, wbc: true, lidom: false, team: 'STL', decade: '2020s' },
+            { id: 'p_gary', name: 'Gary Sánchez', pos: ['C', 'DH'], ovr: 87, active: true, mlb: true, wbc: true, lidom: true, team: 'BAL', decade: '2020s' },
+            { id: 'p_yanier', name: 'Yainer Díaz', pos: ['C', '1B', 'DH'], ovr: 90, active: true, mlb: true, wbc: true, lidom: true, team: 'HOU', decade: '2020s' },
+            { id: 'p_langeliers', name: 'Shea Langeliers', pos: ['C', 'DH'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'ATH', decade: '2020s' },
+            { id: 'p_ohoppe', name: 'Logan O\'Hoppe', pos: ['C'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'LAA', decade: '2020s' },
+            { id: 'p_alva', name: 'Francisco Álvarez', pos: ['C', 'DH'], ovr: 88, active: true, mlb: true, wbc: true, lidom: false, team: 'NYM', decade: '2020s' },
+            { id: 'p_moreno', name: 'Gabriel Moreno', pos: ['C'], ovr: 88, active: true, mlb: true, wbc: true, lidom: false, team: 'ARI', decade: '2020s' },
+            { id: 'p_bailey', name: 'Patrick Bailey', pos: ['C'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'SF', decade: '2020s' },
+            { id: 'p_wells', name: 'Austin Wells', pos: ['C', 'DH'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '2020s' },
+            { id: 'p_basallo', name: 'Samuel Basallo', pos: ['C', '1B', 'DH'], ovr: 88, active: true, mlb: true, wbc: false, lidom: true, team: 'BAL', decade: '2020s' },
+            { id: 'p_kirk', name: 'Alejandro Kirk', pos: ['C', 'DH'], ovr: 87, active: true, mlb: true, wbc: true, lidom: false, team: 'TOR', decade: '2020s' },
+            { id: 'p_jeffers', name: 'Ryan Jeffers', pos: ['C', 'DH'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'MIN', decade: '2020s' },
+            { id: 'p_stephenson', name: 'Tyler Stephenson', pos: ['C', '1B'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'CIN', decade: '2020s' },
+            { id: 'p_amaya', name: 'Miguel Amaya', pos: ['C'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'CHC', decade: '2020s' },
+            { id: 'p_campusano', name: 'Luis Campusano', pos: ['C', 'DH'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'SD', decade: '2020s' },
+            { id: 'p_wong', name: 'Connor Wong', pos: ['C', '2B'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'BOS', decade: '2020s' },
+            { id: 'p_heim', name: 'Jonah Heim', pos: ['C'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'TEX', decade: '2020s' },
+            { id: 'p_murphy_s', name: 'Sean Murphy', pos: ['C'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '2020s' },
+            { id: 'p_naylor_b', name: 'Bo Naylor', pos: ['C'], ovr: 86, active: true, mlb: true, wbc: true, lidom: false, team: 'CLE', decade: '2020s' },
+            { id: 'p_dingler', name: 'Dillon Dingler', pos: ['C'], ovr: 85, active: true, mlb: true, wbc: false, lidom: false, team: 'DET', decade: '2020s' },
+            { id: 'p_lee_k', name: 'Korey Lee', pos: ['C'], ovr: 84, active: true, mlb: true, wbc: false, lidom: false, team: 'CWS', decade: '2020s' },
+            { id: 'p_ruiz_k', name: 'Keibert Ruiz', pos: ['C'], ovr: 85, active: true, mlb: true, wbc: false, lidom: false, team: 'WSH', decade: '2020s' },
+            { id: 'p_fortes', name: 'Nick Fortes', pos: ['C'], ovr: 84, active: true, mlb: true, wbc: false, lidom: false, team: 'MIA', decade: '2020s' },
+            { id: 'p_bart', name: 'Joey Bart', pos: ['C'], ovr: 85, active: true, mlb: true, wbc: false, lidom: false, team: 'PIT', decade: '2020s' },
+            { id: 'p_goodman', name: 'Hunter Goodman', pos: ['C', 'RF', 'DH'], ovr: 85, active: true, mlb: true, wbc: false, lidom: false, team: 'COL', decade: '2020s' },
+            { id: 'p_jansen_d', name: 'Danny Jansen', pos: ['C'], ovr: 85, active: true, mlb: true, wbc: false, lidom: false, team: 'TB', decade: '2020s' },
 
-        // ALL 30 MLB TEAMS + LIDOM + WBC STORE LOGOS WITH CUSTOM SVG EMBLEMS
-        const STORE_LOGOS = [
-            // 30 MLB TEAMS
-            { id: 'mlb_nyy', league: 'MLB', code: 'NYY', name: 'New York Yankees', bg: '#0C2340', fg: '#FFFFFF', accent: '#C4CED4', price: 60 },
-            { id: 'mlb_lad', league: 'MLB', code: 'LAD', name: 'Los Angeles Dodgers', bg: '#005A9C', fg: '#FFFFFF', accent: '#EF3E42', price: 60 },
-            { id: 'mlb_bos', league: 'MLB', code: 'BOS', name: 'Boston Red Sox', bg: '#BD3039', fg: '#FFFFFF', accent: '#0C2340', price: 55 },
-            { id: 'mlb_atl', league: 'MLB', code: 'ATL', name: 'Atlanta Braves', bg: '#13274F', fg: '#CE1141', accent: '#EAAA00', price: 55 },
-            { id: 'mlb_hou', league: 'MLB', code: 'HOU', name: 'Houston Astros', bg: '#002D62', fg: '#EB6E1F', accent: '#F4911E', price: 50 },
-            { id: 'mlb_nym', league: 'MLB', code: 'NYM', name: 'New York Mets', bg: '#002D72', fg: '#FF5910', accent: '#FFFFFF', price: 50 },
-            { id: 'mlb_chc', league: 'MLB', code: 'CHC', name: 'Chicago Cubs', bg: '#0E3386', fg: '#CC3433', accent: '#FFFFFF', price: 50 },
-            { id: 'mlb_stl', league: 'MLB', code: 'STL', name: 'St. Louis Cardinals', bg: '#C41E3A', fg: '#FEDB00', accent: '#0C2340', price: 50 },
-            { id: 'mlb_sf',  league: 'MLB', code: 'SF',  name: 'San Francisco Giants', bg: '#27251F', fg: '#FD5A1E', accent: '#EFD19F', price: 50 },
-            { id: 'mlb_phi', league: 'MLB', code: 'PHI', name: 'Philadelphia Phillies', bg: '#E81828', fg: '#FFFFFF', accent: '#002D72', price: 50 },
-            { id: 'mlb_sd',  league: 'MLB', code: 'SD',  name: 'San Diego Padres', bg: '#2F241D', fg: '#FFC425', accent: '#FFFFFF', price: 50 },
-            { id: 'mlb_tor', league: 'MLB', code: 'TOR', name: 'Toronto Blue Jays', bg: '#134A8E', fg: '#FFFFFF', accent: '#E8291C', price: 45 },
-            { id: 'mlb_tex', league: 'MLB', code: 'TEX', name: 'Texas Rangers', bg: '#003278', fg: '#FFFFFF', accent: '#C0111F', price: 45 },
-            { id: 'mlb_sea', league: 'MLB', code: 'SEA', name: 'Seattle Mariners', bg: '#0C2C56', fg: '#005C5C', accent: '#C4CED4', price: 45 },
-            { id: 'mlb_bal', league: 'MLB', code: 'BAL', name: 'Baltimore Orioles', bg: '#DF4601', fg: '#FFFFFF', accent: '#000000', price: 45 },
-            { id: 'mlb_tb',  league: 'MLB', code: 'TB',  name: 'Tampa Bay Rays', bg: '#092C5C', fg: '#8FBCE6', accent: '#F5D130', price: 40 },
-            { id: 'mlb_cle', league: 'MLB', code: 'CLE', name: 'Cleveland Guardians', bg: '#00385D', fg: '#E50022', accent: '#FFFFFF', price: 40 },
-            { id: 'mlb_min', league: 'MLB', code: 'MIN', name: 'Minnesota Twins', bg: '#002B5C', fg: '#D31145', accent: '#B9975B', price: 40 },
-            { id: 'mlb_det', league: 'MLB', code: 'DET', name: 'Detroit Tigers', bg: '#0C2340', fg: '#FA4616', accent: '#FFFFFF', price: 40 },
-            { id: 'mlb_cws', league: 'MLB', code: 'CWS', name: 'Chicago White Sox', bg: '#27251F', fg: '#FFFFFF', accent: '#C4CED4', price: 40 },
-            { id: 'mlb_kc',  league: 'MLB', code: 'KC',  name: 'Kansas City Royals', bg: '#004687', fg: '#BD9B60', accent: '#FFFFFF', price: 40 },
-            { id: 'mlb_laa', league: 'MLB', code: 'LAA', name: 'Los Angeles Angels', bg: '#BA0021', fg: '#FFFFFF', accent: '#003263', price: 45 },
-            { id: 'mlb_oak', league: 'MLB', code: 'ATH', name: 'Athletics', bg: '#003831', fg: '#EFB21E', accent: '#FFFFFF', price: 40 },
-            { id: 'mlb_ari', league: 'MLB', code: 'ARI', name: 'Arizona Diamondbacks', bg: '#A71930', fg: '#E3D4AD', accent: '#30CED8', price: 40 },
-            { id: 'mlb_col', league: 'MLB', code: 'COL', name: 'Colorado Rockies', bg: '#333366', fg: '#C4CED4', accent: '#FFFFFF', price: 40 },
-            { id: 'mlb_mil', league: 'MLB', code: 'MIL', name: 'Milwaukee Brewers', bg: '#12284B', fg: '#FFC52F', accent: '#FFFFFF', price: 40 },
-            { id: 'mlb_cin', league: 'MLB', code: 'CIN', name: 'Cincinnati Reds', bg: '#C6011F', fg: '#FFFFFF', accent: '#000000', price: 40 },
-            { id: 'mlb_pit', league: 'MLB', code: 'PIT', name: 'Pittsburgh Pirates', bg: '#27251F', fg: '#FDB827', accent: '#FFFFFF', price: 40 },
-            { id: 'mlb_mia', league: 'MLB', code: 'MIA', name: 'Miami Marlins', bg: '#00A3E0', fg: '#EF3340', accent: '#000000', price: 40 },
-            { id: 'mlb_wsh', league: 'MLB', code: 'WSH', name: 'Washington Nationals', bg: '#AB0003', fg: '#FFFFFF', accent: '#14225A', price: 40 },
-            // LIDOM
-            { id: 'lidom_tl', league: 'LIDOM', code: 'TL', name: 'Tigres del Licey', bg: '#002D72', fg: '#FFFFFF', accent: '#60A5FA', price: 55 },
-            { id: 'lidom_ac', league: 'LIDOM', code: 'AC', name: 'Águilas Cibaeñas', bg: '#F59E0B', fg: '#0F172A', accent: '#FFFFFF', price: 55 },
-            { id: 'lidom_le', league: 'LIDOM', code: 'LE', name: 'Leones del Escogido', bg: '#C8102E', fg: '#FFFFFF', accent: '#FACC15', price: 50 },
-            { id: 'lidom_eo', league: 'LIDOM', code: 'EO', name: 'Estrellas Orientales', bg: '#006A4E', fg: '#FFFFFF', accent: '#FDE047', price: 50 },
-            { id: 'lidom_gc', league: 'LIDOM', code: 'GC', name: 'Gigantes del Cibao', bg: '#7A1C24', fg: '#FACC15', accent: '#FFFFFF', price: 45 },
-            { id: 'lidom_te', league: 'LIDOM', code: 'TE', name: 'Toros del Este', bg: '#E85D04', fg: '#111827', accent: '#FFFFFF', price: 45 },
-            // WBC
-            { id: 'wbc_dom', league: 'WBC', code: 'DOM', name: 'República Dominicana', bg: '#002D62', fg: '#FFFFFF', accent: '#CE1126', price: 60 },
-            { id: 'wbc_usa', league: 'WBC', code: 'USA', name: 'Estados Unidos', bg: '#0A3161', fg: '#FFFFFF', accent: '#B31942', price: 60 },
-            { id: 'wbc_jpn', league: 'WBC', code: 'JPN', name: 'Japón Samurai', bg: '#0F172A', fg: '#FFFFFF', accent: '#EF4444', price: 60 },
-            { id: 'wbc_ven', league: 'WBC', code: 'VEN', name: 'Venezuela', bg: '#581C3C', fg: '#FACC15', accent: '#1D4ED8', price: 55 },
-            { id: 'wbc_pur', league: 'WBC', code: 'PUR', name: 'Puerto Rico', bg: '#1D4ED8', fg: '#FFFFFF', accent: '#EF4444', price: 55 },
-            { id: 'wbc_mex', league: 'WBC', code: 'MEX', name: 'México', bg: '#006847', fg: '#FFFFFF', accent: '#CE1126', price: 55 },
-            { id: 'wbc_cub', league: 'WBC', code: 'CUB', name: 'Cuba', bg: '#002A8F', fg: '#FFFFFF', accent: '#CF142B', price: 55 },
-            { id: 'wbc_kor', league: 'WBC', code: 'KOR', name: 'Corea del Sur', bg: '#0047A0', fg: '#FFFFFF', accent: '#CD2E3A', price: 50 }
+            // ================= FIRST BASE (1B) & DESIGNATED HITTERS (DH) =================
+            { id: 'p_pujols', name: 'Albert Pujols', pos: ['1B', '3B', 'LF', 'DH'], ovr: 99, active: false, mlb: true, wbc: true, lidom: true, team: 'STL', decade: '2000s' },
+            { id: 'p_gehrig', name: 'Lou Gehrig', pos: ['1B', 'DH'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '1930s' },
+            { id: 'p_foxx', name: 'Jimmie Foxx', pos: ['1B', '3B', 'DH'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'ATH', decade: '1930s' },
+            { id: 'p_miggy', name: 'Miguel Cabrera', pos: ['1B', '3B', 'LF', 'DH'], ovr: 98, active: false, mlb: true, wbc: true, lidom: false, team: 'DET', decade: '2010s' },
+            { id: 'p_ortiz', name: 'David Ortiz', pos: ['DH', '1B'], ovr: 97, active: false, mlb: true, wbc: true, lidom: true, team: 'BOS', decade: '2000s' },
+            { id: 'p_edgar', name: 'Edgar Martínez', pos: ['DH', '3B', '1B'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'SEA', decade: '1990s' },
+            { id: 'p_thomas', name: 'Frank Thomas', pos: ['1B', 'DH'], ovr: 97, active: false, mlb: true, wbc: false, lidom: false, team: 'CWS', decade: '1990s' },
+            { id: 'p_bagwell', name: 'Jeff Bagwell', pos: ['1B', 'DH'], ovr: 95, active: false, mlb: true, wbc: false, lidom: false, team: 'HOU', decade: '1990s' },
+            { id: 'p_thome', name: 'Jim Thome', pos: ['1B', '3B', 'DH'], ovr: 95, active: false, mlb: true, wbc: false, lidom: false, team: 'CLE', decade: '2000s' },
+            { id: 'p_votto', name: 'Joey Votto', pos: ['1B', 'DH'], ovr: 94, active: false, mlb: true, wbc: true, lidom: false, team: 'CIN', decade: '2010s' },
+            { id: 'p_encarnacion', name: 'Edwin Encarnación', pos: ['1B', '3B', 'DH'], ovr: 91, active: false, mlb: true, wbc: true, lidom: true, team: 'TOR', decade: '2010s' },
+            { id: 'p_mcCovey', name: 'Willie McCovey', pos: ['1B', 'DH'], ovr: 95, active: false, mlb: true, wbc: false, lidom: false, team: 'SF', decade: '1960s' },
+            { id: 'p_murray', name: 'Eddie Murray', pos: ['1B', 'DH'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'BAL', decade: '1980s' },
+            { id: 'p_mcGwire', name: 'Mark McGwire', pos: ['1B', 'DH'], ovr: 95, active: false, mlb: true, wbc: false, lidom: false, team: 'STL', decade: '1990s' },
+            { id: 'p_palmeiro', name: 'Rafael Palmeiro', pos: ['1B', 'DH'], ovr: 93, active: false, mlb: true, wbc: false, lidom: false, team: 'TEX', decade: '1990s' },
+            { id: 'p_hernandez_k', name: 'Keith Hernandez', pos: ['1B'], ovr: 93, active: false, mlb: true, wbc: false, lidom: false, team: 'NYM', decade: '1980s' },
+            { id: 'p_helton', name: 'Todd Helton', pos: ['1B'], ovr: 94, active: false, mlb: true, wbc: false, lidom: false, team: 'COL', decade: '2000s' },
+            { id: 'p_baines', name: 'Harold Baines', pos: ['DH', 'RF'], ovr: 91, active: false, mlb: true, wbc: false, lidom: false, team: 'CWS', decade: '1980s' },
+            { id: 'p_nelson_cruz', name: 'Nelson Cruz', pos: ['DH', 'RF'], ovr: 92, active: false, mlb: true, wbc: true, lidom: true, team: 'TEX', decade: '2010s' },
+            // Active 1B & DH (2026-2027)
+            { id: 'p_freeman', name: 'Freddie Freeman', pos: ['1B', 'DH'], ovr: 96, active: true, mlb: true, wbc: true, lidom: false, team: 'LAD', decade: '2020s' },
+            { id: 'p_harper', name: 'Bryce Harper', pos: ['1B', 'RF', 'DH'], ovr: 96, active: true, mlb: true, wbc: true, lidom: false, team: 'PHI', decade: '2020s' },
+            { id: 'p_vladdy', name: 'Vladimir Guerrero Jr.', pos: ['1B', '3B', 'DH'], ovr: 96, active: true, mlb: true, wbc: true, lidom: true, team: 'TOR', decade: '2020s' },
+            { id: 'p_olson', name: 'Matt Olson', pos: ['1B', 'DH'], ovr: 93, active: true, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '2020s' },
+            { id: 'p_alonso', name: 'Pete Alonso', pos: ['1B', 'DH'], ovr: 92, active: true, mlb: true, wbc: true, lidom: false, team: 'NYM', decade: '2020s' },
+            { id: 'p_goldy', name: 'Paul Goldschmidt', pos: ['1B', 'DH'], ovr: 89, active: true, mlb: true, wbc: true, lidom: false, team: 'NYY', decade: '2020s' },
+            { id: 'p_naylor', name: 'Josh Naylor', pos: ['1B', 'DH'], ovr: 90, active: true, mlb: true, wbc: true, lidom: false, team: 'ARI', decade: '2020s' },
+            { id: 'p_cwalker', name: 'Christian Walker', pos: ['1B'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'HOU', decade: '2020s' },
+            { id: 'p_ydiaz', name: 'Yandy Díaz', pos: ['1B', '3B', 'DH'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'TB', decade: '2020s' },
+            { id: 'p_pasquantino', name: 'Vinnie Pasquantino', pos: ['1B', 'DH'], ovr: 88, active: true, mlb: true, wbc: true, lidom: false, team: 'KC', decade: '2020s' },
+            { id: 'p_csantana', name: 'Carlos Santana', pos: ['1B', 'DH'], ovr: 87, active: true, mlb: true, wbc: true, lidom: true, team: 'CLE', decade: '2020s' },
+            { id: 'p_mountcastle', name: 'Ryan Mountcastle', pos: ['1B', 'DH'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'BAL', decade: '2020s' },
+            { id: 'p_togas', name: 'Michael Toglia', pos: ['1B', 'RF'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'COL', decade: '2020s' },
+            { id: 'p_casas', name: 'Triston Casas', pos: ['1B', 'DH'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'BOS', decade: '2020s' },
+            { id: 'p_busch', name: 'Michael Busch', pos: ['1B', '2B'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'CHC', decade: '2020s' },
+            { id: 'p_lowe_n', name: 'Nathaniel Lowe', pos: ['1B'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'WSH', decade: '2020s' },
+            { id: 'p_torkelson', name: 'Spencer Torkelson', pos: ['1B', 'DH'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'DET', decade: '2020s' },
+            { id: 'p_soderstrom', name: 'Tyler Soderstrom', pos: ['1B', 'C', 'DH'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'ATH', decade: '2020s' },
+            { id: 'p_hoskins', name: 'Rhys Hoskins', pos: ['1B', 'DH'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'MIL', decade: '2020s' },
+            { id: 'p_steer', name: 'Spencer Steer', pos: ['1B', '3B', 'LF'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'CIN', decade: '2020s' },
+            { id: 'p_ozuna', name: 'Marcell Ozuna', pos: ['DH', 'LF'], ovr: 92, active: true, mlb: true, wbc: true, lidom: true, team: 'ATL', decade: '2020s' },
+            { id: 'p_stanton', name: 'Giancarlo Stanton', pos: ['DH', 'RF'], ovr: 90, active: true, mlb: true, wbc: true, lidom: false, team: 'NYY', decade: '2020s' },
+            { id: 'p_schwarber', name: 'Kyle Schwarber', pos: ['DH', 'LF'], ovr: 92, active: true, mlb: true, wbc: true, lidom: false, team: 'PHI', decade: '2020s' },
+            { id: 'p_soler', name: 'Jorge Soler', pos: ['DH', 'RF'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'LAA', decade: '2020s' },
+            { id: 'p_pederson', name: 'Joc Pederson', pos: ['DH', '1B'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'TEX', decade: '2020s' },
+            { id: 'p_yoshida', name: 'Masataka Yoshida', pos: ['DH', 'LF'], ovr: 87, active: true, mlb: true, wbc: true, lidom: false, team: 'BOS', decade: '2020s' },
+            { id: 'p_mccutchen', name: 'Andrew McCutchen', pos: ['DH', 'RF'], ovr: 86, active: true, mlb: true, wbc: true, lidom: false, team: 'PIT', decade: '2020s' },
+            { id: 'p_bell', name: 'Josh Bell', pos: ['DH', '1B'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'WSH', decade: '2020s' },
+            { id: 'p_vaughn', name: 'Andrew Vaughn', pos: ['1B', 'DH'], ovr: 85, active: true, mlb: true, wbc: false, lidom: false, team: 'CWS', decade: '2020s' },
+            { id: 'p_wade', name: 'LaMonte Wade Jr.', pos: ['1B', 'RF'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'SF', decade: '2020s' },
+
+            // ================= SECOND BASE (2B) =================
+            { id: 'p_morgan', name: 'Joe Morgan', pos: ['2B', 'DH'], ovr: 97, active: false, mlb: true, wbc: false, lidom: false, team: 'CIN', decade: '1970s' },
+            { id: 'p_hornsby', name: 'Rogers Hornsby', pos: ['2B', '3B', 'DH'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'STL', decade: '1920s' },
+            { id: 'p_jrobinson', name: 'Jackie Robinson', pos: ['2B', '1B', '3B'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '1950s' },
+            { id: 'p_cano', name: 'Robinson Canó', pos: ['2B', 'DH'], ovr: 95, active: false, mlb: true, wbc: true, lidom: true, team: 'NYY', decade: '2010s' },
+            { id: 'p_utley', name: 'Chase Utley', pos: ['2B'], ovr: 94, active: false, mlb: true, wbc: true, lidom: false, team: 'PHI', decade: '2000s' },
+            { id: 'p_pedroia', name: 'Dustin Pedroia', pos: ['2B'], ovr: 93, active: false, mlb: true, wbc: true, lidom: false, team: 'BOS', decade: '2010s' },
+            { id: 'p_soriano', name: 'Alfonso Soriano', pos: ['2B', 'LF', 'DH'], ovr: 92, active: false, mlb: true, wbc: true, lidom: true, team: 'NYY', decade: '2000s' },
+            { id: 'p_alomar', name: 'Roberto Alomar', pos: ['2B'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'TOR', decade: '1990s' },
+            { id: 'p_biggio', name: 'Craig Biggio', pos: ['2B', 'C', 'CF'], ovr: 94, active: false, mlb: true, wbc: false, lidom: false, team: 'HOU', decade: '1990s' },
+            { id: 'p_sandberg', name: 'Ryne Sandberg', pos: ['2B'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'CHC', decade: '1980s' },
+            { id: 'p_carew', name: 'Rod Carew', pos: ['2B', '1B', 'DH'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'MIN', decade: '1970s' },
+            { id: 'p_kent', name: 'Jeff Kent', pos: ['2B', '1B'], ovr: 93, active: false, mlb: true, wbc: false, lidom: false, team: 'SF', decade: '2000s' },
+            // Active 2B (2026-2027)
+            { id: 'p_marte', name: 'Ketel Marte', pos: ['2B', 'CF', 'SS', 'DH'], ovr: 96, active: true, mlb: true, wbc: true, lidom: true, team: 'ARI', decade: '2020s' },
+            { id: 'p_altuve', name: 'José Altuve', pos: ['2B', 'LF', 'DH'], ovr: 94, active: true, mlb: true, wbc: true, lidom: false, team: 'HOU', decade: '2020s' },
+            { id: 'p_semien', name: 'Marcus Semien', pos: ['2B', 'SS'], ovr: 92, active: true, mlb: true, wbc: false, lidom: false, team: 'TEX', decade: '2020s' },
+            { id: 'p_arraez', name: 'Luis Arráez', pos: ['2B', '1B', 'DH'], ovr: 92, active: true, mlb: true, wbc: true, lidom: false, team: 'SD', decade: '2020s' },
+            { id: 'p_albies', name: 'Ozzie Albies', pos: ['2B'], ovr: 91, active: true, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '2020s' },
+            { id: 'p_gleyber', name: 'Gleyber Torres', pos: ['2B', 'DH'], ovr: 89, active: true, mlb: true, wbc: true, lidom: false, team: 'DET', decade: '2020s' },
+            { id: 'p_gimenez', name: 'Andrés Giménez', pos: ['2B', 'SS'], ovr: 90, active: true, mlb: true, wbc: true, lidom: false, team: 'TOR', decade: '2020s' },
+            { id: 'p_chisholm', name: 'Jazz Chisholm Jr.', pos: ['2B', '3B', 'CF'], ovr: 91, active: true, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '2020s' },
+            { id: 'p_edman', name: 'Tommy Edman', pos: ['2B', 'SS', 'CF'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '2020s' },
+            { id: 'p_india', name: 'Jonathan India', pos: ['2B', '3B', 'DH'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'KC', decade: '2020s' },
+            { id: 'p_mclain', name: 'Matt McLain', pos: ['2B', 'SS'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'CIN', decade: '2020s' },
+            { id: 'p_garcia_l', name: 'Luis García Jr.', pos: ['2B'], ovr: 87, active: true, mlb: true, wbc: false, lidom: true, team: 'WSH', decade: '2020s' },
+            { id: 'p_hoerner', name: 'Nico Hoerner', pos: ['2B', 'SS'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'CHC', decade: '2020s' },
+            { id: 'p_stott', name: 'Bryson Stott', pos: ['2B', 'SS'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'PHI', decade: '2020s' },
+            { id: 'p_cronenworth', name: 'Jake Cronenworth', pos: ['2B', '1B'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'SD', decade: '2020s' },
+            { id: 'p_holliday', name: 'Jackson Holliday', pos: ['2B', 'SS'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'BAL', decade: '2020s' },
+            { id: 'p_campbell', name: 'Kristian Campbell', pos: ['2B', 'LF', 'CF'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'BOS', decade: '2020s' },
+            { id: 'p_turang', name: 'Brice Turang', pos: ['2B', 'SS'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'MIL', decade: '2020s' },
+            { id: 'p_donovan', name: 'Brendan Donovan', pos: ['2B', 'LF', '3B'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'STL', decade: '2020s' },
+            { id: 'p_lowe_b', name: 'Brandon Lowe', pos: ['2B', 'DH'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'TB', decade: '2020s' },
+            { id: 'p_gelof', name: 'Zack Gelof', pos: ['2B'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'ATH', decade: '2020s' },
+            { id: 'p_bazzana', name: 'Travis Bazzana', pos: ['2B'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'CLE', decade: '2020s' },
+            { id: 'p_gonzales_n', name: 'Nick Gonzales', pos: ['2B', 'SS'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'PIT', decade: '2020s' },
+            { id: 'p_edwards_x', name: 'Xavier Edwards', pos: ['2B', 'SS'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'MIA', decade: '2020s' },
+
+            // ================= SHORTSTOP (SS) =================
+            { id: 'p_jeter', name: 'Derek Jeter', pos: ['SS', 'DH'], ovr: 97, active: false, mlb: true, wbc: true, lidom: false, team: 'NYY', decade: '1990s' },
+            { id: 'p_arod', name: 'Alex Rodríguez', pos: ['SS', '3B', 'DH'], ovr: 99, active: false, mlb: true, wbc: true, lidom: false, team: 'SEA', decade: '2000s' },
+            { id: 'p_ripken', name: 'Cal Ripken Jr.', pos: ['SS', '3B'], ovr: 97, active: false, mlb: true, wbc: false, lidom: false, team: 'BAL', decade: '1980s' },
+            { id: 'p_wagner', name: 'Honus Wagner', pos: ['SS'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'PIT', decade: '1900s' },
+            { id: 'p_ozzie', name: 'Ozzie Smith', pos: ['SS'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'STL', decade: '1980s' },
+            { id: 'p_reyes', name: 'José Reyes', pos: ['SS'], ovr: 92, active: false, mlb: true, wbc: true, lidom: true, team: 'NYM', decade: '2000s' },
+            { id: 'p_tejada', name: 'Miguel Tejada', pos: ['SS', '3B', 'DH'], ovr: 93, active: false, mlb: true, wbc: true, lidom: true, team: 'ATH', decade: '2000s' },
+            { id: 'p_larkin', name: 'Barry Larkin', pos: ['SS'], ovr: 95, active: false, mlb: true, wbc: false, lidom: false, team: 'CIN', decade: '1990s' },
+            { id: 'p_nomar', name: 'Nomar Garciaparra', pos: ['SS', '1B'], ovr: 94, active: false, mlb: true, wbc: false, lidom: false, team: 'BOS', decade: '1990s' },
+            { id: 'p_banks', name: 'Ernie Banks', pos: ['SS', '1B'], ovr: 97, active: false, mlb: true, wbc: false, lidom: false, team: 'CHC', decade: '1950s' },
+            { id: 'p_yount', name: 'Robin Yount', pos: ['SS', 'CF'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'MIL', decade: '1980s' },
+            { id: 'p_trammell', name: 'Alan Trammell', pos: ['SS'], ovr: 94, active: false, mlb: true, wbc: false, lidom: false, team: 'DET', decade: '1980s' },
+            { id: 'p_hanley', name: 'Hanley Ramírez', pos: ['SS', '3B', '1B', 'DH'], ovr: 92, active: false, mlb: true, wbc: true, lidom: true, team: 'MIA', decade: '2000s' },
+            // Active SS (2026-2027)
+            { id: 'p_witt', name: 'Bobby Witt Jr.', pos: ['SS', '3B', 'DH'], ovr: 98, active: true, mlb: true, wbc: true, lidom: false, team: 'KC', decade: '2020s' },
+            { id: 'p_gunnar', name: 'Gunnar Henderson', pos: ['SS', '3B', 'DH'], ovr: 97, active: true, mlb: true, wbc: true, lidom: false, team: 'BAL', decade: '2020s' },
+            { id: 'p_lindor', name: 'Francisco Lindor', pos: ['SS', 'DH'], ovr: 96, active: true, mlb: true, wbc: true, lidom: false, team: 'NYM', decade: '2020s' },
+            { id: 'p_seager', name: 'Corey Seager', pos: ['SS', 'DH'], ovr: 95, active: true, mlb: true, wbc: false, lidom: false, team: 'TEX', decade: '2020s' },
+            { id: 'p_elly', name: 'Elly De La Cruz', pos: ['SS', '3B'], ovr: 95, active: true, mlb: true, wbc: true, lidom: true, team: 'CIN', decade: '2020s' },
+            { id: 'p_turner', name: 'Trea Turner', pos: ['SS', '2B'], ovr: 92, active: true, mlb: true, wbc: true, lidom: false, team: 'PHI', decade: '2020s' },
+            { id: 'p_adames', name: 'Willy Adames', pos: ['SS'], ovr: 91, active: true, mlb: true, wbc: true, lidom: true, team: 'SF', decade: '2020s' },
+            { id: 'p_correa', name: 'Carlos Correa', pos: ['SS'], ovr: 90, active: true, mlb: true, wbc: true, lidom: false, team: 'MIN', decade: '2020s' },
+            { id: 'p_swanson', name: 'Dansby Swanson', pos: ['SS'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'CHC', decade: '2020s' },
+            { id: 'p_bogaerts', name: 'Xander Bogaerts', pos: ['SS', '2B'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'SD', decade: '2020s' },
+            { id: 'p_bichette', name: 'Bo Bichette', pos: ['SS', '2B'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'TOR', decade: '2020s' },
+            { id: 'p_volpe', name: 'Anthony Volpe', pos: ['SS'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '2020s' },
+            { id: 'p_abrams', name: 'CJ Abrams', pos: ['SS'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'WSH', decade: '2020s' },
+            { id: 'p_tovar', name: 'Ezequiel Tovar', pos: ['SS'], ovr: 89, active: true, mlb: true, wbc: true, lidom: false, team: 'COL', decade: '2020s' },
+            { id: 'p_neto', name: 'Zach Neto', pos: ['SS'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'LAA', decade: '2020s' },
+            { id: 'p_cruz_o', name: 'Oneil Cruz', pos: ['SS', 'CF', 'DH'], ovr: 91, active: true, mlb: true, wbc: true, lidom: true, team: 'PIT', decade: '2020s' },
+            { id: 'p_pena_j', name: 'Jeremy Peña', pos: ['SS'], ovr: 89, active: true, mlb: true, wbc: true, lidom: true, team: 'HOU', decade: '2020s' },
+            { id: 'p_winn', name: 'Masyn Winn', pos: ['SS'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'STL', decade: '2020s' },
+            { id: 'p_story', name: 'Trevor Story', pos: ['SS', '2B'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'BOS', decade: '2020s' },
+            { id: 'p_mayer', name: 'Marcelo Mayer', pos: ['SS', '3B'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'BOS', decade: '2020s' },
+            { id: 'p_perdomo', name: 'Geraldo Perdomo', pos: ['SS', '2B'], ovr: 87, active: true, mlb: true, wbc: true, lidom: true, team: 'ARI', decade: '2020s' },
+            { id: 'p_crawford_jp', name: 'J.P. Crawford', pos: ['SS'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'SEA', decade: '2020s' },
+            { id: 'p_wilson_j', name: 'Jacob Wilson', pos: ['SS'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'ATH', decade: '2020s' },
+            { id: 'p_arcias', name: 'Orlando Arcia', pos: ['SS'], ovr: 85, active: true, mlb: true, wbc: true, lidom: false, team: 'ATL', decade: '2020s' },
+            { id: 'p_rocchio', name: 'Brayan Rocchio', pos: ['SS', '2B'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'CLE', decade: '2020s' },
+            { id: 'p_mcgonigle', name: 'Kevin McGonigle', pos: ['SS', '2B'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'DET', decade: '2020s' },
+            { id: 'p_montgomery_c', name: 'Colson Montgomery', pos: ['SS', '3B'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'CWS', decade: '2020s' },
+
+            // ================= THIRD BASE (3B) =================
+            { id: 'p_schmidt', name: 'Mike Schmidt', pos: ['3B', '1B', 'DH'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'PHI', decade: '1980s' },
+            { id: 'p_brett', name: 'George Brett', pos: ['3B', '1B', 'DH'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'KC', decade: '1980s' },
+            { id: 'p_beltre', name: 'Adrián Beltré', pos: ['3B', 'DH'], ovr: 96, active: false, mlb: true, wbc: true, lidom: true, team: 'TEX', decade: '2010s' },
+            { id: 'p_chipper', name: 'Chipper Jones', pos: ['3B', 'LF', 'DH'], ovr: 97, active: false, mlb: true, wbc: true, lidom: false, team: 'ATL', decade: '1990s' },
+            { id: 'p_boggs', name: 'Wade Boggs', pos: ['3B', 'DH'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'BOS', decade: '1980s' },
+            { id: 'p_brooks', name: 'Brooks Robinson', pos: ['3B'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'BAL', decade: '1970s' },
+            { id: 'p_rolen', name: 'Scott Rolen', pos: ['3B'], ovr: 94, active: false, mlb: true, wbc: false, lidom: false, team: 'STL', decade: '2000s' },
+            { id: 'p_wright', name: 'David Wright', pos: ['3B'], ovr: 93, active: false, mlb: true, wbc: true, lidom: false, team: 'NYM', decade: '2000s' },
+            { id: 'p_mathews', name: 'Eddie Mathews', pos: ['3B'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '1950s' },
+            { id: 'p_santo', name: 'Ron Santo', pos: ['3B'], ovr: 94, active: false, mlb: true, wbc: false, lidom: false, team: 'CHC', decade: '1960s' },
+            { id: 'p_longoria', name: 'Evan Longoria', pos: ['3B', 'DH'], ovr: 92, active: false, mlb: true, wbc: true, lidom: false, team: 'TB', decade: '2010s' },
+            { id: 'p_donaldson', name: 'Josh Donaldson', pos: ['3B', 'DH'], ovr: 93, active: false, mlb: true, wbc: false, lidom: false, team: 'TOR', decade: '2010s' },
+            // Active 3B (2026-2027)
+            { id: 'p_jram', name: 'José Ramírez', pos: ['3B', '2B', 'DH'], ovr: 97, active: true, mlb: true, wbc: true, lidom: true, team: 'CLE', decade: '2020s' },
+            { id: 'p_devers', name: 'Rafael Devers', pos: ['3B', 'DH'], ovr: 95, active: true, mlb: true, wbc: true, lidom: true, team: 'BOS', decade: '2020s' },
+            { id: 'p_machado', name: 'Manny Machado', pos: ['3B', 'SS', 'DH'], ovr: 94, active: true, mlb: true, wbc: true, lidom: false, team: 'SD', decade: '2020s' },
+            { id: 'p_riley', name: 'Austin Riley', pos: ['3B', 'DH'], ovr: 93, active: true, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '2020s' },
+            { id: 'p_bregman', name: 'Alex Bregman', pos: ['3B', 'SS', 'DH'], ovr: 92, active: true, mlb: true, wbc: true, lidom: false, team: 'BOS', decade: '2020s' },
+            { id: 'p_chapman_m', name: 'Matt Chapman', pos: ['3B'], ovr: 92, active: true, mlb: true, wbc: false, lidom: false, team: 'SF', decade: '2020s' },
+            { id: 'p_arenado', name: 'Nolan Arenado', pos: ['3B'], ovr: 90, active: true, mlb: true, wbc: true, lidom: false, team: 'STL', decade: '2020s' },
+            { id: 'p_vientos', name: 'Mark Vientos', pos: ['3B', '1B', 'DH'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'NYM', decade: '2020s' },
+            { id: 'p_paredes', name: 'Isaac Paredes', pos: ['3B', '1B', 'DH'], ovr: 89, active: true, mlb: true, wbc: true, lidom: false, team: 'HOU', decade: '2020s' },
+            { id: 'p_westburg', name: 'Jordan Westburg', pos: ['3B', '2B'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'BAL', decade: '2020s' },
+            { id: 'p_caminero', name: 'Junior Caminero', pos: ['3B', 'DH'], ovr: 91, active: true, mlb: true, wbc: true, lidom: true, team: 'TB', decade: '2020s' },
+            { id: 'p_burger', name: 'Jake Burger', pos: ['3B', '1B', 'DH'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'TEX', decade: '2020s' },
+            { id: 'p_mcmahon', name: 'Ryan McMahon', pos: ['3B', '2B'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'COL', decade: '2020s' },
+            { id: 'p_muncy', name: 'Max Muncy', pos: ['3B', '1B', '2B', 'DH'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '2020s' },
+            { id: 'p_bohm', name: 'Alec Bohm', pos: ['3B', '1B'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'PHI', decade: '2020s' },
+            { id: 'p_suarez_e', name: 'Eugenio Suárez', pos: ['3B', 'DH'], ovr: 88, active: true, mlb: true, wbc: true, lidom: false, team: 'ARI', decade: '2020s' },
+            { id: 'p_lewis_r', name: 'Royce Lewis', pos: ['3B', 'SS', 'DH'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'MIN', decade: '2020s' },
+            { id: 'p_jung', name: 'Josh Jung', pos: ['3B'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'TEX', decade: '2020s' },
+            { id: 'p_hayes', name: 'Ke\'Bryan Hayes', pos: ['3B'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'PIT', decade: '2020s' },
+            { id: 'p_ortiz_j', name: 'Joey Ortiz', pos: ['3B', '2B', 'SS'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'MIL', decade: '2020s' },
+            { id: 'p_candelario', name: 'Jeimer Candelario', pos: ['3B', '1B'], ovr: 86, active: true, mlb: true, wbc: true, lidom: true, team: 'CIN', decade: '2020s' },
+            { id: 'p_rendon', name: 'Anthony Rendon', pos: ['3B'], ovr: 84, active: true, mlb: true, wbc: false, lidom: false, team: 'LAA', decade: '2020s' },
+            { id: 'p_house', name: 'Brady House', pos: ['3B'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'WSH', decade: '2020s' },
+            { id: 'p_norby', name: 'Connor Norby', pos: ['3B', '2B'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'MIA', decade: '2020s' },
+            { id: 'p_vierling', name: 'Matt Vierling', pos: ['3B', 'CF', 'RF'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'DET', decade: '2020s' },
+
+            // ================= LEFT FIELD (LF) =================
+            { id: 'p_bonds', name: 'Barry Bonds', pos: ['LF', 'DH'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'SF', decade: '2000s' },
+            { id: 'p_williams', name: 'Ted Williams', pos: ['LF', 'DH'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'BOS', decade: '1940s' },
+            { id: 'p_rickey', name: 'Rickey Henderson', pos: ['LF', 'DH'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'ATH', decade: '1980s' },
+            { id: 'p_manny', name: 'Manny Ramírez', pos: ['LF', 'RF', 'DH'], ovr: 97, active: false, mlb: true, wbc: false, lidom: true, team: 'BOS', decade: '2000s' },
+            { id: 'p_musial', name: 'Stan Musial', pos: ['LF', '1B', 'RF', 'DH'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'STL', decade: '1950s' },
+            { id: 'p_yaz', name: 'Carl Yastrzemski', pos: ['LF', '1B', 'DH'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'BOS', decade: '1960s' },
+            { id: 'p_rose', name: 'Pete Rose', pos: ['LF', '1B', '2B', '3B'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'CIN', decade: '1970s' },
+            { id: 'p_stargell', name: 'Willie Stargell', pos: ['LF', '1B'], ovr: 95, active: false, mlb: true, wbc: false, lidom: false, team: 'PIT', decade: '1970s' },
+            { id: 'p_raines', name: 'Tim Raines', pos: ['LF', 'DH'], ovr: 94, active: false, mlb: true, wbc: false, lidom: false, team: 'CWS', decade: '1980s' },
+            // Active LF (2026-2027)
+            { id: 'p_soto', name: 'Juan Soto', pos: ['LF', 'RF', 'DH'], ovr: 99, active: true, mlb: true, wbc: true, lidom: true, team: 'NYM', decade: '2020s' },
+            { id: 'p_yordan', name: 'Yordan Álvarez', pos: ['LF', 'DH'], ovr: 97, active: true, mlb: true, wbc: false, lidom: false, team: 'HOU', decade: '2020s' },
+            { id: 'p_kwan', name: 'Steven Kwan', pos: ['LF'], ovr: 92, active: true, mlb: true, wbc: false, lidom: false, team: 'CLE', decade: '2020s' },
+            { id: 'p_reynolds', name: 'Bryan Reynolds', pos: ['LF', 'CF', 'DH'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'PIT', decade: '2020s' },
+            { id: 'p_happ', name: 'Ian Happ', pos: ['LF'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'CHC', decade: '2020s' },
+            { id: 'p_arozarena', name: 'Randy Arozarena', pos: ['LF', 'RF', 'DH'], ovr: 90, active: true, mlb: true, wbc: true, lidom: false, team: 'SEA', decade: '2020s' },
+            { id: 'p_nimmo', name: 'Brandon Nimmo', pos: ['LF', 'CF'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'NYM', decade: '2020s' },
+            { id: 'p_yelich', name: 'Christian Yelich', pos: ['LF', 'RF', 'DH'], ovr: 90, active: true, mlb: true, wbc: true, lidom: false, team: 'MIL', decade: '2020s' },
+            { id: 'p_profar', name: 'Jurickson Profar', pos: ['LF', '1B', 'DH'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '2020s' },
+            { id: 'p_greene', name: 'Riley Greene', pos: ['LF', 'CF', 'DH'], ovr: 92, active: true, mlb: true, wbc: false, lidom: false, team: 'DET', decade: '2020s' },
+            { id: 'p_gurriel', name: 'Lourdes Gurriel Jr.', pos: ['LF', 'DH'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'ARI', decade: '2020s' },
+            { id: 'p_ward', name: 'Taylor Ward', pos: ['LF', 'DH'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'LAA', decade: '2020s' },
+            { id: 'p_wood', name: 'James Wood', pos: ['LF', 'CF', 'DH'], ovr: 92, active: true, mlb: true, wbc: false, lidom: false, team: 'WSH', decade: '2020s' },
+            { id: 'p_langford', name: 'Wyatt Langford', pos: ['LF', 'CF', 'DH'], ovr: 91, active: true, mlb: true, wbc: false, lidom: false, team: 'TEX', decade: '2020s' },
+            { id: 'p_dominguez_j', name: 'Jasson Domínguez', pos: ['LF', 'CF', 'DH'], ovr: 89, active: true, mlb: true, wbc: false, lidom: true, team: 'NYY', decade: '2020s' },
+            { id: 'p_anthony_r', name: 'Roman Anthony', pos: ['LF', 'CF', 'RF'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'BOS', decade: '2020s' },
+            { id: 'p_conforto', name: 'Michael Conforto', pos: ['LF', 'RF'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '2020s' },
+            { id: 'p_cowser_lf', name: 'Heston Kjerstad', pos: ['LF', 'RF', 'DH'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'BAL', decade: '2020s' },
+            { id: 'p_ramos_h', name: 'Heliot Ramos', pos: ['LF', 'CF', 'RF'], ovr: 89, active: true, mlb: true, wbc: true, lidom: false, team: 'SF', decade: '2020s' },
+            { id: 'p_marsh', name: 'Brandon Marsh', pos: ['LF', 'CF'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'PHI', decade: '2020s' },
+            { id: 'p_blevins_m', name: 'Max Kepler', pos: ['LF', 'RF'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'PHI', decade: '2020s' },
+            { id: 'p_benintendi', name: 'Andrew Benintendi', pos: ['LF'], ovr: 85, active: true, mlb: true, wbc: false, lidom: false, team: 'CWS', decade: '2020s' },
+            { id: 'p_melendez', name: 'MJ Melendez', pos: ['LF', 'C'], ovr: 85, active: true, mlb: true, wbc: false, lidom: false, team: 'KC', decade: '2020s' },
+            { id: 'p_naylor_j2', name: 'JJ Bleday', pos: ['CF', 'LF'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'ATH', decade: '2020s' },
+
+            // ================= CENTER FIELD (CF) =================
+            { id: 'p_mays', name: 'Willie Mays', pos: ['CF', 'DH'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'SF', decade: '1950s' },
+            { id: 'p_griffey', name: 'Ken Griffey Jr.', pos: ['CF', 'DH'], ovr: 99, active: false, mlb: true, wbc: true, lidom: false, team: 'SEA', decade: '1990s' },
+            { id: 'p_mantle', name: 'Mickey Mantle', pos: ['CF', '1B', 'DH'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '1950s' },
+            { id: 'p_dimaggio', name: 'Joe DiMaggio', pos: ['CF'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '1940s' },
+            { id: 'p_beltran', name: 'Carlos Beltrán', pos: ['CF', 'DH'], ovr: 95, active: false, mlb: true, wbc: true, lidom: false, team: 'NYM', decade: '2000s' },
+            { id: 'p_ajones', name: 'Andruw Jones', pos: ['CF'], ovr: 95, active: false, mlb: true, wbc: true, lidom: false, team: 'ATL', decade: '2000s' },
+            { id: 'p_bonifacio', name: 'Emilio Bonifacio', pos: ['CF', '2B', 'LF'], ovr: 87, active: false, mlb: true, wbc: true, lidom: true, team: 'MIA', decade: '2010s' },
+            { id: 'p_cobb', name: 'Ty Cobb', pos: ['CF', 'RF'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'DET', decade: '1910s' },
+            { id: 'p_speaker', name: 'Tris Speaker', pos: ['CF'], ovr: 97, active: false, mlb: true, wbc: false, lidom: false, team: 'CLE', decade: '1920s' },
+            { id: 'p_snider', name: 'Duke Snider', pos: ['CF'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '1950s' },
+            { id: 'p_puckett', name: 'Kirby Puckett', pos: ['CF'], ovr: 95, active: false, mlb: true, wbc: false, lidom: false, team: 'MIN', decade: '1980s' },
+            { id: 'p_loftin', name: 'Kenny Lofton', pos: ['CF'], ovr: 93, active: false, mlb: true, wbc: false, lidom: false, team: 'CLE', decade: '1990s' },
+            // Active CF (2026-2027)
+            { id: 'p_trout', name: 'Mike Trout', pos: ['CF', 'RF', 'DH'], ovr: 95, active: true, mlb: true, wbc: true, lidom: false, team: 'LAA', decade: '2020s' },
+            { id: 'p_julio', name: 'Julio Rodríguez', pos: ['CF', 'DH'], ovr: 95, active: true, mlb: true, wbc: true, lidom: true, team: 'SEA', decade: '2020s' },
+            { id: 'p_merrill', name: 'Jackson Merrill', pos: ['CF', 'SS'], ovr: 94, active: true, mlb: true, wbc: true, lidom: false, team: 'SD', decade: '2020s' },
+            { id: 'p_buxton', name: 'Byron Buxton', pos: ['CF', 'DH'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'MIN', decade: '2020s' },
+            { id: 'p_mharris', name: 'Michael Harris II', pos: ['CF'], ovr: 91, active: true, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '2020s' },
+            { id: 'p_robert', name: 'Luis Robert Jr.', pos: ['CF', 'DH'], ovr: 90, active: true, mlb: true, wbc: true, lidom: false, team: 'CWS', decade: '2020s' },
+            { id: 'p_duran', name: 'Jarren Duran', pos: ['CF', 'LF', 'DH'], ovr: 93, active: true, mlb: true, wbc: true, lidom: false, team: 'BOS', decade: '2020s' },
+            { id: 'p_chourio', name: 'Jackson Chourio', pos: ['CF', 'LF', 'RF'], ovr: 93, active: true, mlb: true, wbc: true, lidom: false, team: 'MIL', decade: '2020s' },
+            { id: 'p_varsho', name: 'Daulton Varsho', pos: ['CF', 'LF'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'TOR', decade: '2020s' },
+            { id: 'p_lee_jh', name: 'Jung Hoo Lee', pos: ['CF'], ovr: 89, active: true, mlb: true, wbc: true, lidom: false, team: 'SF', decade: '2020s' },
+            { id: 'p_cowser', name: 'Colton Cowser', pos: ['CF', 'LF'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'BAL', decade: '2020s' },
+            { id: 'p_doyle', name: 'Brenton Doyle', pos: ['CF'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'COL', decade: '2020s' },
+            { id: 'p_rojas_j', name: 'Johan Rojas', pos: ['CF'], ovr: 85, active: true, mlb: true, wbc: false, lidom: true, team: 'PHI', decade: '2020s' },
+            { id: 'p_crowarmstrong', name: 'Pete Crow-Armstrong', pos: ['CF'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'CHC', decade: '2020s' },
+            { id: 'p_crews', name: 'Dylan Crews', pos: ['CF', 'RF'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'WSH', decade: '2020s' },
+            { id: 'p_siri', name: 'Jose Siri', pos: ['CF'], ovr: 86, active: true, mlb: true, wbc: false, lidom: true, team: 'NYM', decade: '2020s' },
+            { id: 'p_deluca', name: 'Jonny DeLuca', pos: ['CF', 'RF'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'TB', decade: '2020s' },
+            { id: 'p_thomas_a', name: 'Alek Thomas', pos: ['CF'], ovr: 86, active: true, mlb: true, wbc: true, lidom: false, team: 'ARI', decade: '2020s' },
+            { id: 'p_friedl', name: 'TJ Friedl', pos: ['CF', 'LF'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'CIN', decade: '2020s' },
+            { id: 'p_meyers', name: 'Jake Meyers', pos: ['CF'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'HOU', decade: '2020s' },
+            { id: 'p_isbel', name: 'Kyle Isbel', pos: ['CF'], ovr: 85, active: true, mlb: true, wbc: false, lidom: false, team: 'KC', decade: '2020s' },
+            { id: 'p_siani', name: 'Michael Siani', pos: ['CF'], ovr: 85, active: true, mlb: true, wbc: false, lidom: false, team: 'STL', decade: '2020s' },
+            { id: 'p_taveras', name: 'Leody Taveras', pos: ['CF'], ovr: 85, active: true, mlb: true, wbc: false, lidom: true, team: 'TEX', decade: '2020s' },
+
+            // ================= RIGHT FIELD (RF) =================
+            { id: 'p_ruth', name: 'Babe Ruth', pos: ['RF', 'LF', 'SP1', 'DH'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '1920s' },
+            { id: 'p_aaron', name: 'Hank Aaron', pos: ['RF', 'DH'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '1960s' },
+            { id: 'p_clemente', name: 'Roberto Clemente', pos: ['RF'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'PIT', decade: '1960s' },
+            { id: 'p_vlad', name: 'Vladimir Guerrero', pos: ['RF', 'DH'], ovr: 97, active: false, mlb: true, wbc: false, lidom: true, team: 'LAA', decade: '2000s' },
+            { id: 'p_ichiro', name: 'Ichiro Suzuki', pos: ['RF', 'CF', 'DH'], ovr: 97, active: false, mlb: true, wbc: true, lidom: false, team: 'SEA', decade: '2000s' },
+            { id: 'p_sosa', name: 'Sammy Sosa', pos: ['RF', 'DH'], ovr: 95, active: false, mlb: true, wbc: false, lidom: true, team: 'CHC', decade: '1990s' },
+            { id: 'p_gwynn', name: 'Tony Gwynn', pos: ['RF', 'DH'], ovr: 97, active: false, mlb: true, wbc: false, lidom: false, team: 'SD', decade: '1990s' },
+            { id: 'p_reggie', name: 'Reggie Jackson', pos: ['RF', 'DH'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '1970s' },
+            { id: 'p_kaline', name: 'Al Kaline', pos: ['RF', '1B'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'DET', decade: '1960s' },
+            { id: 'p_robinson_f', name: 'Frank Robinson', pos: ['RF', 'LF', 'DH'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'BAL', decade: '1960s' },
+            { id: 'p_winfield', name: 'Dave Winfield', pos: ['RF', 'DH'], ovr: 95, active: false, mlb: true, wbc: false, lidom: false, team: 'SD', decade: '1980s' },
+            { id: 'p_walker_l', name: 'Larry Walker', pos: ['RF', 'DH'], ovr: 95, active: false, mlb: true, wbc: false, lidom: false, team: 'COL', decade: '1990s' },
+            { id: 'p_sheffield', name: 'Gary Sheffield', pos: ['RF', '3B', 'DH'], ovr: 94, active: false, mlb: true, wbc: false, lidom: false, team: 'MIA', decade: '1990s' },
+            { id: 'p_bautista_j', name: 'José Bautista', pos: ['RF', '3B', 'DH'], ovr: 93, active: false, mlb: true, wbc: true, lidom: true, team: 'TOR', decade: '2010s' },
+            // Active RF (2026-2027)
+            { id: 'p_judge', name: 'Aaron Judge', pos: ['RF', 'CF', 'DH'], ovr: 99, active: true, mlb: true, wbc: true, lidom: false, team: 'NYY', decade: '2020s' },
+            { id: 'p_betts', name: 'Mookie Betts', pos: ['RF', 'SS', '2B', 'DH'], ovr: 97, active: true, mlb: true, wbc: true, lidom: false, team: 'LAD', decade: '2020s' },
+            { id: 'p_acuna', name: 'Ronald Acuña Jr.', pos: ['RF', 'CF', 'DH'], ovr: 96, active: true, mlb: true, wbc: true, lidom: false, team: 'ATL', decade: '2020s' },
+            { id: 'p_tucker', name: 'Kyle Tucker', pos: ['RF', 'DH'], ovr: 96, active: true, mlb: true, wbc: true, lidom: false, team: 'CHC', decade: '2020s' },
+            { id: 'p_tatis', name: 'Fernando Tatis Jr.', pos: ['RF', 'SS', 'DH'], ovr: 96, active: true, mlb: true, wbc: true, lidom: true, team: 'SD', decade: '2020s' },
+            { id: 'p_corbin', name: 'Corbin Carroll', pos: ['RF', 'CF', 'LF'], ovr: 93, active: true, mlb: true, wbc: true, lidom: false, team: 'ARI', decade: '2020s' },
+            { id: 'p_teoscar', name: 'Teoscar Hernández', pos: ['RF', 'LF', 'DH'], ovr: 91, active: true, mlb: true, wbc: true, lidom: true, team: 'LAD', decade: '2020s' },
+            { id: 'p_santander', name: 'Anthony Santander', pos: ['RF', 'LF', 'DH'], ovr: 91, active: true, mlb: true, wbc: true, lidom: false, team: 'TOR', decade: '2020s' },
+            { id: 'p_suzuki_s', name: 'Seiya Suzuki', pos: ['RF', 'DH'], ovr: 90, active: true, mlb: true, wbc: true, lidom: false, team: 'CHC', decade: '2020s' },
+            { id: 'p_castellanos', name: 'Nick Castellanos', pos: ['RF', 'DH'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'PHI', decade: '2020s' },
+            { id: 'p_rooker', name: 'Brent Rooker', pos: ['RF', 'LF', 'DH'], ovr: 91, active: true, mlb: true, wbc: false, lidom: false, team: 'ATH', decade: '2020s' },
+            { id: 'p_sanchez_j', name: 'Jesús Sánchez', pos: ['RF', 'LF'], ovr: 87, active: true, mlb: true, wbc: false, lidom: true, team: 'MIA', decade: '2020s' },
+            { id: 'p_adolis', name: 'Adolis García', pos: ['RF', 'DH'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'TEX', decade: '2020s' },
+            { id: 'p_bellinger', name: 'Cody Bellinger', pos: ['RF', 'CF', '1B'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '2020s' },
+            { id: 'p_nootbaar', name: 'Lars Nootbaar', pos: ['RF', 'LF', 'CF'], ovr: 88, active: true, mlb: true, wbc: true, lidom: false, team: 'STL', decade: '2020s' },
+            { id: 'p_frelick', name: 'Sal Frelick', pos: ['RF', 'CF'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'MIL', decade: '2020s' },
+            { id: 'p_yastrzemski_m', name: 'Mike Yastrzemski', pos: ['RF', 'CF'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'SF', decade: '2020s' },
+            { id: 'p_abreu_w', name: 'Wilyer Abreu', pos: ['RF', 'LF'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'BOS', decade: '2020s' },
+            { id: 'p_robles', name: 'Victor Robles', pos: ['RF', 'CF'], ovr: 87, active: true, mlb: true, wbc: false, lidom: true, team: 'SEA', decade: '2020s' },
+            { id: 'p_lowe_j', name: 'Josh Lowe', pos: ['RF', 'LF'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'TB', decade: '2020s' },
+            { id: 'p_marte_n', name: 'Starling Marte', pos: ['RF', 'DH'], ovr: 86, active: true, mlb: true, wbc: true, lidom: true, team: 'NYM', decade: '2020s' },
+            { id: 'p_thomas_l', name: 'Lane Thomas', pos: ['RF', 'CF'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'CLE', decade: '2020s' },
+            { id: 'p_renfroe', name: 'Hunter Renfroe', pos: ['RF', 'DH'], ovr: 85, active: true, mlb: true, wbc: false, lidom: false, team: 'KC', decade: '2020s' },
+            { id: 'p_wallner', name: 'Matt Wallner', pos: ['RF', 'LF', 'DH'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'MIN', decade: '2020s' },
+            { id: 'p_adell', name: 'Jo Adell', pos: ['RF', 'CF'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'LAA', decade: '2020s' },
+            { id: 'p_fraley', name: 'Jake Fraley', pos: ['RF', 'LF'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'CIN', decade: '2020s' },
+
+            // ================= STARTING PITCHERS (SP1) =================
+            { id: 'p_pedro', name: 'Pedro Martínez', pos: ['SP1'], ovr: 99, active: false, mlb: true, wbc: true, lidom: true, team: 'BOS', decade: '1990s' },
+            { id: 'p_randy', name: 'Randy Johnson', pos: ['SP1'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'ARI', decade: '2000s' },
+            { id: 'p_maddux', name: 'Greg Maddux', pos: ['SP1'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '1990s' },
+            { id: 'p_koufax', name: 'Sandy Koufax', pos: ['SP1'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '1960s' },
+            { id: 'p_marichal', name: 'Juan Marichal', pos: ['SP1'], ovr: 98, active: false, mlb: true, wbc: false, lidom: true, team: 'SF', decade: '1960s' },
+            { id: 'p_nolan', name: 'Nolan Ryan', pos: ['SP1'], ovr: 97, active: false, mlb: true, wbc: false, lidom: false, team: 'TEX', decade: '1980s' },
+            { id: 'p_seaver', name: 'Tom Seaver', pos: ['SP1'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'NYM', decade: '1970s' },
+            { id: 'p_clemens', name: 'Roger Clemens', pos: ['SP1'], ovr: 98, active: false, mlb: true, wbc: true, lidom: false, team: 'BOS', decade: '1990s' },
+            { id: 'p_halladay', name: 'Roy Halladay', pos: ['SP1'], ovr: 97, active: false, mlb: true, wbc: false, lidom: false, team: 'TOR', decade: '2000s' },
+            { id: 'p_bartolo', name: 'Bartolo Colón', pos: ['SP1'], ovr: 91, active: false, mlb: true, wbc: true, lidom: true, team: 'NYM', decade: '2000s' },
+            { id: 'p_gibson', name: 'Bob Gibson', pos: ['SP1'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'STL', decade: '1960s' },
+            { id: 'p_johnson_w', name: 'Walter Johnson', pos: ['SP1'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'WSH', decade: '1910s' },
+            { id: 'p_young_cy', name: 'Cy Young', pos: ['SP1'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'CLE', decade: '1900s' },
+            { id: 'p_carlton', name: 'Steve Carlton', pos: ['SP1'], ovr: 97, active: false, mlb: true, wbc: false, lidom: false, team: 'PHI', decade: '1970s' },
+            { id: 'p_palmer', name: 'Jim Palmer', pos: ['SP1'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'BAL', decade: '1970s' },
+            { id: 'p_glavine', name: 'Tom Glavine', pos: ['SP1'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '1990s' },
+            { id: 'p_smoltz', name: 'John Smoltz', pos: ['SP1', 'CP'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '1990s' },
+            { id: 'p_sabathia', name: 'CC Sabathia', pos: ['SP1'], ovr: 95, active: false, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '2000s' },
+            { id: 'p_felix_h', name: 'Félix Hernández', pos: ['SP1'], ovr: 95, active: false, mlb: true, wbc: true, lidom: false, team: 'SEA', decade: '2010s' },
+            { id: 'p_greinke', name: 'Zack Greinke', pos: ['SP1'], ovr: 95, active: false, mlb: true, wbc: false, lidom: false, team: 'KC', decade: '2010s' },
+            { id: 'p_santana_j', name: 'Johan Santana', pos: ['SP1'], ovr: 96, active: false, mlb: true, wbc: true, lidom: false, team: 'MIN', decade: '2000s' },
+            // Active SP1 (2026-2027)
+            { id: 'p_ohtani', name: 'Shohei Ohtani', pos: ['SP1', 'DH', 'RF'], ovr: 99, active: true, mlb: true, wbc: true, lidom: false, team: 'LAD', decade: '2020s' },
+            { id: 'p_skubal', name: 'Tarik Skubal', pos: ['SP1'], ovr: 98, active: true, mlb: true, wbc: true, lidom: false, team: 'DET', decade: '2020s' },
+            { id: 'p_skenes', name: 'Paul Skenes', pos: ['SP1'], ovr: 97, active: true, mlb: true, wbc: true, lidom: false, team: 'PIT', decade: '2020s' },
+            { id: 'p_wheeler', name: 'Zack Wheeler', pos: ['SP1'], ovr: 96, active: true, mlb: true, wbc: false, lidom: false, team: 'PHI', decade: '2020s' },
+            { id: 'p_sale', name: 'Chris Sale', pos: ['SP1'], ovr: 95, active: true, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '2020s' },
+            { id: 'p_cole', name: 'Gerrit Cole', pos: ['SP1'], ovr: 95, active: true, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '2020s' },
+            { id: 'p_burnes', name: 'Corbin Burnes', pos: ['SP1'], ovr: 95, active: true, mlb: true, wbc: false, lidom: false, team: 'ARI', decade: '2020s' },
+            { id: 'p_crochet', name: 'Garrett Crochet', pos: ['SP1'], ovr: 95, active: true, mlb: true, wbc: false, lidom: false, team: 'BOS', decade: '2020s' },
+            { id: 'p_snell', name: 'Blake Snell', pos: ['SP1'], ovr: 94, active: true, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '2020s' },
+            { id: 'p_yamamoto', name: 'Yoshinobu Yamamoto', pos: ['SP1'], ovr: 94, active: true, mlb: true, wbc: true, lidom: false, team: 'LAD', decade: '2020s' },
+            { id: 'p_sasaki', name: 'Roki Sasaki', pos: ['SP1'], ovr: 93, active: true, mlb: true, wbc: true, lidom: false, team: 'LAD', decade: '2020s' },
+            { id: 'p_alcantara', name: 'Sandy Alcántara', pos: ['SP1'], ovr: 94, active: true, mlb: true, wbc: true, lidom: true, team: 'MIA', decade: '2020s' },
+            { id: 'p_cease', name: 'Dylan Cease', pos: ['SP1'], ovr: 92, active: true, mlb: true, wbc: false, lidom: false, team: 'SD', decade: '2020s' },
+            { id: 'p_gilbert', name: 'Logan Gilbert', pos: ['SP1'], ovr: 93, active: true, mlb: true, wbc: false, lidom: false, team: 'SEA', decade: '2020s' },
+            { id: 'p_kirby', name: 'George Kirby', pos: ['SP1'], ovr: 92, active: true, mlb: true, wbc: false, lidom: false, team: 'SEA', decade: '2020s' },
+            { id: 'p_framber', name: 'Framber Valdez', pos: ['SP1'], ovr: 92, active: true, mlb: true, wbc: true, lidom: true, team: 'HOU', decade: '2020s' },
+            { id: 'p_webb', name: 'Logan Webb', pos: ['SP1'], ovr: 92, active: true, mlb: true, wbc: true, lidom: false, team: 'SF', decade: '2020s' },
+            { id: 'p_fried', name: 'Max Fried', pos: ['SP1'], ovr: 93, active: true, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '2020s' },
+            { id: 'p_glasnow', name: 'Tyler Glasnow', pos: ['SP1'], ovr: 93, active: true, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '2020s' },
+            { id: 'p_lopez_p', name: 'Pablo López', pos: ['SP1'], ovr: 91, active: true, mlb: true, wbc: true, lidom: false, team: 'MIN', decade: '2020s' },
+            { id: 'p_ragans', name: 'Cole Ragans', pos: ['SP1'], ovr: 92, active: true, mlb: true, wbc: false, lidom: false, team: 'KC', decade: '2020s' },
+            { id: 'p_lopez_r', name: 'Reynaldo López', pos: ['SP1', 'RP'], ovr: 90, active: true, mlb: true, wbc: false, lidom: true, team: 'ATL', decade: '2020s' },
+            { id: 'p_imanga', name: 'Shota Imanaga', pos: ['SP1'], ovr: 92, active: true, mlb: true, wbc: true, lidom: false, team: 'CHC', decade: '2020s' },
+            { id: 'p_peralta', name: 'Freddy Peralta', pos: ['SP1'], ovr: 91, active: true, mlb: true, wbc: true, lidom: true, team: 'MIL', decade: '2020s' },
+            { id: 'p_degrom', name: 'Jacob deGrom', pos: ['SP1'], ovr: 95, active: true, mlb: true, wbc: false, lidom: false, team: 'TEX', decade: '2020s' },
+            { id: 'p_strider', name: 'Spencer Strider', pos: ['SP1'], ovr: 94, active: true, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '2020s' },
+            { id: 'p_greene_h', name: 'Hunter Greene', pos: ['SP1'], ovr: 92, active: true, mlb: true, wbc: false, lidom: false, team: 'CIN', decade: '2020s' },
+            { id: 'p_sanchez_c', name: 'Cristopher Sánchez', pos: ['SP1'], ovr: 91, active: true, mlb: true, wbc: false, lidom: true, team: 'PHI', decade: '2020s' },
+            { id: 'p_king_m', name: 'Michael King', pos: ['SP1', 'RP'], ovr: 91, active: true, mlb: true, wbc: false, lidom: false, team: 'SD', decade: '2020s' },
+            { id: 'p_bieber', name: 'Shane Bieber', pos: ['SP1'], ovr: 91, active: true, mlb: true, wbc: false, lidom: false, team: 'CLE', decade: '2020s' },
+            { id: 'p_gray_s', name: 'Sonny Gray', pos: ['SP1'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'STL', decade: '2020s' },
+            { id: 'p_gore', name: 'MacKenzie Gore', pos: ['SP1'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'WSH', decade: '2020s' },
+            { id: 'p_gausman', name: 'Kevin Gausman', pos: ['SP1'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'TOR', decade: '2020s' },
+            { id: 'p_eflin', name: 'Zach Eflin', pos: ['SP1'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'BAL', decade: '2020s' },
+            { id: 'p_mcclanahan', name: 'Shane McClanahan', pos: ['SP1'], ovr: 92, active: true, mlb: true, wbc: false, lidom: false, team: 'TB', decade: '2020s' },
+
+            // ================= RELIEF PITCHERS (RP) =================
+            { id: 'p_eckersley', name: 'Dennis Eckersley', pos: ['RP', 'CP'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'ATH', decade: '1990s' },
+            { id: 'p_fingers', name: 'Rollie Fingers', pos: ['RP', 'CP'], ovr: 95, active: false, mlb: true, wbc: false, lidom: false, team: 'MIL', decade: '1980s' },
+            { id: 'p_betances', name: 'Dellin Betances', pos: ['RP'], ovr: 92, active: false, mlb: true, wbc: true, lidom: true, team: 'NYY', decade: '2010s' },
+            { id: 'p_rodney', name: 'Fernando Rodney', pos: ['RP', 'CP'], ovr: 91, active: false, mlb: true, wbc: true, lidom: true, team: 'TB', decade: '2010s' },
+            { id: 'p_miller', name: 'Andrew Miller', pos: ['RP'], ovr: 93, active: false, mlb: true, wbc: true, lidom: false, team: 'CLE', decade: '2010s' },
+            { id: 'p_gossage', name: 'Goose Gossage', pos: ['RP', 'CP'], ovr: 95, active: false, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '1980s' },
+            { id: 'p_sutter', name: 'Bruce Sutter', pos: ['RP', 'CP'], ovr: 94, active: false, mlb: true, wbc: false, lidom: false, team: 'STL', decade: '1980s' },
+            { id: 'p_wilhelm', name: 'Hoyt Wilhelm', pos: ['RP'], ovr: 95, active: false, mlb: true, wbc: false, lidom: false, team: 'BAL', decade: '1960s' },
+            // Active RP (2026-2027)
+            { id: 'p_miller_m', name: 'Mason Miller', pos: ['RP', 'CP'], ovr: 95, active: true, mlb: true, wbc: true, lidom: false, team: 'ATH', decade: '2020s' },
+            { id: 'p_devin', name: 'Devin Williams', pos: ['RP', 'CP'], ovr: 94, active: true, mlb: true, wbc: true, lidom: false, team: 'NYY', decade: '2020s' },
+            { id: 'p_weaver', name: 'Luke Weaver', pos: ['RP'], ovr: 91, active: true, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '2020s' },
+            { id: 'p_estrada_j', name: 'Jeremiah Estrada', pos: ['RP'], ovr: 91, active: true, mlb: true, wbc: false, lidom: false, team: 'SD', decade: '2020s' },
+            { id: 'p_adam', name: 'Jason Adam', pos: ['RP'], ovr: 90, active: true, mlb: true, wbc: true, lidom: false, team: 'SD', decade: '2020s' },
+            { id: 'p_gaddis', name: 'Hunter Gaddis', pos: ['RP'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'CLE', decade: '2020s' },
+            { id: 'p_smith_c', name: 'Cade Smith', pos: ['RP'], ovr: 92, active: true, mlb: true, wbc: false, lidom: false, team: 'CLE', decade: '2020s' },
+            { id: 'p_abreu_b', name: 'Bryan Abreu', pos: ['RP'], ovr: 91, active: true, mlb: true, wbc: true, lidom: true, team: 'HOU', decade: '2020s' },
+            { id: 'p_munoz', name: 'Andrés Muñoz', pos: ['RP', 'CP'], ovr: 93, active: true, mlb: true, wbc: true, lidom: false, team: 'SEA', decade: '2020s' },
+            { id: 'p_jax', name: 'Griffin Jax', pos: ['RP'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'MIN', decade: '2020s' },
+            { id: 'p_kopech', name: 'Michael Kopech', pos: ['RP'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '2020s' },
+            { id: 'p_strahm', name: 'Matt Strahm', pos: ['RP'], ovr: 91, active: true, mlb: true, wbc: false, lidom: false, team: 'PHI', decade: '2020s' },
+            { id: 'p_hodge', name: 'Porter Hodge', pos: ['RP'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'CHC', decade: '2020s' },
+            { id: 'p_treinen', name: 'Blake Treinen', pos: ['RP'], ovr: 91, active: true, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '2020s' },
+            { id: 'p_vesia', name: 'Alex Vesia', pos: ['RP'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '2020s' },
+            { id: 'p_kerkering', name: 'Orion Kerkering', pos: ['RP'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'PHI', decade: '2020s' },
+            { id: 'p_cano_y', name: 'Yennier Canó', pos: ['RP'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'BAL', decade: '2020s' },
+            { id: 'p_ercesg', name: 'Lucas Erceg', pos: ['RP', 'CP'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'KC', decade: '2020s' },
+            { id: 'p_joyce', name: 'Ben Joyce', pos: ['RP'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'LAA', decade: '2020s' },
+
+            // ================= CLOSERS (CP) =================
+            { id: 'p_mariano', name: 'Mariano Rivera', pos: ['CP'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '2000s' },
+            { id: 'p_hoffman', name: 'Trevor Hoffman', pos: ['CP'], ovr: 97, active: false, mlb: true, wbc: false, lidom: false, team: 'SD', decade: '1990s' },
+            { id: 'p_wagner_b', name: 'Billy Wagner', pos: ['CP'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'HOU', decade: '2000s' },
+            { id: 'p_gagne', name: 'Éric Gagné', pos: ['CP'], ovr: 95, active: false, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '2000s' },
+            { id: 'p_marmol', name: 'Carlos Mármol', pos: ['CP', 'RP'], ovr: 89, active: false, mlb: true, wbc: true, lidom: true, team: 'CHC', decade: '2010s' },
+            { id: 'p_smith_lee', name: 'Lee Smith', pos: ['CP'], ovr: 95, active: false, mlb: true, wbc: false, lidom: false, team: 'CHC', decade: '1980s' },
+            { id: 'p_nathan', name: 'Joe Nathan', pos: ['CP'], ovr: 94, active: false, mlb: true, wbc: false, lidom: false, team: 'MIN', decade: '2000s' },
+            { id: 'p_krod', name: 'Francisco Rodríguez', pos: ['CP'], ovr: 95, active: false, mlb: true, wbc: true, lidom: false, team: 'LAA', decade: '2000s' },
+            // Active CP (2026-2027)
+            { id: 'p_clase', name: 'Emmanuel Clase', pos: ['CP'], ovr: 97, active: true, mlb: true, wbc: true, lidom: true, team: 'CLE', decade: '2020s' },
+            { id: 'p_diaz', name: 'Edwin Díaz', pos: ['CP'], ovr: 95, active: true, mlb: true, wbc: true, lidom: false, team: 'NYM', decade: '2020s' },
+            { id: 'p_hader', name: 'Josh Hader', pos: ['CP', 'RP'], ovr: 94, active: true, mlb: true, wbc: false, lidom: false, team: 'HOU', decade: '2020s' },
+            { id: 'p_helsley', name: 'Ryan Helsley', pos: ['CP'], ovr: 94, active: true, mlb: true, wbc: false, lidom: false, team: 'STL', decade: '2020s' },
+            { id: 'p_suarez_r', name: 'Robert Suárez', pos: ['CP'], ovr: 93, active: true, mlb: true, wbc: true, lidom: false, team: 'SD', decade: '2020s' },
+            { id: 'p_iglesias', name: 'Raisel Iglesias', pos: ['CP'], ovr: 92, active: true, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '2020s' },
+            { id: 'p_bautista', name: 'Félix Bautista', pos: ['CP'], ovr: 94, active: true, mlb: true, wbc: true, lidom: true, team: 'BAL', decade: '2020s' },
+            { id: 'p_doval', name: 'Camilo Doval', pos: ['CP'], ovr: 90, active: true, mlb: true, wbc: true, lidom: true, team: 'SF', decade: '2020s' },
+            { id: 'p_jansen', name: 'Kenley Jansen', pos: ['CP'], ovr: 90, active: true, mlb: true, wbc: true, lidom: false, team: 'LAA', decade: '2020s' },
+            { id: 'p_chapman', name: 'Aroldis Chapman', pos: ['CP', 'RP'], ovr: 91, active: true, mlb: true, wbc: false, lidom: false, team: 'BOS', decade: '2020s' },
+            { id: 'p_fairbanks', name: 'Pete Fairbanks', pos: ['CP'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'TB', decade: '2020s' },
+            { id: 'p_scott', name: 'Tanner Scott', pos: ['CP', 'RP'], ovr: 93, active: true, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '2020s' },
+            { id: 'p_estevez', name: 'Carlos Estévez', pos: ['CP'], ovr: 89, active: true, mlb: true, wbc: false, lidom: true, team: 'KC', decade: '2020s' },
+            { id: 'p_duran_j', name: 'Jhoan Durán', pos: ['CP', 'RP'], ovr: 93, active: true, mlb: true, wbc: false, lidom: true, team: 'MIN', decade: '2020s' },
+            { id: 'p_megill_t', name: 'Trevor Megill', pos: ['CP'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'MIL', decade: '2020s' },
+            { id: 'p_bednar', name: 'David Bednar', pos: ['CP'], ovr: 89, active: true, mlb: true, wbc: true, lidom: false, team: 'PIT', decade: '2020s' },
+            { id: 'p_finnegan', name: 'Kyle Finnegan', pos: ['CP'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'WSH', decade: '2020s' },
+            { id: 'p_hoffman_j', name: 'Jeff Hoffman', pos: ['CP', 'RP'], ovr: 91, active: true, mlb: true, wbc: false, lidom: false, team: 'TOR', decade: '2020s' },
+            { id: 'p_yates', name: 'Kirby Yates', pos: ['CP'], ovr: 91, active: true, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '2020s' }
         ];
 
         function renderTeamCrestSVG(logo, sizeClass = 'w-14 h-14') {
@@ -1242,284 +1715,62 @@
             return `<svg class="${sizeClass}" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" style="background:${logo.bg};">${emblemInner}</svg>`;
         }
 
-        // COMPREHENSIVE MLB, WBC & LIDOM ROSTER DATABASE (ALL-TIME LEGENDS + CURRENT SEASON ACTIVE STARS)
-        const PLAYERS_DB = [
-            // ================= CATCHERS (C) =================
-            { id: 'p_bench', name: 'Johnny Bench', pos: ['C', '1B'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'CIN', decade: '1970s' },
-            { id: 'p_pudge', name: 'Iván Rodríguez', pos: ['C'], ovr: 97, active: false, mlb: true, wbc: true, lidom: false, team: 'TEX', decade: '1990s' },
-            { id: 'p_molina', name: 'Yadier Molina', pos: ['C'], ovr: 95, active: false, mlb: true, wbc: true, lidom: false, team: 'STL', decade: '2010s' },
-            { id: 'p_piazza', name: 'Mike Piazza', pos: ['C', '1B'], ovr: 96, active: false, mlb: true, wbc: true, lidom: false, team: 'NYM', decade: '1990s' },
-            { id: 'p_berra', name: 'Yogi Berra', pos: ['C', 'LF'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '1950s' },
-            { id: 'p_carter', name: 'Gary Carter', pos: ['C'], ovr: 94, active: false, mlb: true, wbc: false, lidom: false, team: 'NYM', decade: '1980s' },
-            { id: 'p_posey', name: 'Buster Posey', pos: ['C', '1B'], ovr: 95, active: false, mlb: true, wbc: true, lidom: false, team: 'SF', decade: '2010s' },
-            { id: 'p_mauer', name: 'Joe Mauer', pos: ['C', '1B'], ovr: 94, active: false, mlb: true, wbc: false, lidom: false, team: 'MIN', decade: '2000s' },
-            { id: 'p_pena', name: 'Tony Peña', pos: ['C'], ovr: 91, active: false, mlb: true, wbc: false, lidom: true, team: 'PIT', decade: '1980s' },
-            // Active Catchers
-            { id: 'p_rutschman', name: 'Adley Rutschman', pos: ['C'], ovr: 92, active: true, mlb: true, wbc: false, lidom: false, team: 'BAL', decade: '2020s' },
-            { id: 'p_wcontreras', name: 'William Contreras', pos: ['C'], ovr: 92, active: true, mlb: true, wbc: true, lidom: false, team: 'MIL', decade: '2020s' },
-            { id: 'p_will_smith', name: 'Will Smith', pos: ['C'], ovr: 91, active: true, mlb: true, wbc: true, lidom: false, team: 'LAD', decade: '2020s' },
-            { id: 'p_salvy', name: 'Salvador Pérez', pos: ['C', '1B'], ovr: 91, active: true, mlb: true, wbc: true, lidom: false, team: 'KC', decade: '2020s' },
-            { id: 'p_realmuto', name: 'J.T. Realmuto', pos: ['C'], ovr: 90, active: true, mlb: true, wbc: true, lidom: false, team: 'PHI', decade: '2020s' },
-            { id: 'p_raleigh', name: 'Cal Raleigh', pos: ['C'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'SEA', decade: '2020s' },
-            { id: 'p_contreras_w', name: 'Willson Contreras', pos: ['C', '1B'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'STL', decade: '2020s' },
-            { id: 'p_gary', name: 'Gary Sánchez', pos: ['C'], ovr: 87, active: true, mlb: true, wbc: true, lidom: true, team: 'MIL', decade: '2020s' },
-            { id: 'p_yanier', name: 'Yainer Díaz', pos: ['C', '1B'], ovr: 88, active: true, mlb: true, wbc: false, lidom: true, team: 'HOU', decade: '2020s' },
-            { id: 'p_langeliers', name: 'Shea Langeliers', pos: ['C'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'ATH', decade: '2020s' },
-            { id: 'p_ohoppe', name: 'Logan O\'Hoppe', pos: ['C'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'LAA', decade: '2020s' },
-            { id: 'p_alva', name: 'Francisco Álvarez', pos: ['C'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'NYM', decade: '2020s' },
-            { id: 'p_moreno', name: 'Gabriel Moreno', pos: ['C'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'ARI', decade: '2020s' },
+        const BG_COLORS = [
+            '#002D72', '#D50032', '#0C2340', '#134A8E', '#005A9C',
+            '#BD3039', '#CE1141', '#EB6E1F', '#006A4E', '#7A1C24',
+            '#E85D04', '#27251F', '#581C3C', '#0F172A', '#B45309'
+        ];
 
-            // ================= FIRST BASE (1B) =================
-            { id: 'p_pujols', name: 'Albert Pujols', pos: ['1B', '3B', 'LF'], ovr: 99, active: false, mlb: true, wbc: true, lidom: true, team: 'STL', decade: '2000s' },
-            { id: 'p_gehrig', name: 'Lou Gehrig', pos: ['1B'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '1930s' },
-            { id: 'p_foxx', name: 'Jimmie Foxx', pos: ['1B', '3B'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'ATH', decade: '1930s' },
-            { id: 'p_miggy', name: 'Miguel Cabrera', pos: ['1B', '3B', 'LF'], ovr: 98, active: false, mlb: true, wbc: true, lidom: false, team: 'DET', decade: '2010s' },
-            { id: 'p_ortiz', name: 'David Ortiz', pos: ['1B'], ovr: 96, active: false, mlb: true, wbc: true, lidom: true, team: 'BOS', decade: '2000s' },
-            { id: 'p_thomas', name: 'Frank Thomas', pos: ['1B'], ovr: 97, active: false, mlb: true, wbc: false, lidom: false, team: 'CWS', decade: '1990s' },
-            { id: 'p_bagwell', name: 'Jeff Bagwell', pos: ['1B'], ovr: 95, active: false, mlb: true, wbc: false, lidom: false, team: 'HOU', decade: '1990s' },
-            { id: 'p_thome', name: 'Jim Thome', pos: ['1B', '3B'], ovr: 95, active: false, mlb: true, wbc: false, lidom: false, team: 'CLE', decade: '2000s' },
-            { id: 'p_votto', name: 'Joey Votto', pos: ['1B'], ovr: 94, active: false, mlb: true, wbc: true, lidom: false, team: 'CIN', decade: '2010s' },
-            { id: 'p_encarnacion', name: 'Edwin Encarnación', pos: ['1B', '3B'], ovr: 91, active: false, mlb: true, wbc: true, lidom: true, team: 'TOR', decade: '2010s' },
-            // Active 1B
-            { id: 'p_freeman', name: 'Freddie Freeman', pos: ['1B'], ovr: 96, active: true, mlb: true, wbc: true, lidom: false, team: 'LAD', decade: '2020s' },
-            { id: 'p_harper', name: 'Bryce Harper', pos: ['1B', 'RF'], ovr: 96, active: true, mlb: true, wbc: false, lidom: false, team: 'PHI', decade: '2020s' },
-            { id: 'p_vladdy', name: 'Vladimir Guerrero Jr.', pos: ['1B', '3B'], ovr: 95, active: true, mlb: true, wbc: false, lidom: true, team: 'TOR', decade: '2020s' },
-            { id: 'p_olson', name: 'Matt Olson', pos: ['1B'], ovr: 93, active: true, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '2020s' },
-            { id: 'p_alonso', name: 'Pete Alonso', pos: ['1B'], ovr: 91, active: true, mlb: true, wbc: true, lidom: false, team: 'NYM', decade: '2020s' },
-            { id: 'p_goldy', name: 'Paul Goldschmidt', pos: ['1B'], ovr: 90, active: true, mlb: true, wbc: true, lidom: false, team: 'NYY', decade: '2020s' },
-            { id: 'p_naylor', name: 'Josh Naylor', pos: ['1B'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'ARI', decade: '2020s' },
-            { id: 'p_cwalker', name: 'Christian Walker', pos: ['1B'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'HOU', decade: '2020s' },
-            { id: 'p_ydiaz', name: 'Yandy Díaz', pos: ['1B', '3B'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'TB', decade: '2020s' },
-            { id: 'p_pasquantino', name: 'Vinnie Pasquantino', pos: ['1B'], ovr: 87, active: true, mlb: true, wbc: true, lidom: false, team: 'KC', decade: '2020s' },
-            { id: 'p_csantana', name: 'Carlos Santana', pos: ['1B'], ovr: 87, active: true, mlb: true, wbc: true, lidom: true, team: 'CLE', decade: '2020s' },
-            { id: 'p_mountcastle', name: 'Ryan Mountcastle', pos: ['1B'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'BAL', decade: '2020s' },
-            { id: 'p_togas', name: 'Michael Toglia', pos: ['1B', 'RF'], ovr: 85, active: true, mlb: true, wbc: false, lidom: false, team: 'COL', decade: '2020s' },
+        const STORE_LOGOS = [
+            // MLB (30 Teams)
+            { id: 'mlb_nyy', name: 'New York Yankees', code: 'NYY', league: 'MLB', price: 150, bg: '#0C2340', fg: '#FFFFFF', accent: '#C4CED4' },
+            { id: 'mlb_lad', name: 'Los Angeles Dodgers', code: 'LAD', league: 'MLB', price: 150, bg: '#005A9C', fg: '#FFFFFF', accent: '#EF3E42' },
+            { id: 'mlb_bos', name: 'Boston Red Sox', code: 'BOS', league: 'MLB', price: 140, bg: '#0C2340', fg: '#FFFFFF', accent: '#BD3039' },
+            { id: 'mlb_atl', name: 'Atlanta Braves', code: 'ATL', league: 'MLB', price: 140, bg: '#13274F', fg: '#FFFFFF', accent: '#CE1141' },
+            { id: 'mlb_hou', name: 'Houston Astros', code: 'HOU', league: 'MLB', price: 130, bg: '#002D62', fg: '#FFFFFF', accent: '#EB6E1F' },
+            { id: 'mlb_nym', name: 'New York Mets', code: 'NYM', league: 'MLB', price: 135, bg: '#002D72', fg: '#FF5910', accent: '#FF5910' },
+            { id: 'mlb_chc', name: 'Chicago Cubs', code: 'CHC', league: 'MLB', price: 130, bg: '#0E3386', fg: '#FFFFFF', accent: '#CC3433' },
+            { id: 'mlb_stl', name: 'St. Louis Cardinals', code: 'STL', league: 'MLB', price: 135, bg: '#C41E3A', fg: '#FFFFFF', accent: '#FEDB00' },
+            { id: 'mlb_sf', name: 'San Francisco Giants', code: 'SF', league: 'MLB', price: 130, bg: '#27251F', fg: '#FD5A1E', accent: '#FD5A1E' },
+            { id: 'mlb_phi', name: 'Philadelphia Phillies', code: 'PHI', league: 'MLB', price: 130, bg: '#E81828', fg: '#FFFFFF', accent: '#002D72' },
+            { id: 'mlb_sd', name: 'San Diego Padres', code: 'SD', league: 'MLB', price: 125, bg: '#2F241D', fg: '#FFC425', accent: '#FFC425' },
+            { id: 'mlb_tor', name: 'Toronto Blue Jays', code: 'TOR', league: 'MLB', price: 125, bg: '#134A8E', fg: '#FFFFFF', accent: '#E8291C' },
+            { id: 'mlb_tex', name: 'Texas Rangers', code: 'TEX', league: 'MLB', price: 125, bg: '#003278', fg: '#FFFFFF', accent: '#C0111F' },
+            { id: 'mlb_sea', name: 'Seattle Mariners', code: 'SEA', league: 'MLB', price: 120, bg: '#0C2C56', fg: '#FFFFFF', accent: '#005C5C' },
+            { id: 'mlb_bal', name: 'Baltimore Orioles', code: 'BAL', league: 'MLB', price: 125, bg: '#000000', fg: '#DF4601', accent: '#DF4601' },
+            { id: 'mlb_tb', name: 'Tampa Bay Rays', code: 'TB', league: 'MLB', price: 115, bg: '#092C5C', fg: '#FFFFFF', accent: '#8FBCE6' },
+            { id: 'mlb_cle', name: 'Cleveland Guardians', code: 'CLE', league: 'MLB', price: 120, bg: '#00385D', fg: '#FFFFFF', accent: '#E50022' },
+            { id: 'mlb_min', name: 'Minnesota Twins', code: 'MIN', league: 'MLB', price: 115, bg: '#002B5C', fg: '#FFFFFF', accent: '#D31145' },
+            { id: 'mlb_det', name: 'Detroit Tigers', code: 'DET', league: 'MLB', price: 120, bg: '#0C2340', fg: '#FFFFFF', accent: '#FA4616' },
+            { id: 'mlb_cws', name: 'Chicago White Sox', code: 'CWS', league: 'MLB', price: 115, bg: '#27251F', fg: '#FFFFFF', accent: '#C4CED4' },
+            { id: 'mlb_kc', name: 'Kansas City Royals', code: 'KC', league: 'MLB', price: 120, bg: '#004687', fg: '#FFFFFF', accent: '#BD9B60' },
+            { id: 'mlb_laa', name: 'Los Angeles Angels', code: 'LAA', league: 'MLB', price: 120, bg: '#BA0021', fg: '#FFFFFF', accent: '#003263' },
+            { id: 'mlb_oak', name: 'Athletics', code: 'ATH', league: 'MLB', price: 115, bg: '#003831', fg: '#EFB21E', accent: '#EFB21E' },
+            { id: 'mlb_ari', name: 'Arizona Diamondbacks', code: 'ARI', league: 'MLB', price: 120, bg: '#A71930', fg: '#E3D4AD', accent: '#30CED8' },
+            { id: 'mlb_col', name: 'Colorado Rockies', code: 'COL', league: 'MLB', price: 110, bg: '#333366', fg: '#FFFFFF', accent: '#C4CED4' },
+            { id: 'mlb_mil', name: 'Milwaukee Brewers', code: 'MIL', league: 'MLB', price: 120, bg: '#12284B', fg: '#FFC52F', accent: '#FFC52F' },
+            { id: 'mlb_cin', name: 'Cincinnati Reds', code: 'CIN', league: 'MLB', price: 120, bg: '#C6011F', fg: '#FFFFFF', accent: '#000000' },
+            { id: 'mlb_pit', name: 'Pittsburgh Pirates', code: 'PIT', league: 'MLB', price: 120, bg: '#27251F', fg: '#FDB827', accent: '#FDB827' },
+            { id: 'mlb_mia', name: 'Miami Marlins', code: 'MIA', league: 'MLB', price: 115, bg: '#00A3E0', fg: '#FFFFFF', accent: '#EF3340' },
+            { id: 'mlb_wsh', name: 'Washington Nationals', code: 'WSH', league: 'MLB', price: 115, bg: '#AB0003', fg: '#FFFFFF', accent: '#14225A' },
 
-            // ================= SECOND BASE (2B) =================
-            { id: 'p_morgan', name: 'Joe Morgan', pos: ['2B'], ovr: 97, active: false, mlb: true, wbc: false, lidom: false, team: 'CIN', decade: '1970s' },
-            { id: 'p_hornsby', name: 'Rogers Hornsby', pos: ['2B', '3B'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'STL', decade: '1920s' },
-            { id: 'p_jrobinson', name: 'Jackie Robinson', pos: ['2B', '1B', '3B'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '1950s' },
-            { id: 'p_cano', name: 'Robinson Canó', pos: ['2B'], ovr: 95, active: false, mlb: true, wbc: true, lidom: true, team: 'NYY', decade: '2010s' },
-            { id: 'p_utley', name: 'Chase Utley', pos: ['2B'], ovr: 94, active: false, mlb: true, wbc: true, lidom: false, team: 'PHI', decade: '2000s' },
-            { id: 'p_pedroia', name: 'Dustin Pedroia', pos: ['2B'], ovr: 93, active: false, mlb: true, wbc: true, lidom: false, team: 'BOS', decade: '2010s' },
-            { id: 'p_soriano', name: 'Alfonso Soriano', pos: ['2B', 'LF'], ovr: 92, active: false, mlb: true, wbc: true, lidom: true, team: 'NYY', decade: '2000s' },
-            { id: 'p_alomar', name: 'Roberto Alomar', pos: ['2B'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'TOR', decade: '1990s' },
-            { id: 'p_biggio', name: 'Craig Biggio', pos: ['2B', 'C', 'CF'], ovr: 94, active: false, mlb: true, wbc: false, lidom: false, team: 'HOU', decade: '1990s' },
-            // Active 2B
-            { id: 'p_marte', name: 'Ketel Marte', pos: ['2B', 'CF', 'SS'], ovr: 95, active: true, mlb: true, wbc: true, lidom: true, team: 'ARI', decade: '2020s' },
-            { id: 'p_altuve', name: 'José Altuve', pos: ['2B'], ovr: 94, active: true, mlb: true, wbc: true, lidom: false, team: 'HOU', decade: '2020s' },
-            { id: 'p_semien', name: 'Marcus Semien', pos: ['2B', 'SS'], ovr: 92, active: true, mlb: true, wbc: false, lidom: false, team: 'TEX', decade: '2020s' },
-            { id: 'p_arraez', name: 'Luis Arráez', pos: ['2B', '1B'], ovr: 91, active: true, mlb: true, wbc: true, lidom: false, team: 'SD', decade: '2020s' },
-            { id: 'p_albies', name: 'Ozzie Albies', pos: ['2B'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '2020s' },
-            { id: 'p_gleyber', name: 'Gleyber Torres', pos: ['2B'], ovr: 88, active: true, mlb: true, wbc: true, lidom: false, team: 'DET', decade: '2020s' },
-            { id: 'p_gimenez', name: 'Andrés Giménez', pos: ['2B'], ovr: 89, active: true, mlb: true, wbc: true, lidom: false, team: 'TOR', decade: '2020s' },
-            { id: 'p_chisholm', name: 'Jazz Chisholm Jr.', pos: ['2B', '3B', 'CF'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '2020s' },
-            { id: 'p_edman', name: 'Tommy Edman', pos: ['2B', 'SS', 'CF'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '2020s' },
-            { id: 'p_india', name: 'Jonathan India', pos: ['2B'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'KC', decade: '2020s' },
-            { id: 'p_mclain', name: 'Matt McLain', pos: ['2B', 'SS'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'CIN', decade: '2020s' },
-            { id: 'p_garcia_l', name: 'Luis García Jr.', pos: ['2B'], ovr: 86, active: true, mlb: true, wbc: false, lidom: true, team: 'WSH', decade: '2020s' },
+            // LIDOM (6 Teams)
+            { id: 'lidom_tl', name: 'Tigres del Licey', code: 'TL', league: 'LIDOM', price: 140, bg: '#002D72', fg: '#FFFFFF', accent: '#60A5FA' },
+            { id: 'lidom_ac', name: 'Águilas Cibaeñas', code: 'AC', league: 'LIDOM', price: 140, bg: '#F59E0B', fg: '#111827', accent: '#111827' },
+            { id: 'lidom_le', name: 'Leones del Escogido', code: 'LE', league: 'LIDOM', price: 135, bg: '#C8102E', fg: '#FFFFFF', accent: '#FACC15' },
+            { id: 'lidom_eo', name: 'Estrellas Orientales', code: 'EO', league: 'LIDOM', price: 130, bg: '#006A4E', fg: '#FDE047', accent: '#FDE047' },
+            { id: 'lidom_gc', name: 'Gigantes del Cibao', code: 'GC', league: 'LIDOM', price: 125, bg: '#7A1C24', fg: '#FACC15', accent: '#FACC15' },
+            { id: 'lidom_te', name: 'Toros del Este', code: 'TE', league: 'LIDOM', price: 125, bg: '#E85D04', fg: '#111827', accent: '#FFFFFF' },
 
-            // ================= SHORTSTOP (SS) =================
-            { id: 'p_jeter', name: 'Derek Jeter', pos: ['SS'], ovr: 97, active: false, mlb: true, wbc: true, lidom: false, team: 'NYY', decade: '1990s' },
-            { id: 'p_arod', name: 'Alex Rodríguez', pos: ['SS', '3B'], ovr: 99, active: false, mlb: true, wbc: true, lidom: false, team: 'SEA', decade: '2000s' },
-            { id: 'p_ripken', name: 'Cal Ripken Jr.', pos: ['SS', '3B'], ovr: 97, active: false, mlb: true, wbc: false, lidom: false, team: 'BAL', decade: '1980s' },
-            { id: 'p_wagner', name: 'Honus Wagner', pos: ['SS'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'PIT', decade: '1900s' },
-            { id: 'p_ozzie', name: 'Ozzie Smith', pos: ['SS'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'STL', decade: '1980s' },
-            { id: 'p_reyes', name: 'José Reyes', pos: ['SS'], ovr: 92, active: false, mlb: true, wbc: true, lidom: true, team: 'NYM', decade: '2000s' },
-            { id: 'p_tejada', name: 'Miguel Tejada', pos: ['SS', '3B'], ovr: 93, active: false, mlb: true, wbc: true, lidom: true, team: 'ATH', decade: '2000s' },
-            { id: 'p_larkin', name: 'Barry Larkin', pos: ['SS'], ovr: 95, active: false, mlb: true, wbc: false, lidom: false, team: 'CIN', decade: '1990s' },
-            { id: 'p_nomar', name: 'Nomar Garciaparra', pos: ['SS'], ovr: 94, active: false, mlb: true, wbc: false, lidom: false, team: 'BOS', decade: '1990s' },
-            // Active SS
-            { id: 'p_witt', name: 'Bobby Witt Jr.', pos: ['SS', '3B'], ovr: 97, active: true, mlb: true, wbc: true, lidom: false, team: 'KC', decade: '2020s' },
-            { id: 'p_gunnar', name: 'Gunnar Henderson', pos: ['SS', '3B'], ovr: 96, active: true, mlb: true, wbc: false, lidom: false, team: 'BAL', decade: '2020s' },
-            { id: 'p_lindor', name: 'Francisco Lindor', pos: ['SS'], ovr: 96, active: true, mlb: true, wbc: true, lidom: false, team: 'NYM', decade: '2020s' },
-            { id: 'p_seager', name: 'Corey Seager', pos: ['SS'], ovr: 95, active: true, mlb: true, wbc: false, lidom: false, team: 'TEX', decade: '2020s' },
-            { id: 'p_elly', name: 'Elly De La Cruz', pos: ['SS', '3B'], ovr: 94, active: true, mlb: true, wbc: false, lidom: true, team: 'CIN', decade: '2020s' },
-            { id: 'p_turner', name: 'Trea Turner', pos: ['SS', '2B'], ovr: 92, active: true, mlb: true, wbc: true, lidom: false, team: 'PHI', decade: '2020s' },
-            { id: 'p_adames', name: 'Willy Adames', pos: ['SS'], ovr: 90, active: true, mlb: true, wbc: true, lidom: true, team: 'SF', decade: '2020s' },
-            { id: 'p_correa', name: 'Carlos Correa', pos: ['SS'], ovr: 90, active: true, mlb: true, wbc: true, lidom: false, team: 'MIN', decade: '2020s' },
-            { id: 'p_swanson', name: 'Dansby Swanson', pos: ['SS'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'CHC', decade: '2020s' },
-            { id: 'p_bogaerts', name: 'Xander Bogaerts', pos: ['SS', '2B'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'SD', decade: '2020s' },
-            { id: 'p_bichette', name: 'Bo Bichette', pos: ['SS'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'TOR', decade: '2020s' },
-            { id: 'p_volpe', name: 'Anthony Volpe', pos: ['SS'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '2020s' },
-            { id: 'p_abrams', name: 'CJ Abrams', pos: ['SS'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'WSH', decade: '2020s' },
-            { id: 'p_tovar', name: 'Ezequiel Tovar', pos: ['SS'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'COL', decade: '2020s' },
-            { id: 'p_neto', name: 'Zach Neto', pos: ['SS'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'LAA', decade: '2020s' },
-            { id: 'p_cruz_o', name: 'Oneil Cruz', pos: ['SS', 'CF'], ovr: 89, active: true, mlb: true, wbc: false, lidom: true, team: 'PIT', decade: '2020s' },
-            { id: 'p_pena_j', name: 'Jeremy Peña', pos: ['SS'], ovr: 88, active: true, mlb: true, wbc: true, lidom: true, team: 'HOU', decade: '2020s' },
-
-            // ================= THIRD BASE (3B) =================
-            { id: 'p_schmidt', name: 'Mike Schmidt', pos: ['3B', '1B'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'PHI', decade: '1980s' },
-            { id: 'p_brett', name: 'George Brett', pos: ['3B', '1B'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'KC', decade: '1980s' },
-            { id: 'p_beltre', name: 'Adrián Beltré', pos: ['3B'], ovr: 96, active: false, mlb: true, wbc: true, lidom: true, team: 'TEX', decade: '2010s' },
-            { id: 'p_chipper', name: 'Chipper Jones', pos: ['3B', 'LF'], ovr: 97, active: false, mlb: true, wbc: true, lidom: false, team: 'ATL', decade: '1990s' },
-            { id: 'p_boggs', name: 'Wade Boggs', pos: ['3B'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'BOS', decade: '1980s' },
-            { id: 'p_brooks', name: 'Brooks Robinson', pos: ['3B'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'BAL', decade: '1970s' },
-            { id: 'p_rolen', name: 'Scott Rolen', pos: ['3B'], ovr: 94, active: false, mlb: true, wbc: false, lidom: false, team: 'STL', decade: '2000s' },
-            { id: 'p_wright', name: 'David Wright', pos: ['3B'], ovr: 93, active: false, mlb: true, wbc: true, lidom: false, team: 'NYM', decade: '2000s' },
-            // Active 3B
-            { id: 'p_jram', name: 'José Ramírez', pos: ['3B', '2B'], ovr: 96, active: true, mlb: true, wbc: false, lidom: true, team: 'CLE', decade: '2020s' },
-            { id: 'p_devers', name: 'Rafael Devers', pos: ['3B'], ovr: 94, active: true, mlb: true, wbc: true, lidom: true, team: 'BOS', decade: '2020s' },
-            { id: 'p_machado', name: 'Manny Machado', pos: ['3B', 'SS'], ovr: 94, active: true, mlb: true, wbc: true, lidom: false, team: 'SD', decade: '2020s' },
-            { id: 'p_riley', name: 'Austin Riley', pos: ['3B'], ovr: 93, active: true, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '2020s' },
-            { id: 'p_bregman', name: 'Alex Bregman', pos: ['3B', 'SS'], ovr: 91, active: true, mlb: true, wbc: true, lidom: false, team: 'BOS', decade: '2020s' },
-            { id: 'p_chapman_m', name: 'Matt Chapman', pos: ['3B'], ovr: 91, active: true, mlb: true, wbc: false, lidom: false, team: 'SF', decade: '2020s' },
-            { id: 'p_arenado', name: 'Nolan Arenado', pos: ['3B'], ovr: 90, active: true, mlb: true, wbc: true, lidom: false, team: 'STL', decade: '2020s' },
-            { id: 'p_vientos', name: 'Mark Vientos', pos: ['3B', '1B'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'NYM', decade: '2020s' },
-            { id: 'p_paredes', name: 'Isaac Paredes', pos: ['3B', '1B'], ovr: 88, active: true, mlb: true, wbc: true, lidom: false, team: 'HOU', decade: '2020s' },
-            { id: 'p_westburg', name: 'Jordan Westburg', pos: ['3B', '2B'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'BAL', decade: '2020s' },
-            { id: 'p_caminero', name: 'Junior Caminero', pos: ['3B'], ovr: 88, active: true, mlb: true, wbc: false, lidom: true, team: 'TB', decade: '2020s' },
-            { id: 'p_burger', name: 'Jake Burger', pos: ['3B', '1B'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'TEX', decade: '2020s' },
-            { id: 'p_mcmahon', name: 'Ryan McMahon', pos: ['3B', '2B'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'COL', decade: '2020s' },
-
-            // ================= LEFT FIELD (LF) =================
-            { id: 'p_bonds', name: 'Barry Bonds', pos: ['LF'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'SF', decade: '2000s' },
-            { id: 'p_williams', name: 'Ted Williams', pos: ['LF'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'BOS', decade: '1940s' },
-            { id: 'p_rickey', name: 'Rickey Henderson', pos: ['LF'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'ATH', decade: '1980s' },
-            { id: 'p_manny', name: 'Manny Ramírez', pos: ['LF', 'RF'], ovr: 97, active: false, mlb: true, wbc: false, lidom: true, team: 'BOS', decade: '2000s' },
-            { id: 'p_musial', name: 'Stan Musial', pos: ['LF', '1B', 'RF'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'STL', decade: '1950s' },
-            { id: 'p_yaz', name: 'Carl Yastrzemski', pos: ['LF', '1B'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'BOS', decade: '1960s' },
-            // Active LF
-            { id: 'p_soto', name: 'Juan Soto', pos: ['LF', 'RF'], ovr: 98, active: true, mlb: true, wbc: true, lidom: true, team: 'NYM', decade: '2020s' },
-            { id: 'p_yordan', name: 'Yordan Álvarez', pos: ['LF'], ovr: 96, active: true, mlb: true, wbc: false, lidom: false, team: 'HOU', decade: '2020s' },
-            { id: 'p_kwan', name: 'Steven Kwan', pos: ['LF'], ovr: 91, active: true, mlb: true, wbc: false, lidom: false, team: 'CLE', decade: '2020s' },
-            { id: 'p_reynolds', name: 'Bryan Reynolds', pos: ['LF', 'CF'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'PIT', decade: '2020s' },
-            { id: 'p_happ', name: 'Ian Happ', pos: ['LF'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'CHC', decade: '2020s' },
-            { id: 'p_arozarena', name: 'Randy Arozarena', pos: ['LF', 'RF'], ovr: 89, active: true, mlb: true, wbc: true, lidom: false, team: 'SEA', decade: '2020s' },
-            { id: 'p_nimmo', name: 'Brandon Nimmo', pos: ['LF', 'CF'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'NYM', decade: '2020s' },
-            { id: 'p_yelich', name: 'Christian Yelich', pos: ['LF', 'RF'], ovr: 90, active: true, mlb: true, wbc: true, lidom: false, team: 'MIL', decade: '2020s' },
-            { id: 'p_profar', name: 'Jurickson Profar', pos: ['LF', '1B'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '2020s' },
-            { id: 'p_greene', name: 'Riley Greene', pos: ['LF', 'CF'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'DET', decade: '2020s' },
-            { id: 'p_gurriel', name: 'Lourdes Gurriel Jr.', pos: ['LF'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'ARI', decade: '2020s' },
-            { id: 'p_ward', name: 'Taylor Ward', pos: ['LF'], ovr: 86, active: true, mlb: true, wbc: false, lidom: false, team: 'LAA', decade: '2020s' },
-            { id: 'p_wood', name: 'James Wood', pos: ['LF', 'CF'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'WSH', decade: '2020s' },
-
-            // ================= CENTER FIELD (CF) =================
-            { id: 'p_mays', name: 'Willie Mays', pos: ['CF'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'SF', decade: '1950s' },
-            { id: 'p_griffey', name: 'Ken Griffey Jr.', pos: ['CF'], ovr: 99, active: false, mlb: true, wbc: true, lidom: false, team: 'SEA', decade: '1990s' },
-            { id: 'p_mantle', name: 'Mickey Mantle', pos: ['CF', '1B'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '1950s' },
-            { id: 'p_dimaggio', name: 'Joe DiMaggio', pos: ['CF'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '1940s' },
-            { id: 'p_beltran', name: 'Carlos Beltrán', pos: ['CF'], ovr: 95, active: false, mlb: true, wbc: true, lidom: false, team: 'NYM', decade: '2000s' },
-            { id: 'p_ajones', name: 'Andruw Jones', pos: ['CF'], ovr: 95, active: false, mlb: true, wbc: true, lidom: false, team: 'ATL', decade: '2000s' },
-            { id: 'p_bonifacio', name: 'Emilio Bonifacio', pos: ['CF', '2B', 'LF'], ovr: 87, active: false, mlb: true, wbc: true, lidom: true, team: 'MIA', decade: '2010s' },
-            // Active CF
-            { id: 'p_trout', name: 'Mike Trout', pos: ['CF'], ovr: 96, active: true, mlb: true, wbc: true, lidom: false, team: 'LAA', decade: '2020s' },
-            { id: 'p_julio', name: 'Julio Rodríguez', pos: ['CF'], ovr: 94, active: true, mlb: true, wbc: true, lidom: true, team: 'SEA', decade: '2020s' },
-            { id: 'p_merrill', name: 'Jackson Merrill', pos: ['CF'], ovr: 92, active: true, mlb: true, wbc: false, lidom: false, team: 'SD', decade: '2020s' },
-            { id: 'p_buxton', name: 'Byron Buxton', pos: ['CF'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'MIN', decade: '2020s' },
-            { id: 'p_mharris', name: 'Michael Harris II', pos: ['CF'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '2020s' },
-            { id: 'p_robert', name: 'Luis Robert Jr.', pos: ['CF'], ovr: 89, active: true, mlb: true, wbc: true, lidom: false, team: 'CWS', decade: '2020s' },
-            { id: 'p_duran', name: 'Jarren Duran', pos: ['CF', 'LF'], ovr: 92, active: true, mlb: true, wbc: true, lidom: false, team: 'BOS', decade: '2020s' },
-            { id: 'p_chourio', name: 'Jackson Chourio', pos: ['CF', 'LF', 'RF'], ovr: 91, active: true, mlb: true, wbc: false, lidom: false, team: 'MIL', decade: '2020s' },
-            { id: 'p_varsho', name: 'Daulton Varsho', pos: ['CF', 'LF'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'TOR', decade: '2020s' },
-            { id: 'p_lee_jh', name: 'Jung Hoo Lee', pos: ['CF'], ovr: 87, active: true, mlb: true, wbc: true, lidom: false, team: 'SF', decade: '2020s' },
-            { id: 'p_cowser', name: 'Colton Cowser', pos: ['CF', 'LF'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'BAL', decade: '2020s' },
-            { id: 'p_doyle', name: 'Brenton Doyle', pos: ['CF'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'COL', decade: '2020s' },
-            { id: 'p_rojas_j', name: 'Johan Rojas', pos: ['CF'], ovr: 85, active: true, mlb: true, wbc: false, lidom: true, team: 'PHI', decade: '2020s' },
-
-            // ================= RIGHT FIELD (RF) =================
-            { id: 'p_ruth', name: 'Babe Ruth', pos: ['RF', 'LF', 'SP1'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '1920s' },
-            { id: 'p_aaron', name: 'Hank Aaron', pos: ['RF'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '1960s' },
-            { id: 'p_clemente', name: 'Roberto Clemente', pos: ['RF'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'PIT', decade: '1960s' },
-            { id: 'p_vlad', name: 'Vladimir Guerrero', pos: ['RF'], ovr: 97, active: false, mlb: true, wbc: false, lidom: true, team: 'LAA', decade: '2000s' },
-            { id: 'p_ichiro', name: 'Ichiro Suzuki', pos: ['RF', 'CF'], ovr: 97, active: false, mlb: true, wbc: true, lidom: false, team: 'SEA', decade: '2000s' },
-            { id: 'p_sosa', name: 'Sammy Sosa', pos: ['RF'], ovr: 95, active: false, mlb: true, wbc: false, lidom: true, team: 'CHC', decade: '1990s' },
-            { id: 'p_gwynn', name: 'Tony Gwynn', pos: ['RF'], ovr: 97, active: false, mlb: true, wbc: false, lidom: false, team: 'SD', decade: '1990s' },
-            { id: 'p_reggie', name: 'Reggie Jackson', pos: ['RF'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '1970s' },
-            // Active RF
-            { id: 'p_judge', name: 'Aaron Judge', pos: ['RF', 'CF'], ovr: 99, active: true, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '2020s' },
-            { id: 'p_betts', name: 'Mookie Betts', pos: ['RF', 'SS', '2B'], ovr: 97, active: true, mlb: true, wbc: true, lidom: false, team: 'LAD', decade: '2020s' },
-            { id: 'p_acuna', name: 'Ronald Acuña Jr.', pos: ['RF', 'CF'], ovr: 96, active: true, mlb: true, wbc: true, lidom: false, team: 'ATL', decade: '2020s' },
-            { id: 'p_tucker', name: 'Kyle Tucker', pos: ['RF'], ovr: 95, active: true, mlb: true, wbc: true, lidom: false, team: 'CHC', decade: '2020s' },
-            { id: 'p_tatis', name: 'Fernando Tatis Jr.', pos: ['RF', 'SS'], ovr: 95, active: true, mlb: true, wbc: false, lidom: true, team: 'SD', decade: '2020s' },
-            { id: 'p_corbin', name: 'Corbin Carroll', pos: ['RF', 'CF', 'LF'], ovr: 92, active: true, mlb: true, wbc: false, lidom: false, team: 'ARI', decade: '2020s' },
-            { id: 'p_teoscar', name: 'Teoscar Hernández', pos: ['RF', 'LF'], ovr: 91, active: true, mlb: true, wbc: true, lidom: true, team: 'LAD', decade: '2020s' },
-            { id: 'p_santander', name: 'Anthony Santander', pos: ['RF', 'LF'], ovr: 90, active: true, mlb: true, wbc: true, lidom: false, team: 'TOR', decade: '2020s' },
-            { id: 'p_suzuki_s', name: 'Seiya Suzuki', pos: ['RF'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'CHC', decade: '2020s' },
-            { id: 'p_castellanos', name: 'Nick Castellanos', pos: ['RF'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'PHI', decade: '2020s' },
-            { id: 'p_rooker', name: 'Brent Rooker', pos: ['RF', 'LF'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'ATH', decade: '2020s' },
-            { id: 'p_sanchez_j', name: 'Jesús Sánchez', pos: ['RF', 'LF'], ovr: 86, active: true, mlb: true, wbc: false, lidom: true, team: 'MIA', decade: '2020s' },
-            { id: 'p_adolis', name: 'Adolis García', pos: ['RF'], ovr: 88, active: true, mlb: true, wbc: false, lidom: false, team: 'TEX', decade: '2020s' },
-
-            // ================= STARTING PITCHERS (SP1) =================
-            { id: 'p_pedro', name: 'Pedro Martínez', pos: ['SP1'], ovr: 99, active: false, mlb: true, wbc: true, lidom: true, team: 'BOS', decade: '1990s' },
-            { id: 'p_randy', name: 'Randy Johnson', pos: ['SP1'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'ARI', decade: '2000s' },
-            { id: 'p_maddux', name: 'Greg Maddux', pos: ['SP1'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '1990s' },
-            { id: 'p_koufax', name: 'Sandy Koufax', pos: ['SP1'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '1960s' },
-            { id: 'p_marichal', name: 'Juan Marichal', pos: ['SP1'], ovr: 98, active: false, mlb: true, wbc: false, lidom: true, team: 'SF', decade: '1960s' },
-            { id: 'p_nolan', name: 'Nolan Ryan', pos: ['SP1'], ovr: 97, active: false, mlb: true, wbc: false, lidom: false, team: 'TEX', decade: '1980s' },
-            { id: 'p_seaver', name: 'Tom Seaver', pos: ['SP1'], ovr: 98, active: false, mlb: true, wbc: false, lidom: false, team: 'NYM', decade: '1970s' },
-            { id: 'p_clemens', name: 'Roger Clemens', pos: ['SP1'], ovr: 98, active: false, mlb: true, wbc: true, lidom: false, team: 'BOS', decade: '1990s' },
-            { id: 'p_halladay', name: 'Roy Halladay', pos: ['SP1'], ovr: 97, active: false, mlb: true, wbc: false, lidom: false, team: 'TOR', decade: '2000s' },
-            { id: 'p_bartolo', name: 'Bartolo Colón', pos: ['SP1'], ovr: 91, active: false, mlb: true, wbc: true, lidom: true, team: 'NYM', decade: '2000s' },
-            // Active SP1
-            { id: 'p_ohtani', name: 'Shohei Ohtani', pos: ['SP1', 'RF'], ovr: 99, active: true, mlb: true, wbc: true, lidom: false, team: 'LAD', decade: '2020s' },
-            { id: 'p_skubal', name: 'Tarik Skubal', pos: ['SP1'], ovr: 97, active: true, mlb: true, wbc: false, lidom: false, team: 'DET', decade: '2020s' },
-            { id: 'p_skenes', name: 'Paul Skenes', pos: ['SP1'], ovr: 96, active: true, mlb: true, wbc: false, lidom: false, team: 'PIT', decade: '2020s' },
-            { id: 'p_wheeler', name: 'Zack Wheeler', pos: ['SP1'], ovr: 96, active: true, mlb: true, wbc: false, lidom: false, team: 'PHI', decade: '2020s' },
-            { id: 'p_sale', name: 'Chris Sale', pos: ['SP1'], ovr: 95, active: true, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '2020s' },
-            { id: 'p_cole', name: 'Gerrit Cole', pos: ['SP1'], ovr: 95, active: true, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '2020s' },
-            { id: 'p_burnes', name: 'Corbin Burnes', pos: ['SP1'], ovr: 94, active: true, mlb: true, wbc: false, lidom: false, team: 'ARI', decade: '2020s' },
-            { id: 'p_crochet', name: 'Garrett Crochet', pos: ['SP1'], ovr: 94, active: true, mlb: true, wbc: false, lidom: false, team: 'BOS', decade: '2020s' },
-            { id: 'p_snell', name: 'Blake Snell', pos: ['SP1'], ovr: 93, active: true, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '2020s' },
-            { id: 'p_yamamoto', name: 'Yoshinobu Yamamoto', pos: ['SP1'], ovr: 93, active: true, mlb: true, wbc: true, lidom: false, team: 'LAD', decade: '2020s' },
-            { id: 'p_alcantara', name: 'Sandy Alcántara', pos: ['SP1'], ovr: 93, active: true, mlb: true, wbc: true, lidom: true, team: 'MIA', decade: '2020s' },
-            { id: 'p_cease', name: 'Dylan Cease', pos: ['SP1'], ovr: 92, active: true, mlb: true, wbc: false, lidom: false, team: 'SD', decade: '2020s' },
-            { id: 'p_gilbert', name: 'Logan Gilbert', pos: ['SP1'], ovr: 92, active: true, mlb: true, wbc: false, lidom: false, team: 'SEA', decade: '2020s' },
-            { id: 'p_framber', name: 'Framber Valdez', pos: ['SP1'], ovr: 92, active: true, mlb: true, wbc: false, lidom: true, team: 'HOU', decade: '2020s' },
-            { id: 'p_webb', name: 'Logan Webb', pos: ['SP1'], ovr: 91, active: true, mlb: true, wbc: true, lidom: false, team: 'SF', decade: '2020s' },
-            { id: 'p_kershaw', name: 'Clayton Kershaw', pos: ['SP1'], ovr: 92, active: true, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '2020s' },
-            { id: 'p_verlander', name: 'Justin Verlander', pos: ['SP1'], ovr: 91, active: true, mlb: true, wbc: false, lidom: false, team: 'SF', decade: '2020s' },
-            { id: 'p_scherzer', name: 'Max Scherzer', pos: ['SP1'], ovr: 91, active: true, mlb: true, wbc: false, lidom: false, team: 'TOR', decade: '2020s' },
-            { id: 'p_lopez_p', name: 'Pablo López', pos: ['SP1'], ovr: 90, active: true, mlb: true, wbc: true, lidom: false, team: 'MIN', decade: '2020s' },
-            { id: 'p_ragans', name: 'Cole Ragans', pos: ['SP1'], ovr: 91, active: true, mlb: true, wbc: false, lidom: false, team: 'KC', decade: '2020s' },
-            { id: 'p_lopez_r', name: 'Reynaldo López', pos: ['SP1', 'RP'], ovr: 90, active: true, mlb: true, wbc: false, lidom: true, team: 'ATL', decade: '2020s' },
-            { id: 'p_imanga', name: 'Shota Imanaga', pos: ['SP1'], ovr: 91, active: true, mlb: true, wbc: true, lidom: false, team: 'CHC', decade: '2020s' },
-            { id: 'p_peralta', name: 'Freddy Peralta', pos: ['SP1'], ovr: 90, active: true, mlb: true, wbc: false, lidom: true, team: 'MIL', decade: '2020s' },
-            { id: 'p_degrom', name: 'Jacob deGrom', pos: ['SP1'], ovr: 95, active: true, mlb: true, wbc: false, lidom: false, team: 'TEX', decade: '2020s' },
-            { id: 'p_strider', name: 'Spencer Strider', pos: ['SP1'], ovr: 94, active: true, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '2020s' },
-
-            // ================= RELIEF PITCHERS (RP) =================
-            { id: 'p_eckersley', name: 'Dennis Eckersley', pos: ['RP', 'CP'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'ATH', decade: '1990s' },
-            { id: 'p_fingers', name: 'Rollie Fingers', pos: ['RP', 'CP'], ovr: 95, active: false, mlb: true, wbc: false, lidom: false, team: 'MIL', decade: '1980s' },
-            { id: 'p_betances', name: 'Dellin Betances', pos: ['RP'], ovr: 92, active: false, mlb: true, wbc: true, lidom: true, team: 'NYY', decade: '2010s' },
-            { id: 'p_rodney', name: 'Fernando Rodney', pos: ['RP', 'CP'], ovr: 91, active: false, mlb: true, wbc: true, lidom: true, team: 'TB', decade: '2010s' },
-            { id: 'p_miller', name: 'Andrew Miller', pos: ['RP'], ovr: 93, active: false, mlb: true, wbc: true, lidom: false, team: 'CLE', decade: '2010s' },
-            // Active RP
-            { id: 'p_miller_m', name: 'Mason Miller', pos: ['RP', 'CP'], ovr: 94, active: true, mlb: true, wbc: false, lidom: false, team: 'ATH', decade: '2020s' },
-            { id: 'p_devin', name: 'Devin Williams', pos: ['RP', 'CP'], ovr: 94, active: true, mlb: true, wbc: true, lidom: false, team: 'NYY', decade: '2020s' },
-            { id: 'p_weaver', name: 'Luke Weaver', pos: ['RP'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '2020s' },
-            { id: 'p_estrada_j', name: 'Jeremiah Estrada', pos: ['RP'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'SD', decade: '2020s' },
-            { id: 'p_adam', name: 'Jason Adam', pos: ['RP'], ovr: 89, active: true, mlb: true, wbc: true, lidom: false, team: 'SD', decade: '2020s' },
-            { id: 'p_gaddis', name: 'Hunter Gaddis', pos: ['RP'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'CLE', decade: '2020s' },
-            { id: 'p_smith_c', name: 'Cade Smith', pos: ['RP'], ovr: 91, active: true, mlb: true, wbc: false, lidom: false, team: 'CLE', decade: '2020s' },
-            { id: 'p_abreu_b', name: 'Bryan Abreu', pos: ['RP'], ovr: 90, active: true, mlb: true, wbc: true, lidom: true, team: 'HOU', decade: '2020s' },
-            { id: 'p_munoz', name: 'Andrés Muñoz', pos: ['RP', 'CP'], ovr: 92, active: true, mlb: true, wbc: true, lidom: false, team: 'SEA', decade: '2020s' },
-            { id: 'p_jax', name: 'Griffin Jax', pos: ['RP'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'MIN', decade: '2020s' },
-            { id: 'p_kopech', name: 'Michael Kopech', pos: ['RP'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '2020s' },
-            { id: 'p_strahm', name: 'Matt Strahm', pos: ['RP'], ovr: 90, active: true, mlb: true, wbc: false, lidom: false, team: 'PHI', decade: '2020s' },
-            { id: 'p_hodge', name: 'Porter Hodge', pos: ['RP'], ovr: 87, active: true, mlb: true, wbc: false, lidom: false, team: 'CHC', decade: '2020s' },
-
-            // ================= CLOSERS (CP) =================
-            { id: 'p_mariano', name: 'Mariano Rivera', pos: ['CP'], ovr: 99, active: false, mlb: true, wbc: false, lidom: false, team: 'NYY', decade: '2000s' },
-            { id: 'p_hoffman', name: 'Trevor Hoffman', pos: ['CP'], ovr: 97, active: false, mlb: true, wbc: false, lidom: false, team: 'SD', decade: '1990s' },
-            { id: 'p_wagner_b', name: 'Billy Wagner', pos: ['CP'], ovr: 96, active: false, mlb: true, wbc: false, lidom: false, team: 'HOU', decade: '2000s' },
-            { id: 'p_gagne', name: 'Éric Gagné', pos: ['CP'], ovr: 95, active: false, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '2000s' },
-            { id: 'p_marmol', name: 'Carlos Mármol', pos: ['CP', 'RP'], ovr: 89, active: false, mlb: true, wbc: true, lidom: true, team: 'CHC', decade: '2010s' },
-            // Active CP
-            { id: 'p_clase', name: 'Emmanuel Clase', pos: ['CP'], ovr: 97, active: true, mlb: true, wbc: false, lidom: true, team: 'CLE', decade: '2020s' },
-            { id: 'p_diaz', name: 'Edwin Díaz', pos: ['CP'], ovr: 95, active: true, mlb: true, wbc: true, lidom: false, team: 'NYM', decade: '2020s' },
-            { id: 'p_hader', name: 'Josh Hader', pos: ['CP', 'RP'], ovr: 94, active: true, mlb: true, wbc: false, lidom: false, team: 'HOU', decade: '2020s' },
-            { id: 'p_helsley', name: 'Ryan Helsley', pos: ['CP'], ovr: 94, active: true, mlb: true, wbc: false, lidom: false, team: 'STL', decade: '2020s' },
-            { id: 'p_suarez_r', name: 'Robert Suárez', pos: ['CP'], ovr: 92, active: true, mlb: true, wbc: false, lidom: false, team: 'SD', decade: '2020s' },
-            { id: 'p_iglesias', name: 'Raisel Iglesias', pos: ['CP'], ovr: 92, active: true, mlb: true, wbc: false, lidom: false, team: 'ATL', decade: '2020s' },
-            { id: 'p_bautista', name: 'Félix Bautista', pos: ['CP'], ovr: 93, active: true, mlb: true, wbc: false, lidom: true, team: 'BAL', decade: '2020s' },
-            { id: 'p_doval', name: 'Camilo Doval', pos: ['CP'], ovr: 89, active: true, mlb: true, wbc: true, lidom: true, team: 'SF', decade: '2020s' },
-            { id: 'p_jansen', name: 'Kenley Jansen', pos: ['CP'], ovr: 90, active: true, mlb: true, wbc: true, lidom: false, team: 'LAA', decade: '2020s' },
-            { id: 'p_chapman', name: 'Aroldis Chapman', pos: ['CP', 'RP'], ovr: 91, active: true, mlb: true, wbc: false, lidom: false, team: 'BOS', decade: '2020s' },
-            { id: 'p_fairbanks', name: 'Pete Fairbanks', pos: ['CP'], ovr: 89, active: true, mlb: true, wbc: false, lidom: false, team: 'TB', decade: '2020s' },
-            { id: 'p_scott', name: 'Tanner Scott', pos: ['CP', 'RP'], ovr: 92, active: true, mlb: true, wbc: false, lidom: false, team: 'LAD', decade: '2020s' },
-            { id: 'p_estevez', name: 'Carlos Estévez', pos: ['CP'], ovr: 89, active: true, mlb: true, wbc: false, lidom: true, team: 'KC', decade: '2020s' }
+            // WBC (8 National Teams)
+            { id: 'wbc_dom', name: 'República Dominicana', code: 'DOM', league: 'WBC', price: 150, bg: '#002D62', fg: '#FFFFFF', accent: '#CE1126' },
+            { id: 'wbc_usa', name: 'Estados Unidos', code: 'USA', league: 'WBC', price: 150, bg: '#0A3161', fg: '#FFFFFF', accent: '#B31942' },
+            { id: 'wbc_jpn', name: 'Japón', code: 'JPN', league: 'WBC', price: 150, bg: '#0F172A', fg: '#FFFFFF', accent: '#EF4444' },
+            { id: 'wbc_ven', name: 'Venezuela', code: 'VEN', league: 'WBC', price: 140, bg: '#581C3C', fg: '#FACC15', accent: '#FACC15' },
+            { id: 'wbc_pur', name: 'Puerto Rico', code: 'PUR', league: 'WBC', price: 140, bg: '#1D4ED8', fg: '#FFFFFF', accent: '#EF4444' },
+            { id: 'wbc_mex', name: 'México', code: 'MEX', league: 'WBC', price: 135, bg: '#006847', fg: '#FFFFFF', accent: '#CE1126' },
+            { id: 'wbc_cub', name: 'Cuba', code: 'CUB', league: 'WBC', price: 135, bg: '#002A8F', fg: '#FFFFFF', accent: '#CF142B' },
+            { id: 'wbc_kor', name: 'Corea del Sur', code: 'KOR', league: 'WBC', price: 130, bg: '#0047A0', fg: '#FFFFFF', accent: '#CD2E3A' }
         ];
 
         // ================= USER & LOCALSTORAGE / CLOUD STATE =================
@@ -1590,10 +1841,10 @@
         };
 
         function getLeagueTier(crowns) {
-            if (crowns >= 100) return { name: 'HALL OF FAME', css: 'tier-hof', heroCss: 'hero-tier-hof' };
-            if (crowns >= 50) return { name: 'LEYENDA', css: 'tier-legend', heroCss: 'hero-tier-legend' };
-            if (crowns >= 25) return { name: 'MVP', css: 'tier-mvp', heroCss: 'hero-tier-mvp' };
-            if (crowns >= 10) return { name: 'PRO', css: 'tier-pro', heroCss: 'hero-tier-pro' };
+            if (crowns >= 45) return { name: 'HALL OF FAME', css: 'tier-hof', heroCss: 'hero-tier-hof' };
+            if (crowns >= 25) return { name: 'LEYENDA', css: 'tier-legend', heroCss: 'hero-tier-legend' };
+            if (crowns >= 12) return { name: 'MVP', css: 'tier-mvp', heroCss: 'hero-tier-mvp' };
+            if (crowns >= 5) return { name: 'PRO', css: 'tier-pro', heroCss: 'hero-tier-pro' };
             return { name: 'ROOKIE', css: 'tier-rookie', heroCss: 'hero-tier-rookie' };
         }
 
@@ -1814,8 +2065,8 @@
         };
 
         const GAME_TIPS = [
-            "Completa las 11 posiciones para revelar el OVR oculto de tu equipo.",
-            "Si un jugador es multiposición, tócalo en tu alineación para moverlo a otro puesto elegible.",
+            "Completa las 12 posiciones (incluyendo DH) para revelar el OVR oculto de tu equipo.",
+            "Una vez elegido un jugador queda bloqueado en tu alineación; solo puedes moverlo si juega otra posición.",
             "En el modo [162-0] cuentas con 3 comodines para cambiar de equipo y 3 para cambiar de década.",
             "Cada victoria en Serie Final suma +3 Coronas y +50 Estrellas; una derrota resta -2 Coronas.",
             "Conecta tu cuenta de Google en Mi Perfil para conservar tu progreso y amigos en cualquier dispositivo.",
@@ -2334,9 +2585,9 @@
 
         function renderLineupBuilder() {
             const filledCount = Object.keys(gameState.lineup).length;
-            document.getElementById('lineup-progress').textContent = `${filledCount}/11`;
+            document.getElementById('lineup-progress').textContent = `${filledCount}/12`;
             const finishBtn = document.getElementById('btn-finish-lineup');
-            finishBtn.disabled = filledCount < 11;
+            finishBtn.disabled = filledCount < 12;
             finishBtn.textContent = (gameState.mainMode === 'VS' && !gameState.vsIsResponder)
                 ? 'Enviar Reto VS'
                 : 'Simular Serie';
@@ -2346,9 +2597,11 @@
             diamondEl.innerHTML = POSITIONS.map(pos => {
                 const coord = DIAMOND_COORDS[pos];
                 const player = gameState.lineup[pos];
-                return `<button onclick="openPositionSlot('${pos}')" style="top:${coord.top}; left:${coord.left};" class="pos-node absolute -translate-x-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-xl border ${player ? 'bg-slate-900/95 border-amber-400 text-white shadow-lg' : 'bg-black/65 border-white/25 text-amber-300 hover:border-amber-400'} text-center min-w-[68px]">
+                const canMove = player && player.pos.filter(p => p !== pos && POSITIONS.includes(p)).length > 0;
+                const badgeState = !player ? '+ Fichar' : (canMove ? '⇄ Mover' : '🔒 Fijo');
+                return `<button onclick="openPositionSlot('${pos}')" style="top:${coord.top}; left:${coord.left};" class="pos-node absolute -translate-x-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-xl border ${player ? (canMove ? 'bg-slate-900/95 border-amber-400 text-white shadow-lg' : 'bg-slate-950/95 border-slate-600 text-slate-200 cursor-not-allowed') : 'bg-black/65 border-white/25 text-amber-300 hover:border-amber-400'} text-center min-w-[68px]">
                     <span class="text-[10px] font-display font-bold uppercase block leading-none text-amber-400">${pos}</span>
-                    <span class="text-[11px] font-semibold block truncate max-w-[84px] mt-0.5">${player ? player.name.split(' ').pop() : '+ Fichar'}</span>
+                    <span class="text-[11px] font-semibold block truncate max-w-[84px] mt-0.5">${player ? player.name.split(' ').pop() : badgeState}</span>
                 </button>`;
             }).join('');
 
@@ -2356,12 +2609,14 @@
             const rosterEl = document.getElementById('roster-list');
             rosterEl.innerHTML = POSITIONS.map(pos => {
                 const player = gameState.lineup[pos];
-                return `<button onclick="openPositionSlot('${pos}')" class="w-full p-2.5 rounded-xl bg-[var(--bg-elevated)] border ${player ? 'border-amber-400/35' : 'border-[var(--border-subtle)] hover:border-amber-400/50'} flex items-center justify-between text-left transition">
+                const canMove = player && player.pos.filter(p => p !== pos && POSITIONS.includes(p)).length > 0;
+                const actionTag = !player ? 'Fichar' : (canMove ? 'Mover ⇄' : 'Bloqueado 🔒');
+                return `<button onclick="openPositionSlot('${pos}')" class="w-full p-2.5 rounded-xl bg-[var(--bg-elevated)] border ${player ? (canMove ? 'border-amber-400/35' : 'border-slate-700/80 opacity-90') : 'border-[var(--border-subtle)] hover:border-amber-400/50'} flex items-center justify-between text-left transition">
                     <div class="flex items-center gap-2.5 min-w-0">
                         <span class="w-9 py-1 rounded-lg bg-amber-400/15 text-amber-400 font-display text-xs font-bold text-center shrink-0">${pos}</span>
                         <span class="text-xs font-bold truncate ${player ? 'text-[var(--text-primary)]' : 'text-[var(--text-muted)]'}">${player ? player.name : 'Seleccionar jugador...'}</span>
                     </div>
-                    <span class="text-[10px] font-bold uppercase ${player ? 'text-amber-400' : 'text-[var(--text-muted)]'} shrink-0">${player ? 'Mover' : 'Fichar'}</span>
+                    <span class="text-[10px] font-bold uppercase ${!player ? 'text-[var(--text-muted)]' : (canMove ? 'text-amber-400' : 'text-slate-400')} shrink-0">${actionTag}</span>
                 </button>`;
             }).join('');
         }
@@ -2369,26 +2624,30 @@
         window.openPositionSlot = function(pos) {
             gameState.activeSlotPos = pos;
             const existing = gameState.lineup[pos];
-            document.getElementById('player-modal').classList.remove('hidden');
-            document.getElementById('modal-pos-title').textContent = `Posición: ${pos}`;
 
             if (existing) {
+                const eligibleTargets = existing.pos.filter(p => p !== pos && POSITIONS.includes(p));
+                if (eligibleTargets.length === 0) {
+                    showToast(`${existing.name} está bloqueado en ${pos} y no juega otra posición.`);
+                    return;
+                }
+                document.getElementById('player-modal').classList.remove('hidden');
+                document.getElementById('modal-pos-title').textContent = `Posición: ${pos}`;
                 document.getElementById('modal-swap-box').classList.remove('hidden');
                 document.getElementById('modal-search-box').classList.add('hidden');
                 document.getElementById('modal-locked-player-name').textContent = existing.name;
 
-                const eligibleTargets = existing.pos.filter(p => p !== pos && POSITIONS.includes(p));
                 const targetsEl = document.getElementById('modal-swap-targets');
-                if (eligibleTargets.length === 0) {
-                    targetsEl.innerHTML = `<p class="text-xs text-[var(--text-muted)]">Este jugador solo juega ${pos} y ya está fijado en tu alineación.</p>`;
-                } else {
-                    targetsEl.innerHTML = eligibleTargets.map(targetPos => `
-                        <button onclick="swapPlayerPosition('${pos}', '${targetPos}')" class="px-3.5 py-2 rounded-xl btn-primary-gold text-xs font-bold uppercase">
-                            Mover a ${targetPos}
-                        </button>
-                    `).join('');
-                }
+                targetsEl.innerHTML = eligibleTargets.map(targetPos => {
+                    const occupant = gameState.lineup[targetPos];
+                    const canSwapOccupant = !occupant || occupant.pos.includes(pos);
+                    return `<button onclick="swapPlayerPosition('${pos}', '${targetPos}')" ${!canSwapOccupant ? 'disabled' : ''} class="px-3.5 py-2 rounded-xl btn-primary-gold text-xs font-bold uppercase disabled:opacity-40 disabled:cursor-not-allowed">
+                        ${occupant ? `Intercambiar con ${targetPos} (${occupant.name.split(' ').pop()})` : `Mover a ${targetPos}`}
+                    </button>`;
+                }).join('');
             } else {
+                document.getElementById('player-modal').classList.remove('hidden');
+                document.getElementById('modal-pos-title').textContent = `Posición: ${pos}`;
                 document.getElementById('modal-swap-box').classList.add('hidden');
                 document.getElementById('modal-search-box').classList.remove('hidden');
                 const input = document.getElementById('player-search-input');
@@ -2464,7 +2723,7 @@
             if (!player || !gameState.activeSlotPos) return;
             gameState.lineup[gameState.activeSlotPos] = player;
             closePlayerModal();
-            if (gameState.league === '162-0' && Object.keys(gameState.lineup).length < 11) {
+            if (gameState.league === '162-0' && Object.keys(gameState.lineup).length < 12) {
                 roll162Prompt();
             }
             renderLineupBuilder();
@@ -2501,7 +2760,7 @@
         }
 
         window.handleLineupSubmit = async function() {
-            if (Object.keys(gameState.lineup).length < 11) return;
+            if (Object.keys(gameState.lineup).length < 12) return;
 
             // Async VS Challenger sends lineup to Firestore
             if (gameState.mainMode === 'VS' && !gameState.vsIsResponder) {
@@ -2587,7 +2846,7 @@
             refreshAllUI();
 
             // Select MVP (Position Player) & Cy Young (Pitcher) from Champion Team
-            const hitters = ['C', '1B', '2B', 'SS', '3B', 'LF', 'CF', 'RF'].map(p => winningLineup[p]).filter(Boolean);
+            const hitters = ['C', '1B', '2B', 'SS', '3B', 'LF', 'CF', 'RF', 'DH'].map(p => winningLineup[p]).filter(Boolean);
             hitters.sort((a, b) => b.ovr - a.ovr);
             const mvp = hitters[0] || { name: 'MVP' };
 
