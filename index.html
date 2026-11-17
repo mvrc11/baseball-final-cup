@@ -866,13 +866,23 @@
         let allPublicUsers = [];
         let allAsyncMatches = [];
 
+        const defaultFirebaseConfig = {
+            apiKey: "AIzaSyBXQlRxOsii_nf-YjRw0bakkdAG_1J1zDI",
+            authDomain: "baseball-final-cup-b5246.firebaseapp.com",
+            projectId: "baseball-final-cup-b5246",
+            storageBucket: "baseball-final-cup-b5246.firebasestorage.app",
+            messagingSenderId: "341069673648",
+            appId: "1:341069673648:web:25ae25b4960bfa8159b775",
+            measurementId: "G-P58W8GFFDR"
+        };
+
         try {
-            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-                const firebaseConfig = JSON.parse(__firebase_config);
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-            }
+            const firebaseConfig = (typeof __firebase_config !== 'undefined' && __firebase_config)
+                ? JSON.parse(__firebase_config)
+                : defaultFirebaseConfig;
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
         } catch (e) {
             console.warn("Running in local memory fallback mode.");
         }
@@ -1249,8 +1259,9 @@
         }
 
         window.signInWithGoogle = async function() {
-            if (!auth) {
-                showToast('Modo local activo.');
+            if (!auth || !db) {
+                showToast('Modo local activo: Firebase no está configurado en este entorno.');
+                console.warn('Firebase Auth or Firestore not initialized.');
                 return;
             }
             try {
@@ -1260,15 +1271,15 @@
                     try {
                         await linkWithPopup(auth.currentUser, provider);
                     } catch (linkErr) {
-                        // If this Google account already has an existing profile, sign straight into it
                         await signInWithPopup(auth, provider);
                     }
                 } else {
                     await signInWithPopup(auth, provider);
                 }
-                showToast('Sesión de Google guardada. Tu progreso se cargará automáticamente.');
+                showToast('¡Sesión de Google iniciada con éxito!');
             } catch (err) {
-                showToast('No se pudo completar el inicio con Google.');
+                console.error("Google Auth Error:", err);
+                showToast('Error al conectar con Google. Revisa tus dominios autorizados y la consola.');
             }
         };
 
