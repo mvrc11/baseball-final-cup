@@ -1608,4 +1608,600 @@
                                     <span class="text-xs font-bold truncate">${u.name}</span>
                                     <span class="text-[10px] font-mono text-amber-400/90">#${u.sixDigitId || '------'}</span>
                                 </div>
-                                <span class="text-[10px] ${presence.online ? 'text-emerald-
+                                <span class="text-[10px] ${presence.online ? 'text-emerald-400' : 'text-[var(--text-muted)]'} block">${presence.label}</span>
+                            </div>
+                        </div>
+                        ${isFriend
+                            ? `<span class="text-[11px] font-bold text-emerald-400 px-2.5 py-1">Amigo</span>`
+                            : `<button onclick="addFriendByUid('${u.uid}')" class="px-3 py-1.5 rounded-lg btn-primary-gold text-[11px] uppercase font-bold">Agregar</button>`
+                        }
+                    </div>`;
+                }).join('');
+            }
+
+            const myFriendObjs = allPublicUsers.filter(u => (userProfile.friends || []).includes(u.uid));
+            if (myFriendObjs.length === 0) {
+                myFriendsEl.innerHTML = `<p class="text-xs text-[var(--text-muted)]">Aún no tienes amigos agregados.</p>`;
+            } else {
+                myFriendsEl.innerHTML = myFriendObjs.map(f => {
+                    const tier = getLeagueTier(f.crowns || 0);
+                    const presence = formatUserPresence(f.lastActive);
+                    return `<div class="flex items-center justify-between p-2.5 rounded-xl bg-[var(--bg-elevated)]">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <div class="w-9 h-9 rounded-lg overflow-hidden shrink-0">${buildAvatarHTML(f, 'w-full h-full', 'text-xs')}</div>
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-xs font-bold truncate">${f.name}</span>
+                                    <span class="px-2 py-0.5 rounded-full text-[9px] font-display font-bold uppercase ${tier.css}">${tier.name}</span>
+                                </div>
+                                <span class="text-[10px] ${presence.online ? 'text-emerald-400' : 'text-[var(--text-muted)]'} block">${presence.label}</span>
+                            </div>
+                        </div>
+                        <button onclick="challengeFriendToVS('${f.uid}')" class="px-3 py-1.5 rounded-lg btn-primary-blue text-[11px] font-bold uppercase">Retar VS</button>
+                    </div>`;
+                }).join('');
+            }
+        };
+
+        window.addFriendByUid = async function(friendUid) {
+            if (!friendUid || (userProfile.friends || []).includes(friendUid)) return;
+            userProfile.friends = [...(userProfile.friends || []), friendUid];
+            await syncProfileToCloud();
+            renderFriendsDirectory();
+            renderVSLobby();
+            showToast('Amigo agregado a tu lista.');
+        };
+
+        window.copyPlayerSixDigitId = function() {
+            const idStr = '#' + (userProfile.sixDigitId || '000000');
+            const temp = document.createElement('textarea');
+            temp.value = idStr;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+            showToast(`ID ${idStr} copiado al portapapeles.`);
+        };
+
+        // ================= MODES, VS ASYNC & LINEUP BUILDER =================
+        window.selectMainMode = function(mode) {
+            gameState.mainMode = mode;
+            if (mode === 'VS') {
+                hideAllViews();
+                document.getElementById('view-vs-lobby').classList.remove('hidden');
+                renderVSLobby();
+                return;
+            }
+            hideAllViews();
+            document.getElementById('view-league-select').classList.remove('hidden');
+            document.getElementById('selected-mode-pill').textContent = 'MODO SOLO';
+            document.getElementById('solo-difficulty-box').classList.remove('hidden');
+            document.getElementById('btn-league-162').classList.remove('hidden');
+        };
+
+        window.setSoloDifficulty = function(diff) {
+            gameState.soloDifficulty = diff;
+            ['ROOKIE', 'MVP', 'HOF'].forEach(d => {
+                const btn = document.getElementById(`diff-${d}`);
+                if (!btn) return;
+                btn.className = d === diff
+                    ? 'diff-btn py-2.5 px-3 rounded-xl border border-amber-400 bg-amber-400/15 text-amber-400 text-xs font-display font-bold uppercase tracking-wider transition'
+                    : 'diff-btn py-2.5 px-3 rounded-xl border border-[var(--border-subtle)] text-xs font-display font-bold uppercase tracking-wider transition';
+            });
+        };
+
+        function renderVSLobby() {
+            const pendingList = document.getElementById('vs-pending-list');
+            const friendsChallengeList = document.getElementById('vs-friends-challenge-list');
+            const badge = document.getElementById('vs-pending-badge');
+            if (!pendingList || !friendsChallengeList) return;
+
+            const incoming = allAsyncMatches.filter(m => m.opponentUid === userProfile.uid && m.status === 'pending');
+            if (badge) {
+                if (incoming.length > 0) {
+                    badge.textContent = incoming.length;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+
+            if (incoming.length === 0) {
+                pendingList.innerHTML = `<p class="text-xs text-[var(--text-muted)]">No tienes partidas pendientes en este momento.</p>`;
+            } else {
+                pendingList.innerHTML = incoming.map(m => `
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-[var(--bg-elevated)] border border-amber-400/30">
+                        <div>
+                            <span class="text-xs font-bold block">Reto de ${m.challengerName || 'Rival'}</span>
+                            <span class="text-[11px] text-amber-400 font-display uppercase">Liga [${m.league || 'MLB'}]</span>
+                        </div>
+                        <button onclick="acceptVSChallenge('${m.id}')" class="px-4 py-2 rounded-xl btn-primary-gold text-xs uppercase font-bold">Aceptar y Jugar</button>
+                    </div>
+                `).join('');
+            }
+
+            const myFriendObjs = allPublicUsers.filter(u => (userProfile.friends || []).includes(u.uid));
+            if (myFriendObjs.length === 0) {
+                friendsChallengeList.innerHTML = `<p class="text-xs text-[var(--text-muted)]">Agrega amigos para enviarles un reto de Serie Final.</p>`;
+            } else {
+                friendsChallengeList.innerHTML = myFriendObjs.map(f => `
+                    <div class="flex items-center justify-between p-2.5 rounded-xl bg-[var(--bg-elevated)]">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-lg overflow-hidden">${buildAvatarHTML(f, 'w-full h-full', 'text-xs')}</div>
+                            <span class="text-xs font-bold">${f.name}</span>
+                        </div>
+                        <button onclick="challengeFriendToVS('${f.uid}')" class="px-3.5 py-1.5 rounded-lg btn-primary-blue text-xs font-bold uppercase">Enviar Reto</button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        window.challengeFriendToVS = function(friendUid) {
+            const friend = allPublicUsers.find(u => u.uid === friendUid);
+            if (!friend) return;
+            gameState.mainMode = 'VS';
+            gameState.vsOpponent = friend;
+            gameState.vsIsResponder = false;
+            gameState.vsMatchId = null;
+            gameState.vsChallengerLineup = null;
+
+            hideAllViews();
+            document.getElementById('view-league-select').classList.remove('hidden');
+            document.getElementById('selected-mode-pill').textContent = `VS — ${friend.name}`;
+            document.getElementById('solo-difficulty-box').classList.add('hidden');
+            document.getElementById('btn-league-162').classList.add('hidden');
+        };
+
+        window.acceptVSChallenge = function(matchId) {
+            const match = allAsyncMatches.find(m => m.id === matchId);
+            if (!match) return;
+            gameState.mainMode = 'VS';
+            gameState.vsMatchId = match.id;
+            gameState.vsIsResponder = true;
+            gameState.vsOpponent = { uid: match.challengerUid, name: match.challengerName };
+            gameState.vsChallengerLineup = match.challengerLineup;
+            startLeague(match.league || 'MLB');
+        };
+
+        window.startLeague = function(league) {
+            gameState.league = league;
+            gameState.lineup = {};
+            gameState.activeSlotPos = null;
+            gameState.wcTeamLeft = 3;
+            gameState.wcDecadeLeft = 3;
+
+            hideAllViews();
+            document.getElementById('view-game').classList.remove('hidden');
+            document.getElementById('game-league-title').textContent = `[${league}]`;
+            document.getElementById('game-opponent-subtitle').textContent = gameState.mainMode === 'VS'
+                ? `vs ${gameState.vsOpponent?.name || 'Rival'}`
+                : `vs CPU (${gameState.soloDifficulty})`;
+
+            const is162 = league === '162-0';
+            document.getElementById('mode-162-bar').classList.toggle('hidden', !is162);
+            document.getElementById('stadium-container').classList.toggle('hidden', is162);
+            const rosterContainer = document.getElementById('roster-container');
+            rosterContainer.className = is162
+                ? 'lg:col-span-12 card-minimal rounded-2xl p-4 space-y-2.5'
+                : 'lg:col-span-5 card-minimal rounded-2xl p-4 space-y-2.5';
+
+            if (is162) roll162Prompt();
+            renderLineupBuilder();
+        };
+
+        window.exitGameToMenu = function() {
+            if (gameState.mainMode === 'VS') {
+                hideAllViews();
+                document.getElementById('view-vs-lobby').classList.remove('hidden');
+            } else {
+                goHome();
+            }
+        };
+
+        function roll162Prompt() {
+            const teams = [...new Set(PLAYERS_DB.map(p => p.team))];
+            const decades = [...new Set(PLAYERS_DB.map(p => p.decade))];
+            gameState.draftTeam = teams[Math.floor(Math.random() * teams.length)];
+            gameState.draftDecade = decades[Math.floor(Math.random() * decades.length)];
+            update162BarUI();
+        }
+
+        function update162BarUI() {
+            document.getElementById('draft-prompt-text').textContent = `${gameState.draftTeam} — Década ${gameState.draftDecade}`;
+            document.getElementById('wc-team-count').textContent = gameState.wcTeamLeft;
+            document.getElementById('wc-decade-count').textContent = gameState.wcDecadeLeft;
+        }
+
+        window.useWildcard = function(type) {
+            if (type === 'team') {
+                if (gameState.wcTeamLeft <= 0) return showToast('Sin comodines de equipo restantes.');
+                gameState.wcTeamLeft--;
+                const teams = [...new Set(PLAYERS_DB.map(p => p.team))].filter(t => t !== gameState.draftTeam);
+                gameState.draftTeam = teams[Math.floor(Math.random() * teams.length)];
+            } else {
+                if (gameState.wcDecadeLeft <= 0) return showToast('Sin comodines de década restantes.');
+                gameState.wcDecadeLeft--;
+                const decades = [...new Set(PLAYERS_DB.map(p => p.decade))].filter(d => d !== gameState.draftDecade);
+                gameState.draftDecade = decades[Math.floor(Math.random() * decades.length)];
+            }
+            update162BarUI();
+        };
+
+        function renderLineupBuilder() {
+            const filledCount = Object.keys(gameState.lineup).length;
+            document.getElementById('lineup-progress').textContent = `${filledCount}/11`;
+            const finishBtn = document.getElementById('btn-finish-lineup');
+            finishBtn.disabled = filledCount < 11;
+            finishBtn.textContent = (gameState.mainMode === 'VS' && !gameState.vsIsResponder)
+                ? 'Enviar Reto VS'
+                : 'Simular Serie';
+
+            // Render Diamond Nodes
+            const diamondEl = document.getElementById('diamond-nodes');
+            diamondEl.innerHTML = POSITIONS.map(pos => {
+                const coord = DIAMOND_COORDS[pos];
+                const player = gameState.lineup[pos];
+                return `<button onclick="openPositionSlot('${pos}')" style="top:${coord.top}; left:${coord.left};" class="pos-node absolute -translate-x-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-xl border ${player ? 'bg-slate-900/95 border-amber-400 text-white shadow-lg' : 'bg-black/65 border-white/25 text-amber-300 hover:border-amber-400'} text-center min-w-[68px]">
+                    <span class="text-[10px] font-display font-bold uppercase block leading-none text-amber-400">${pos}</span>
+                    <span class="text-[11px] font-semibold block truncate max-w-[84px] mt-0.5">${player ? player.name.split(' ').pop() : '+ Fichar'}</span>
+                </button>`;
+            }).join('');
+
+            // Render Roster List
+            const rosterEl = document.getElementById('roster-list');
+            rosterEl.innerHTML = POSITIONS.map(pos => {
+                const player = gameState.lineup[pos];
+                return `<button onclick="openPositionSlot('${pos}')" class="w-full p-2.5 rounded-xl bg-[var(--bg-elevated)] border ${player ? 'border-amber-400/35' : 'border-[var(--border-subtle)] hover:border-amber-400/50'} flex items-center justify-between text-left transition">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-9 py-1 rounded-lg bg-amber-400/15 text-amber-400 font-display text-xs font-bold text-center shrink-0">${pos}</span>
+                        <span class="text-xs font-bold truncate ${player ? 'text-[var(--text-primary)]' : 'text-[var(--text-muted)]'}">${player ? player.name : 'Seleccionar jugador...'}</span>
+                    </div>
+                    <span class="text-[10px] font-bold uppercase ${player ? 'text-amber-400' : 'text-[var(--text-muted)]'} shrink-0">${player ? 'Mover' : 'Fichar'}</span>
+                </button>`;
+            }).join('');
+        }
+
+        window.openPositionSlot = function(pos) {
+            gameState.activeSlotPos = pos;
+            const existing = gameState.lineup[pos];
+            document.getElementById('player-modal').classList.remove('hidden');
+            document.getElementById('modal-pos-title').textContent = `Posición: ${pos}`;
+
+            if (existing) {
+                document.getElementById('modal-swap-box').classList.remove('hidden');
+                document.getElementById('modal-search-box').classList.add('hidden');
+                document.getElementById('modal-locked-player-name').textContent = existing.name;
+
+                const eligibleTargets = existing.pos.filter(p => p !== pos && POSITIONS.includes(p));
+                const targetsEl = document.getElementById('modal-swap-targets');
+                if (eligibleTargets.length === 0) {
+                    targetsEl.innerHTML = `<p class="text-xs text-[var(--text-muted)]">Este jugador solo juega ${pos} y ya está fijado en tu alineación.</p>`;
+                } else {
+                    targetsEl.innerHTML = eligibleTargets.map(targetPos => `
+                        <button onclick="swapPlayerPosition('${pos}', '${targetPos}')" class="px-3.5 py-2 rounded-xl btn-primary-gold text-xs font-bold uppercase">
+                            Mover a ${targetPos}
+                        </button>
+                    `).join('');
+                }
+            } else {
+                document.getElementById('modal-swap-box').classList.add('hidden');
+                document.getElementById('modal-search-box').classList.remove('hidden');
+                const input = document.getElementById('player-search-input');
+                input.value = '';
+                filterPlayerResults();
+                setTimeout(() => input.focus(), 50);
+            }
+        };
+
+        window.closePlayerModal = function() {
+            document.getElementById('player-modal').classList.add('hidden');
+        };
+
+        window.swapPlayerPosition = function(fromPos, toPos) {
+            const movingPlayer = gameState.lineup[fromPos];
+            const displacedPlayer = gameState.lineup[toPos];
+            if (!movingPlayer) return;
+
+            if (displacedPlayer) {
+                if (displacedPlayer.pos.includes(fromPos)) {
+                    gameState.lineup[fromPos] = displacedPlayer;
+                    gameState.lineup[toPos] = movingPlayer;
+                } else {
+                    showToast(`No se puede intercambiar: ${displacedPlayer.name} no juega ${fromPos}.`);
+                    return;
+                }
+            } else {
+                delete gameState.lineup[fromPos];
+                gameState.lineup[toPos] = movingPlayer;
+            }
+            closePlayerModal();
+            renderLineupBuilder();
+            showToast(`${movingPlayer.name} movido a ${toPos}.`);
+        };
+
+        window.filterPlayerResults = function() {
+            const pos = gameState.activeSlotPos;
+            const query = (document.getElementById('player-search-input').value || '').trim().toLowerCase();
+            const pickedIds = new Set(Object.values(gameState.lineup).map(p => p.id));
+
+            const matches = PLAYERS_DB.filter(p => {
+                if (pickedIds.has(p.id)) return false;
+                if (!p.pos.includes(pos)) return false;
+                if (gameState.league === 'WORLD CLASSIC' && !p.wbc) return false;
+                if (gameState.league === 'LIDOM' && !p.lidom) return false;
+                if (gameState.league === '162-0' && (p.team !== gameState.draftTeam || p.decade !== gameState.draftDecade)) return false;
+                if (query && !p.name.toLowerCase().includes(query)) return false;
+                return true;
+            });
+
+            const resultsEl = document.getElementById('player-search-results');
+            if (matches.length === 0) {
+                resultsEl.innerHTML = `<p class="text-xs text-[var(--text-muted)] py-3 text-center">No hay jugadores disponibles con ese filtro.</p>`;
+                return;
+            }
+
+            resultsEl.innerHTML = matches.map(p => `
+                <button onclick="selectPlayerForSlot('${p.id}')" class="w-full p-2.5 rounded-xl bg-[var(--bg-elevated)] hover:border-amber-400 border border-[var(--border-subtle)] flex items-center justify-between text-left transition">
+                    <div>
+                        <span class="text-xs font-bold block">${p.name}</span>
+                        <span class="text-[10px] text-[var(--text-muted)] uppercase">${p.team} • ${p.decade} • Pos: ${p.pos.join('/')}</span>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-lg bg-amber-400/15 text-amber-400 text-[11px] font-bold">Fichar</span>
+                </button>
+            `).join('');
+        };
+
+        window.selectPlayerForSlot = function(playerId) {
+            const player = PLAYERS_DB.find(p => p.id === playerId);
+            if (!player || !gameState.activeSlotPos) return;
+            gameState.lineup[gameState.activeSlotPos] = player;
+            closePlayerModal();
+            if (gameState.league === '162-0' && Object.keys(gameState.lineup).length < 11) {
+                roll162Prompt();
+            }
+            renderLineupBuilder();
+        };
+
+        // ================= SERIES SIMULATION & CLOUD PERSISTENCE =================
+        function buildCPULineup(league, difficulty) {
+            const cpuLineup = {};
+            const used = new Set();
+            POSITIONS.forEach(pos => {
+                let pool = PLAYERS_DB.filter(p => !used.has(p.id) && p.pos.includes(pos));
+                if (league === 'WORLD CLASSIC') pool = pool.filter(p => p.wbc);
+                if (league === 'LIDOM') pool = pool.filter(p => p.lidom);
+                pool.sort((a, b) => b.ovr - a.ovr);
+
+                let slice = pool;
+                if (difficulty === 'ROOKIE') slice = pool.slice(Math.max(0, pool.length - 3));
+                else if (difficulty === 'MVP') slice = pool.slice(1, Math.max(2, pool.length - 1));
+                else slice = pool.slice(0, Math.min(3, pool.length));
+
+                const pick = slice[Math.floor(Math.random() * slice.length)] || pool[0];
+                if (pick) {
+                    cpuLineup[pos] = pick;
+                    used.add(pick.id);
+                }
+            });
+            return cpuLineup;
+        }
+
+        function calcTeamOVR(lineupObj) {
+            const vals = POSITIONS.map(pos => lineupObj[pos]?.ovr || 85);
+            return Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
+        }
+
+        window.handleLineupSubmit = async function() {
+            if (Object.keys(gameState.lineup).length < 11) return;
+
+            // Async VS Challenger sends lineup to Firestore
+            if (gameState.mainMode === 'VS' && !gameState.vsIsResponder) {
+                if (db && currentUser && gameState.vsOpponent) {
+                    try {
+                        await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'vs_matches'), {
+                            challengerUid: userProfile.uid,
+                            challengerName: userProfile.name,
+                            opponentUid: gameState.vsOpponent.uid,
+                            opponentName: gameState.vsOpponent.name,
+                            league: gameState.league,
+                            challengerLineup: gameState.lineup,
+                            status: 'pending',
+                            createdAt: Date.now()
+                        });
+                        showToast(`Reto enviado a ${gameState.vsOpponent.name}.`);
+                    } catch (e) {
+                        showToast('Error al enviar el reto en la nube.');
+                    }
+                } else {
+                    showToast('Reto VS preparado.');
+                }
+                goHome();
+                return;
+            }
+
+            const teamAName = userProfile.name;
+            const teamALineup = gameState.lineup;
+            const teamBName = gameState.mainMode === 'VS' ? (gameState.vsOpponent?.name || 'Rival') : `CPU (${gameState.soloDifficulty})`;
+            const teamBLineup = gameState.mainMode === 'VS' && gameState.vsChallengerLineup
+                ? gameState.vsChallengerLineup
+                : buildCPULineup(gameState.league, gameState.soloDifficulty);
+
+            if (gameState.mainMode === 'VS' && gameState.vsMatchId && db) {
+                try {
+                    await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'vs_matches', gameState.vsMatchId), {
+                        status: 'completed',
+                        opponentLineup: teamALineup
+                    });
+                } catch (e) {}
+            }
+
+            await simulateFinalSeries(teamAName, teamALineup, teamBName, teamBLineup);
+        };
+
+        async function simulateFinalSeries(nameA, lineupA, nameB, lineupB) {
+            const ovrA = calcTeamOVR(lineupA);
+            const ovrB = calcTeamOVR(lineupB);
+            let winsA = 0;
+            let winsB = 0;
+            const games = [];
+
+            while (winsA < 4 && winsB < 4) {
+                const edgeA = (ovrA - ovrB) * 0.14;
+                const runsA = Math.max(0, Math.round(3.6 + edgeA + (Math.random() * 5 - 2.2)));
+                let runsB = Math.max(0, Math.round(3.6 - edgeA + (Math.random() * 5 - 2.2)));
+                if (runsA === runsB) runsB += Math.random() > 0.5 ? 1 : -1;
+                if (runsB < 0) runsB = 0;
+
+                if (runsA > runsB) winsA++;
+                else winsB++;
+
+                games.push({ game: games.length + 1, runsA, runsB });
+            }
+
+            const userWon = winsA === 4;
+            const winnerName = userWon ? nameA : nameB;
+            const winningLineup = userWon ? lineupA : lineupB;
+
+            // Update Crowns, Stars & Record
+            if (userWon) {
+                userProfile.crowns = (userProfile.crowns || 0) + 3;
+                userProfile.stars = (userProfile.stars || 0) + 50;
+                userProfile.wins = (userProfile.wins || 0) + 1;
+            } else {
+                userProfile.crowns = Math.max(0, (userProfile.crowns || 0) - 2);
+                userProfile.stars = (userProfile.stars || 0) + 15;
+                userProfile.losses = (userProfile.losses || 0) + 1;
+            }
+
+            await syncProfileToCloud();
+            refreshAllUI();
+
+            // Select MVP (Position Player) & Cy Young (Pitcher) from Champion Team
+            const hitters = ['C', '1B', '2B', 'SS', '3B', 'LF', 'CF', 'RF'].map(p => winningLineup[p]).filter(Boolean);
+            hitters.sort((a, b) => b.ovr - a.ovr);
+            const mvp = hitters[0] || { name: 'MVP' };
+
+            const pitchers = ['SP1', 'RP', 'CP'].map(p => winningLineup[p]).filter(Boolean);
+            pitchers.sort((a, b) => b.ovr - a.ovr);
+            const cy = pitchers[0] || { name: 'Cy Young' };
+
+            // Populate Results View
+            hideAllViews();
+            document.getElementById('view-results').classList.remove('hidden');
+            document.getElementById('result-winner-banner').textContent = `CAMPEÓN: ${winnerName}`;
+            document.getElementById('result-series-score').textContent = `${winsA} - ${winsB}`;
+            document.getElementById('result-reward-badge').textContent = userWon
+                ? '+3 Coronas • +50 Estrellas'
+                : '-2 Coronas • +15 Estrellas';
+
+            document.getElementById('result-mvp-name').textContent = mvp.name;
+            document.getElementById('result-mvp-stats').textContent = `.${360 + Math.floor(Math.random() * 95)} AVG • ${2 + Math.floor(Math.random() * 3)} HR • ${6 + Math.floor(Math.random() * 5)} RBI`;
+
+            document.getElementById('result-cy-name').textContent = cy.name;
+            document.getElementById('result-cy-stats').textContent = `${(0.85 + Math.random() * 1.4).toFixed(2)} ERA • ${11 + Math.floor(Math.random() * 9)} K`;
+
+            document.getElementById('result-games-grid').innerHTML = games.map(g => `
+                <div class="p-2.5 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-center">
+                    <span class="text-[10px] font-bold text-amber-400 uppercase block">Juego ${g.game}</span>
+                    <span class="font-display text-base font-bold">${g.runsA} - ${g.runsB}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('res-teamA-label').textContent = nameA;
+            document.getElementById('res-teamA-ovr').textContent = `OVR ${ovrA}`;
+            document.getElementById('res-teamA-list').innerHTML = POSITIONS.map(pos => `
+                <div class="flex justify-between py-0.5 border-b border-white/5">
+                    <span class="text-amber-400 font-bold">${pos}</span>
+                    <span class="truncate mx-2">${lineupA[pos]?.name || '—'}</span>
+                    <span class="text-[var(--text-muted)]">${lineupA[pos]?.ovr || 0}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('res-teamB-label').textContent = nameB;
+            document.getElementById('res-teamB-ovr').textContent = `OVR ${ovrB}`;
+            document.getElementById('res-teamB-list').innerHTML = POSITIONS.map(pos => `
+                <div class="flex justify-between py-0.5 border-b border-white/5">
+                    <span class="text-sky-400 font-bold">${pos}</span>
+                    <span class="truncate mx-2">${lineupB[pos]?.name || '—'}</span>
+                    <span class="text-[var(--text-muted)]">${lineupB[pos]?.ovr || 0}</span>
+                </div>
+            `).join('');
+
+            gameState.lastResultSummary = `⚾ BASEBALL FINAL CUP [${gameState.league}]\n🏆 Campeón: ${winnerName} (${winsA}-${winsB})\n⭐ MVP: ${mvp.name} | Cy Young: ${cy.name}`;
+        }
+
+        window.shareSeriesResultCard = function() {
+            const text = gameState.lastResultSummary || '⚾ BASEBALL FINAL CUP';
+            if (navigator.share) {
+                navigator.share({ title: 'BASEBALL FINAL CUP', text }).catch(() => {});
+            } else {
+                const temp = document.createElement('textarea');
+                temp.value = text;
+                document.body.appendChild(temp);
+                temp.select();
+                document.execCommand('copy');
+                document.body.removeChild(temp);
+                showToast('Resumen de la Serie Final copiado para compartir.');
+            }
+        };
+
+        window.returnAfterMatch = function() {
+            goHome();
+        };
+
+        // ================= SETTINGS & DISPLAY MODALS =================
+        window.openSettingsModal = function() {
+            document.getElementById('settings-modal').classList.remove('hidden');
+        };
+        window.closeSettingsModal = function() {
+            document.getElementById('settings-modal').classList.add('hidden');
+        };
+        window.setThemeMode = function(mode) {
+            document.documentElement.classList.toggle('light-mode', mode === 'light');
+        };
+        window.setFontSize = function(sz) {
+            document.documentElement.classList.remove('font-size-sm', 'font-size-md', 'font-size-lg');
+            document.documentElement.classList.add(`font-size-${sz}`);
+        };
+        window.setFontWeight = function(w) {
+            document.documentElement.classList.toggle('font-weight-bold', w === 'bold');
+        };
+
+        function showToast(msg) {
+            const box = document.getElementById('toast-box');
+            const label = document.getElementById('toast-msg');
+            if (!box || !label) return;
+            label.textContent = msg;
+            box.classList.remove('translate-x-full', 'opacity-0');
+            clearTimeout(window._toastTimer);
+            window._toastTimer = setTimeout(() => {
+                box.classList.add('translate-x-full', 'opacity-0');
+            }, 3200);
+        }
+
+        // ================= PWA MANIFEST & INITIALIZATION =================
+        function injectPWAManifest() {
+            const manifest = {
+                name: 'BASEBALL FINAL CUP',
+                short_name: 'Final Cup',
+                start_url: './',
+                display: 'standalone',
+                background_color: '#0B0F17',
+                theme_color: '#0B0F17',
+                orientation: 'portrait'
+            };
+            const link = document.getElementById('pwa-manifest');
+            if (link) {
+                link.href = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest));
+            }
+        }
+
+        window.addEventListener('load', () => {
+            injectPWAManifest();
+            setRandomSplashTip();
+            refreshAllUI();
+            initCloud();
+        });
+    </script>
+</body>
+</html>
