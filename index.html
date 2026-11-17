@@ -239,9 +239,15 @@
                 <span class="text-[11px] font-bold uppercase tracking-[0.28em] text-amber-400 block">Edición Oficial de Campeonato</span>
             </div>
 
-            <button onclick="enterMainMenu()" class="px-14 py-4 rounded-2xl btn-primary-gold font-display text-xl sm:text-2xl font-bold uppercase tracking-widest shadow-2xl hover:scale-105 active:scale-95 transition transform">
-                PLAY BALL
-            </button>
+            <div class="flex flex-col items-center gap-3 w-full max-w-xs">
+                <button onclick="enterMainMenu()" class="w-full px-14 py-4 rounded-2xl btn-primary-gold font-display text-xl sm:text-2xl font-bold uppercase tracking-widest shadow-2xl hover:scale-105 active:scale-95 transition transform">
+                    PLAY BALL
+                </button>
+                <button id="google-login-splash-btn" onclick="signInWithGoogle()" class="w-full px-5 py-3 rounded-xl card-minimal border border-amber-400/40 text-xs font-display font-bold uppercase tracking-wider flex items-center justify-center gap-2 hover:border-amber-400 transition shadow-md">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.14C3.26 21.3 7.31 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96z"/></svg>
+                    <span id="google-splash-label">Conectar con Google</span>
+                </button>
+            </div>
 
             <!-- Rotating Daily / Session Tip Note -->
             <div class="max-w-sm mx-auto px-4 py-2.5 rounded-xl bg-[var(--bg-surface)]/80 border border-[var(--border-subtle)] text-center space-y-0.5">
@@ -1146,55 +1152,51 @@
                 await setPersistence(auth, browserLocalPersistence);
             } catch (e) {}
 
-            // Wait briefly to see if a persistent Google session already exists before falling back
-            await new Promise((resolve) => {
-                const unsub = onAuthStateChanged(auth, (existingUser) => {
-                    unsub();
-                    resolve(existingUser);
-                });
-            });
-
-            if (!auth.currentUser) {
-                try {
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                } catch (e) {
-                    console.warn('Auth fallback:', e);
-                }
-            }
-
             onAuthStateChanged(auth, async (user) => {
-                if (!user) return;
+                if (!user) {
+                    try {
+                        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                            await signInWithCustomToken(auth, __initial_auth_token);
+                        } else {
+                            await signInAnonymously(auth);
+                        }
+                    } catch (e) {
+                        console.warn('Auth fallback:', e);
+                    }
+                    return;
+                }
+
                 currentUser = user;
                 userProfile.uid = user.uid;
 
                 const googleBtnLabel = document.getElementById('google-btn-label');
+                const googleSplashLabel = document.getElementById('google-splash-label');
+                const isAuth = !user.isAnonymous;
                 if (googleBtnLabel) {
-                    googleBtnLabel.textContent = !user.isAnonymous ? 'Google Conectado' : 'Conectar Google';
+                    googleBtnLabel.textContent = isAuth ? 'Google Conectado' : 'Conectar Google';
+                }
+                if (googleSplashLabel) {
+                    googleSplashLabel.textContent = isAuth ? 'Google Conectado' : 'Conectar con Google';
                 }
 
-                // Load private & public profile
+                // Load private profile from cloud first
                 const privRef = doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'data');
-                const snap = await getDoc(privRef);
-                if (snap.exists()) {
-                    userProfile = { ...userProfile, ...snap.data(), uid: user.uid, lastActive: Date.now() };
-                    if (!userProfile.sixDigitId || String(userProfile.sixDigitId).length !== 6) {
+                try {
+                    const snap = await getDoc(privRef);
+                    if (snap.exists()) {
+                        const cloudData = snap.data();
+                        userProfile = { ...userProfile, ...cloudData, uid: user.uid, lastActive: Date.now() };
+                    } else {
+                        // If signed in with Google, prefill name from Google account if available
+                        if (!user.isAnonymous && user.displayName) {
+                            const googleName = user.displayName.replace(/\s+/g, '_').slice(0, 16);
+                            userProfile.name = googleName;
+                        }
                         userProfile.sixDigitId = generateUniqueSixDigitId(allPublicUsers);
                         await syncProfileToCloud();
                     }
-                } else {
-                    userProfile.sixDigitId = generateUniqueSixDigitId(allPublicUsers);
-                    if (user.displayName) {
-                        const baseName = user.displayName.replace(/\s+/g, '_').slice(0, 16);
-                        const taken = allPublicUsers.some(u => (u.name || '').toLowerCase() === baseName.toLowerCase());
-                        userProfile.name = taken ? generateUniqueDefaultName(allPublicUsers) : baseName;
-                    } else {
-                        userProfile.name = generateUniqueDefaultName(allPublicUsers);
-                    }
-                    await syncProfileToCloud();
+                } catch (e) {
+                    console.error("Error reading cloud profile:", e);
                 }
 
                 checkMonthlySeasonReset();
@@ -1206,7 +1208,6 @@
                     allPublicUsers = [];
                     snapshot.forEach(d => allPublicUsers.push({ uid: d.id, ...d.data() }));
 
-                    // Ensure our 6-digit ID and username never collide with any existing cloud user
                     let needsResync = false;
                     if (allPublicUsers.some(u => u.uid !== userProfile.uid && String(u.sixDigitId) === String(userProfile.sixDigitId))) {
                         userProfile.sixDigitId = generateUniqueSixDigitId(allPublicUsers);
@@ -1234,7 +1235,6 @@
                 }, () => {});
             });
 
-            // Heartbeat every 30s so friends see "Activo ahora"
             setInterval(updatePresenceHeartbeat, 30000);
         }
 
