@@ -1047,7 +1047,7 @@
             { id: 'p_marmol', name: 'Carlos Mármol', pos: ['CP', 'RP'], ovr: 89, mlb: true, wbc: true, lidom: true, team: 'CHC', decade: '2010s' }
         ];
 
-        // ================= USER & GAME STATE =================
+        // ================= USER & LOCALSTORAGE / CLOUD STATE =================
         function generateUniqueSixDigitId(existingUsers = []) {
             const usedIds = new Set(existingUsers.map(u => String(u.sixDigitId || '')));
             let candidate = '';
@@ -1076,7 +1076,7 @@
             wins: 0,
             losses: 0,
             seasonMonth: new Date().toISOString().slice(0, 7),
-            avatarType: 'letter', // 'letter' or 'logo'
+            avatarType: 'letter',
             avatarLetter: 'M',
             avatarBg: '#002D72',
             equippedLogoId: null,
@@ -1085,21 +1085,29 @@
             lastActive: Date.now()
         };
 
-        // Draft buffer for Edit Profile (Changes apply ONLY when pressing Guardar Cambios)
-        let editDraft = null;
+        // Load persisted local backup immediately so progress never vanishes on reload
+        const LOCAL_STORAGE_KEY = 'bfc_local_profile_v1';
+        try {
+            const savedLocal = localStorage.getItem(LOCAL_STORAGE_KEY);
+            if (savedLocal) {
+                const parsed = JSON.parse(savedLocal);
+                if (parsed && parsed.uid) {
+                    userProfile = { ...userProfile, ...parsed };
+                }
+            }
+        } catch (e) {}
 
+        let editDraft = null;
         let gameState = {
-            mainMode: 'SOLO', // 'SOLO' or 'VS'
+            mainMode: 'SOLO',
             soloDifficulty: 'MVP',
             league: 'MLB',
             lineup: {},
             activeSlotPos: null,
-            // 162-0 state
             draftTeam: 'NYY',
             draftDecade: '1990s',
             wcTeamLeft: 3,
             wcDecadeLeft: 3,
-            // VS Async state
             vsOpponent: null,
             vsMatchId: null,
             vsIsResponder: false,
@@ -1107,7 +1115,6 @@
             lastResultSummary: null
         };
 
-        // ================= LEAGUE TIER & MONTHLY RESET =================
         function getLeagueTier(crowns) {
             if (crowns >= 50) return { name: 'HALL OF FAME', css: 'tier-hof' };
             if (crowns >= 30) return { name: 'LEGEND', css: 'tier-legend' };
@@ -1119,7 +1126,6 @@
         function checkMonthlySeasonReset() {
             const currentMonth = new Date().toISOString().slice(0, 7);
             if (userProfile.seasonMonth && userProfile.seasonMonth !== currentMonth) {
-                // Reduce 70% of crowns on new month (keep 30%)
                 userProfile.crowns = Math.floor(userProfile.crowns * 0.30);
                 userProfile.seasonMonth = currentMonth;
                 showToast('Nueva temporada mensual: reinicio de liga aplicado (-70% coronas).');
@@ -1129,7 +1135,6 @@
             }
         }
 
-        // ================= AVATAR RENDERER =================
         function buildAvatarHTML(profileObj, sizeClass = 'w-full h-full', textClass = 'text-sm') {
             if (profileObj.avatarType === 'logo' && profileObj.equippedLogoId) {
                 const logo = STORE_LOGOS.find(l => l.id === profileObj.equippedLogoId);
@@ -1142,7 +1147,7 @@
             return `<div class="${sizeClass} flex items-center justify-center font-display font-bold text-white ${textClass}" style="background:${bg};">${letter}</div>`;
         }
 
-        // ================= FIREBASE AUTH & REAL-TIME SYNC =================
+        // ================= FIREBASE AUTH & PERSISTENT SYNC =================
         async function initCloud() {
             if (!auth || !db) {
                 refreshAllUI();
@@ -1167,37 +1172,37 @@
                 }
 
                 currentUser = user;
-                userProfile.uid = user.uid;
+                if (user.uid && userProfile.uid.startsWith('local_')) {
+                    userProfile.uid = user.uid;
+                }
 
                 const googleBtnLabel = document.getElementById('google-btn-label');
                 const googleSplashLabel = document.getElementById('google-splash-label');
                 const isAuth = !user.isAnonymous;
-                if (googleBtnLabel) {
-                    googleBtnLabel.textContent = isAuth ? 'Google Conectado' : 'Conectar Google';
-                }
-                if (googleSplashLabel) {
-                    googleSplashLabel.textContent = isAuth ? 'Google Conectado' : 'Conectar con Google';
-                }
+                if (googleBtnLabel) googleBtnLabel.textContent = isAuth ? 'Google Conectado' : 'Conectar Google';
+                if (googleSplashLabel) googleSplashLabel.textContent = isAuth ? 'Google Conectado' : 'Conectar con Google';
 
-                // Load private profile from cloud first
+                // Fetch cloud data and merge robustly
                 const privRef = doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'data');
                 try {
                     const snap = await getDoc(privRef);
                     if (snap.exists()) {
                         const cloudData = snap.data();
+                        // Keep highest stats or cloud data while retaining local backup fallback
                         userProfile = { ...userProfile, ...cloudData, uid: user.uid, lastActive: Date.now() };
                     } else {
-                        // If signed in with Google, prefill name from Google account if available
                         if (!user.isAnonymous && user.displayName) {
-                            const googleName = user.displayName.replace(/\s+/g, '_').slice(0, 16);
-                            userProfile.name = googleName;
+                            userProfile.name = user.displayName.replace(/\s+/g, '_').slice(0, 16);
                         }
-                        userProfile.sixDigitId = generateUniqueSixDigitId(allPublicUsers);
                         await syncProfileToCloud();
                     }
                 } catch (e) {
                     console.error("Error reading cloud profile:", e);
                 }
+
+                try {
+                    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userProfile));
+                } catch (e) {}
 
                 checkMonthlySeasonReset();
                 await updatePresenceHeartbeat();
@@ -1207,21 +1212,6 @@
                 onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'players'), async (snapshot) => {
                     allPublicUsers = [];
                     snapshot.forEach(d => allPublicUsers.push({ uid: d.id, ...d.data() }));
-
-                    let needsResync = false;
-                    if (allPublicUsers.some(u => u.uid !== userProfile.uid && String(u.sixDigitId) === String(userProfile.sixDigitId))) {
-                        userProfile.sixDigitId = generateUniqueSixDigitId(allPublicUsers);
-                        needsResync = true;
-                    }
-                    if (allPublicUsers.some(u => u.uid !== userProfile.uid && (u.name || '').toLowerCase() === (userProfile.name || '').toLowerCase())) {
-                        userProfile.name = generateUniqueDefaultName(allPublicUsers);
-                        needsResync = true;
-                    }
-                    if (needsResync) {
-                        await syncProfileToCloud();
-                        refreshAllUI();
-                    }
-
                     renderRanking();
                     renderFriendsDirectory();
                     renderVSLobby();
@@ -1240,6 +1230,10 @@
 
         async function updatePresenceHeartbeat() {
             userProfile.lastActive = Date.now();
+            try {
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userProfile));
+            } catch (e) {}
+
             if (!db || !currentUser) return;
             try {
                 const pubRef = doc(db, 'artifacts', appId, 'public', 'data', 'players', currentUser.uid);
@@ -1249,6 +1243,10 @@
 
         async function syncProfileToCloud() {
             userProfile.lastActive = Date.now();
+            try {
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userProfile));
+            } catch (e) {}
+
             if (!db || !currentUser) return;
             try {
                 const privRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'data');
@@ -1260,8 +1258,7 @@
 
         window.signInWithGoogle = async function() {
             if (!auth || !db) {
-                showToast('Modo local activo: Firebase no está configurado en este entorno.');
-                console.warn('Firebase Auth or Firestore not initialized.');
+                showToast('Modo local activo: Firebase no está configurado.');
                 return;
             }
             try {
@@ -1270,7 +1267,7 @@
                 if (auth.currentUser && auth.currentUser.isAnonymous) {
                     try {
                         await linkWithPopup(auth.currentUser, provider);
-                    } catch (linkErr) {
+                    } catch (e) {
                         await signInWithPopup(auth, provider);
                     }
                 } else {
@@ -1279,11 +1276,10 @@
                 showToast('¡Sesión de Google iniciada con éxito!');
             } catch (err) {
                 console.error("Google Auth Error:", err);
-                showToast('Error al conectar con Google. Revisa tus dominios autorizados y la consola.');
+                showToast('Error al conectar con Google. Revisa tus dominios autorizados.');
             }
         };
 
-        // ================= PRESENCE FORMATTER =================
         function formatUserPresence(lastActiveTs) {
             if (!lastActiveTs) return { online: false, label: 'Sin conexión reciente' };
             const diffSec = Math.floor((Date.now() - lastActiveTs) / 1000);
@@ -1296,15 +1292,12 @@
             return { online: false, label: `Última vez hace ${days} d` };
         }
 
-        // ================= UI REFRESH & NAVIGATION =================
         function refreshAllUI() {
             const tier = getLeagueTier(userProfile.crowns);
-            // Top bar (ONLY Logo + Name + Stars)
             document.getElementById('top-stars-count').textContent = userProfile.stars;
             document.getElementById('top-player-name').textContent = userProfile.name;
             document.getElementById('top-avatar-slot').innerHTML = buildAvatarHTML(userProfile, 'w-full h-full', 'text-[11px]');
 
-            // Home centralized league hero
             const homeNameEl = document.getElementById('home-player-name');
             if (homeNameEl) homeNameEl.textContent = userProfile.name;
             const homeBadge = document.getElementById('home-league-badge');
@@ -1312,7 +1305,6 @@
             homeBadge.className = `px-4 py-1 rounded-full text-xs sm:text-sm font-display font-bold uppercase tracking-widest tier-rookie shadow-sm ${tier.css}`;
             document.getElementById('home-crowns-count').textContent = userProfile.crowns;
 
-            // Profile Card
             document.getElementById('profile-main-avatar').innerHTML = buildAvatarHTML(userProfile, 'w-full h-full', 'text-3xl');
             document.getElementById('profile-display-name').textContent = userProfile.name;
             const sixIdEl = document.getElementById('profile-six-id');
@@ -1345,7 +1337,6 @@
             document.getElementById('view-splash').classList.remove('hidden');
         };
 
-        // ================= SPLASH ROTATING TIPS =================
         const GAME_TIPS = [
             "Completa las 11 posiciones para revelar el OVR oculto de tu equipo.",
             "Si un jugador es multiposición, tócalo en tu alineación para moverlo a otro puesto elegible.",
@@ -1387,9 +1378,7 @@
             }
         };
 
-        // ================= PROFILE EDITOR (CHANGES APPLY ONLY ON SAVE) =================
         window.openProfileEditor = function() {
-            // Clone current profile into temporary editDraft
             editDraft = {
                 name: userProfile.name,
                 avatarType: userProfile.avatarType,
@@ -1410,7 +1399,6 @@
         };
 
         window.cancelProfileEdit = function() {
-            // Discard editDraft completely without saving anything
             editDraft = null;
             document.getElementById('profile-edit-card').classList.add('hidden');
             document.getElementById('profile-view-card').classList.remove('hidden');
@@ -1423,21 +1411,18 @@
         }
 
         function renderEditorOptions() {
-            // Letters A-Z
             const lettersGrid = document.getElementById('edit-letters-grid');
             lettersGrid.innerHTML = ALPHABET.map(l => {
                 const active = editDraft.avatarType === 'letter' && editDraft.avatarLetter === l;
                 return `<button type="button" onclick="selectDraftLetter('${l}')" class="h-8 rounded-lg text-xs font-display font-bold border ${active ? 'border-amber-400 bg-amber-400 text-slate-950' : 'border-[var(--border-subtle)] bg-[var(--bg-elevated)]'}">${l}</button>`;
             }).join('');
 
-            // Colors
             const colorsGrid = document.getElementById('edit-colors-grid');
             colorsGrid.innerHTML = BG_COLORS.map(c => {
                 const active = editDraft.avatarType === 'letter' && editDraft.avatarBg === c;
                 return `<button type="button" onclick="selectDraftColor('${c}')" class="w-8 h-8 rounded-full border-2 ${active ? 'border-amber-400 scale-110' : 'border-white/20'}" style="background:${c};"></button>`;
             }).join('');
 
-            // Owned Logos
             const logosGrid = document.getElementById('edit-owned-logos-grid');
             const owned = STORE_LOGOS.filter(l => (userProfile.ownedLogos || []).includes(l.id));
             if (owned.length === 0) {
@@ -1485,7 +1470,6 @@
                 return;
             }
 
-            // Check uniqueness & cost if name changed
             if (rawName !== userProfile.name) {
                 const duplicate = allPublicUsers.some(u => u.uid !== userProfile.uid && (u.name || '').toLowerCase() === rawName.toLowerCase());
                 if (duplicate) {
@@ -1503,7 +1487,6 @@
                 userProfile.nameChangedOnce = true;
             }
 
-            // Commit avatar changes ONLY now
             userProfile.avatarType = editDraft.avatarType;
             userProfile.avatarLetter = editDraft.avatarLetter;
             userProfile.avatarBg = editDraft.avatarBg;
@@ -1517,7 +1500,6 @@
             showToast('Cambios guardados en tu perfil.');
         };
 
-        // ================= STORE (ALL 30 MLB TEAMS + LIDOM + WBC) =================
         let activeStoreTab = 'MLB';
         window.filterStoreTab = function(tab) {
             activeStoreTab = tab;
@@ -1567,7 +1549,6 @@
             showToast(`Logo ${item.name} comprado. Equípalo en Editar Perfil.`);
         };
 
-        // ================= RANKING & FRIENDS =================
         function renderRanking() {
             const listEl = document.getElementById('ranking-list');
             const combined = [...allPublicUsers];
@@ -1627,698 +1608,4 @@
                                     <span class="text-xs font-bold truncate">${u.name}</span>
                                     <span class="text-[10px] font-mono text-amber-400/90">#${u.sixDigitId || '------'}</span>
                                 </div>
-                                <span class="text-[10px] ${presence.online ? 'text-emerald-400' : 'text-[var(--text-muted)]'}">${presence.label}</span>
-                            </div>
-                        </div>
-                        ${isFriend
-                            ? `<span class="text-[11px] font-bold text-emerald-400">Agregado</span>`
-                            : `<button onclick="addFriend('${u.uid}')" class="px-3 py-1 rounded-lg btn-primary-gold text-[11px] uppercase">Agregar</button>`
-                        }
-                    </div>`;
-                }).join('');
-            }
-
-            const friendObjs = others.filter(u => (userProfile.friends || []).includes(u.uid));
-            if (friendObjs.length === 0) {
-                myFriendsEl.innerHTML = `<p class="text-xs text-[var(--text-muted)]">Aún no tienes amigos agregados.</p>`;
-            } else {
-                myFriendsEl.innerHTML = friendObjs.map(u => {
-                    const presence = formatUserPresence(u.lastActive);
-                    const tier = getLeagueTier(u.crowns || 0);
-                    return `<div class="flex items-center justify-between p-2.5 rounded-xl bg-[var(--bg-elevated)]">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-9 h-9 rounded-lg overflow-hidden">${buildAvatarHTML(u, 'w-full h-full', 'text-xs')}</div>
-                            <div>
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-xs font-bold">${u.name}</span>
-                                    <span class="text-[10px] font-mono text-amber-400/80">#${u.sixDigitId || '------'}</span>
-                                    <span class="px-1.5 py-0.2 rounded text-[9px] font-display font-bold ${tier.css}">${tier.name}</span>
-                                </div>
-                                <span class="text-[10px] ${presence.online ? 'text-emerald-400' : 'text-[var(--text-muted)]'}">${presence.label}</span>
-                            </div>
-                        </div>
-                        <button onclick="initiateVSChallenge('${u.uid}')" class="px-3 py-1.5 rounded-lg btn-primary-blue text-[11px] font-bold uppercase">Retar VS</button>
-                    </div>`;
-                }).join('');
-            }
-        };
-
-        window.addFriend = async function(friendUid) {
-            if (!(userProfile.friends || []).includes(friendUid)) {
-                userProfile.friends = [...(userProfile.friends || []), friendUid];
-                await syncProfileToCloud();
-                renderFriendsDirectory();
-                showToast('Amigo agregado a tu lista.');
-            }
-        };
-
-        // ================= GAME FLOW: SOLO & ASYNC VS FRIENDS =================
-        window.selectMainMode = function(mode) {
-            gameState.mainMode = mode;
-            gameState.vsOpponent = null;
-            gameState.vsMatchId = null;
-            gameState.vsIsResponder = false;
-            gameState.vsChallengerLineup = null;
-
-            if (mode === 'VS') {
-                hideAllViews();
-                document.getElementById('view-vs-lobby').classList.remove('hidden');
-                renderVSLobby();
-                return;
-            }
-
-            hideAllViews();
-            document.getElementById('view-league-select').classList.remove('hidden');
-            document.getElementById('selected-mode-pill').textContent = 'MODO SOLO';
-            document.getElementById('solo-difficulty-box').classList.remove('hidden');
-            document.getElementById('btn-league-162').classList.remove('hidden');
-        };
-
-        window.setSoloDifficulty = function(diff) {
-            gameState.soloDifficulty = diff;
-            ['ROOKIE', 'MVP', 'HOF'].forEach(d => {
-                const btn = document.getElementById(`diff-${d}`);
-                btn.className = d === diff
-                    ? 'diff-btn py-2.5 px-3 rounded-xl border border-amber-400 bg-amber-400/15 text-amber-400 text-xs font-display font-bold uppercase tracking-wider transition'
-                    : 'diff-btn py-2.5 px-3 rounded-xl border border-[var(--border-subtle)] text-xs font-display font-bold uppercase tracking-wider transition';
-            });
-        };
-
-        // ================= ASYNC VS LOBBY LOGIC =================
-        function getPendingMatchWithUser(otherUid) {
-            return allAsyncMatches.find(m =>
-                m.status === 'pending' &&
-                ((m.challengerUid === userProfile.uid && m.opponentUid === otherUid) ||
-                 (m.challengerUid === otherUid && m.opponentUid === userProfile.uid))
-            );
-        }
-
-        function renderVSLobby() {
-            const pendingListEl = document.getElementById('vs-pending-list');
-            const friendsChallengeEl = document.getElementById('vs-friends-challenge-list');
-            const badgeEl = document.getElementById('vs-pending-badge');
-            if (!pendingListEl || !friendsChallengeEl) return;
-
-            const myPending = allAsyncMatches.filter(m =>
-                m.status === 'pending' &&
-                (m.challengerUid === userProfile.uid || m.opponentUid === userProfile.uid)
-            );
-
-            const incomingCount = myPending.filter(m => m.opponentUid === userProfile.uid).length;
-            if (badgeEl) {
-                if (incomingCount > 0) {
-                    badgeEl.textContent = incomingCount;
-                    badgeEl.classList.remove('hidden');
-                } else {
-                    badgeEl.classList.add('hidden');
-                }
-            }
-
-            if (myPending.length === 0) {
-                pendingListEl.innerHTML = `<p class="text-xs text-[var(--text-muted)]">No tienes partidas pendientes en este momento.</p>`;
-            } else {
-                pendingListEl.innerHTML = myPending.map(m => {
-                    const isIncoming = m.opponentUid === userProfile.uid;
-                    const rivalName = isIncoming ? m.challengerName : m.opponentName;
-                    return `<div class="p-3 rounded-xl bg-[var(--bg-elevated)] border border-amber-400/30 flex items-center justify-between gap-2">
-                        <div>
-                            <span class="text-xs font-bold block">${isIncoming ? `Reto recibido de ${rivalName}` : `Reto enviado a ${rivalName}`}</span>
-                            <span class="text-[11px] text-[var(--text-muted)]">Liga: ${m.league} • ${isIncoming ? 'Tu turno de armar equipo y simular' : 'Esperando respuesta de tu amigo'}</span>
-                        </div>
-                        ${isIncoming
-                            ? `<button onclick="acceptAsyncVS('${m.id}')" class="px-3.5 py-2 rounded-lg btn-primary-gold text-xs uppercase">Jugar Ahora</button>`
-                            : `<span class="px-2.5 py-1 rounded-lg bg-amber-500/15 text-amber-400 text-[11px] font-bold">Pendiente</span>`
-                        }
-                    </div>`;
-                }).join('');
-            }
-
-            const friendObjs = allPublicUsers.filter(u => (userProfile.friends || []).includes(u.uid));
-            if (friendObjs.length === 0) {
-                friendsChallengeEl.innerHTML = `<p class="text-xs text-[var(--text-muted)]">Agrega amigos en el apartado AMIGOS para enviarles un reto.</p>`;
-            } else {
-                friendsChallengeEl.innerHTML = friendObjs.map(f => {
-                    const activeMatch = getPendingMatchWithUser(f.uid);
-                    const presence = formatUserPresence(f.lastActive);
-                    return `<div class="p-3 rounded-xl bg-[var(--bg-elevated)] flex items-center justify-between gap-2">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-9 h-9 rounded-lg overflow-hidden">${buildAvatarHTML(f, 'w-full h-full', 'text-xs')}</div>
-                            <div>
-                                <span class="text-xs font-bold block">${f.name}</span>
-                                <span class="text-[10px] ${presence.online ? 'text-emerald-400' : 'text-[var(--text-muted)]'}">${presence.label}</span>
-                            </div>
-                        </div>
-                        ${activeMatch
-                            ? `<span class="px-2.5 py-1 rounded-lg bg-slate-700/60 text-[var(--text-muted)] text-[11px] font-semibold">Partida en curso</span>`
-                            : `<button onclick="initiateVSChallenge('${f.uid}')" class="px-3.5 py-1.5 rounded-lg btn-primary-blue text-xs font-bold uppercase">Enviar Reto</button>`
-                        }
-                    </div>`;
-                }).join('');
-            }
-        }
-
-        window.initiateVSChallenge = function(friendUid) {
-            if (getPendingMatchWithUser(friendUid)) {
-                showToast('Ya tienes una partida pendiente con este amigo. Termínala primero.');
-                return;
-            }
-            const friendObj = allPublicUsers.find(u => u.uid === friendUid) || { uid: friendUid, name: 'Amigo' };
-            gameState.mainMode = 'VS';
-            gameState.vsOpponent = friendObj;
-            gameState.vsMatchId = null;
-            gameState.vsIsResponder = false;
-            gameState.vsChallengerLineup = null;
-
-            hideAllViews();
-            document.getElementById('view-league-select').classList.remove('hidden');
-            document.getElementById('selected-mode-pill').textContent = `VS: ${friendObj.name}`;
-            document.getElementById('solo-difficulty-box').classList.add('hidden');
-            document.getElementById('btn-league-162').classList.add('hidden');
-        };
-
-        window.acceptAsyncVS = function(matchId) {
-            const match = allAsyncMatches.find(m => m.id === matchId);
-            if (!match) return;
-            gameState.mainMode = 'VS';
-            gameState.vsMatchId = match.id;
-            gameState.vsIsResponder = true;
-            gameState.vsChallengerLineup = match.challengerLineup;
-            gameState.vsOpponent = { uid: match.challengerUid, name: match.challengerName };
-            startLeague(match.league);
-        };
-
-        // ================= START LEAGUE & LINEUP BUILDER =================
-        window.startLeague = function(league) {
-            gameState.league = league;
-            gameState.lineup = {};
-            POSITIONS.forEach(p => gameState.lineup[p] = null);
-
-            hideAllViews();
-            document.getElementById('view-game').classList.remove('hidden');
-            document.getElementById('game-league-title').textContent = `[${league}]`;
-
-            const submitBtn = document.getElementById('btn-finish-lineup');
-            if (gameState.mainMode === 'VS') {
-                document.getElementById('game-opponent-subtitle').textContent = `vs ${gameState.vsOpponent?.name || 'Amigo'}`;
-                submitBtn.textContent = gameState.vsIsResponder ? 'Simular Serie Final' : 'Enviar Reto';
-            } else {
-                document.getElementById('game-opponent-subtitle').textContent = `vs IA (${gameState.soloDifficulty})`;
-                submitBtn.textContent = 'Simular Serie Final';
-            }
-
-            // 162-0 hides stadium diamond and shows only roster list + wildcards
-            const stadiumEl = document.getElementById('stadium-container');
-            const rosterEl = document.getElementById('roster-container');
-            const bar162 = document.getElementById('mode-162-bar');
-
-            if (league === '162-0') {
-                stadiumEl.classList.add('hidden');
-                rosterEl.className = 'lg:col-span-12 max-w-2xl mx-auto w-full card-minimal rounded-2xl p-4 space-y-2.5';
-                bar162.classList.remove('hidden');
-                gameState.wcTeamLeft = 3;
-                gameState.wcDecadeLeft = 3;
-                roll162Prompt();
-            } else {
-                stadiumEl.classList.remove('hidden');
-                rosterEl.className = 'lg:col-span-5 card-minimal rounded-2xl p-4 space-y-2.5';
-                bar162.classList.add('hidden');
-            }
-
-            renderBuilderBoard();
-        };
-
-        window.exitGameToMenu = function() {
-            if (gameState.mainMode === 'VS') {
-                selectMainMode('VS');
-            } else {
-                goHome();
-            }
-        };
-
-        function roll162Prompt() {
-            const teams = [...new Set(PLAYERS_DB.map(p => p.team))];
-            const decades = [...new Set(PLAYERS_DB.map(p => p.decade))];
-            gameState.draftTeam = teams[Math.floor(Math.random() * teams.length)];
-            gameState.draftDecade = decades[Math.floor(Math.random() * decades.length)];
-            document.getElementById('draft-prompt-text').textContent = `${gameState.draftTeam} — Década ${gameState.draftDecade}`;
-            document.getElementById('wc-team-count').textContent = gameState.wcTeamLeft;
-            document.getElementById('wc-decade-count').textContent = gameState.wcDecadeLeft;
-        }
-
-        window.useWildcard = function(type) {
-            if (type === 'team') {
-                if (gameState.wcTeamLeft <= 0) { showToast('Sin comodines de equipo.'); return; }
-                gameState.wcTeamLeft--;
-                const teams = [...new Set(PLAYERS_DB.map(p => p.team))].filter(t => t !== gameState.draftTeam);
-                gameState.draftTeam = teams[Math.floor(Math.random() * teams.length)];
-            } else {
-                if (gameState.wcDecadeLeft <= 0) { showToast('Sin comodines de década.'); return; }
-                gameState.wcDecadeLeft--;
-                const decades = [...new Set(PLAYERS_DB.map(p => p.decade))].filter(d => d !== gameState.draftDecade);
-                gameState.draftDecade = decades[Math.floor(Math.random() * decades.length)];
-            }
-            document.getElementById('draft-prompt-text').textContent = `${gameState.draftTeam} — Década ${gameState.draftDecade}`;
-            document.getElementById('wc-team-count').textContent = gameState.wcTeamLeft;
-            document.getElementById('wc-decade-count').textContent = gameState.wcDecadeLeft;
-        };
-
-        function renderBuilderBoard() {
-            const filledCount = POSITIONS.filter(p => gameState.lineup[p] !== null).length;
-            document.getElementById('lineup-progress').textContent = `${filledCount}/11`;
-            document.getElementById('btn-finish-lineup').disabled = filledCount < 11;
-
-            // Diamond Nodes
-            const nodesContainer = document.getElementById('diamond-nodes');
-            nodesContainer.innerHTML = POSITIONS.map(pos => {
-                const player = gameState.lineup[pos];
-                const coords = DIAMOND_COORDS[pos];
-                return `<button onclick="openPositionModal('${pos}')" style="top:${coords.top}; left:${coords.left}; transform:translate(-50%,-50%);" class="pos-node absolute px-2.5 py-1.5 rounded-xl border ${player ? 'bg-slate-950/90 border-amber-400 text-white' : 'bg-slate-900/80 border-white/25 text-slate-300'} shadow-lg text-center min-w-[66px]">
-                    <span class="text-[10px] font-display font-bold text-amber-400 block leading-none">${pos}</span>
-                    <span class="text-[10px] font-semibold block truncate max-w-[82px] mt-0.5">${player ? player.name.split(' ').pop() : '+ Elegir'}</span>
-                </button>`;
-            }).join('');
-
-            // Roster List (OVR hidden until simulation!)
-            const rosterList = document.getElementById('roster-list');
-            rosterList.innerHTML = POSITIONS.map(pos => {
-                const player = gameState.lineup[pos];
-                const canSwap = player && player.pos.length > 1;
-                return `<button onclick="openPositionModal('${pos}')" class="w-full p-2.5 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] hover:border-amber-400/50 flex items-center justify-between text-left transition">
-                    <div class="flex items-center gap-2.5 min-w-0">
-                        <span class="w-8 h-7 rounded-lg bg-[#002D72] text-white font-display text-xs font-bold flex items-center justify-center shrink-0">${pos}</span>
-                        <div class="min-w-0">
-                            <span class="text-xs font-bold block truncate">${player ? player.name : 'Posición disponible'}</span>
-                            ${player ? `<span class="text-[10px] text-[var(--text-muted)]">Posiciones: ${player.pos.join(', ')}</span>` : ''}
-                        </div>
-                    </div>
-                    <span class="text-[11px] font-semibold ${player ? (canSwap ? 'text-amber-400' : 'text-emerald-400') : 'text-[var(--text-muted)]'}">
-                        ${player ? (canSwap ? 'Mover' : 'Fijado') : 'Seleccionar'}
-                    </span>
-                </button>`;
-            }).join('');
-        }
-
-        // ================= POSITION SELECTION & LOCKED SWAP MODAL =================
-        window.openPositionModal = function(pos) {
-            gameState.activeSlotPos = pos;
-            const currentPlayer = gameState.lineup[pos];
-            document.getElementById('modal-pos-title').textContent = `Posición: ${pos}`;
-            document.getElementById('player-modal').classList.remove('hidden');
-
-            const swapBox = document.getElementById('modal-swap-box');
-            const searchBox = document.getElementById('modal-search-box');
-
-            // STRICT RULE: Once chosen, player CANNOT be replaced with another player, ONLY moved to another eligible position!
-            if (currentPlayer) {
-                searchBox.classList.add('hidden');
-                swapBox.classList.remove('hidden');
-                document.getElementById('modal-locked-player-name').textContent = currentPlayer.name;
-
-                const otherEligiblePositions = currentPlayer.pos.filter(p => p !== pos && POSITIONS.includes(p));
-                const targetsEl = document.getElementById('modal-swap-targets');
-                if (otherEligiblePositions.length === 0) {
-                    targetsEl.innerHTML = `<span class="text-xs text-[var(--text-muted)]">Este jugador solo juega en ${pos} y ya está fijado en tu equipo.</span>`;
-                } else {
-                    targetsEl.innerHTML = otherEligiblePositions.map(targetPos => {
-                        const occupant = gameState.lineup[targetPos];
-                        const canSwapOccupant = !occupant || occupant.pos.includes(pos);
-                        if (!canSwapOccupant) {
-                            return `<span class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-500 text-xs">${targetPos} (Ocupado por ${occupant.name})</span>`;
-                        }
-                        return `<button onclick="swapPlayerPosition('${pos}', '${targetPos}')" class="px-3 py-1.5 rounded-lg btn-primary-gold text-xs uppercase">
-                            Mover a ${targetPos} ${occupant ? `(Intercambiar con ${occupant.name})` : ''}
-                        </button>`;
-                    }).join('');
-                }
-            } else {
-                swapBox.classList.add('hidden');
-                searchBox.classList.remove('hidden');
-                document.getElementById('player-search-input').value = '';
-                filterPlayerResults();
-                setTimeout(() => document.getElementById('player-search-input').focus(), 60);
-            }
-        };
-
-        window.closePlayerModal = function() {
-            document.getElementById('player-modal').classList.add('hidden');
-        };
-
-        window.swapPlayerPosition = function(fromPos, toPos) {
-            const p1 = gameState.lineup[fromPos];
-            const p2 = gameState.lineup[toPos];
-            if (!p1 || !p1.pos.includes(toPos)) return;
-            if (p2 && !p2.pos.includes(fromPos)) {
-                showToast(`${p2.name} no puede jugar en ${fromPos}.`);
-                return;
-            }
-            gameState.lineup[toPos] = p1;
-            gameState.lineup[fromPos] = p2 || null;
-            closePlayerModal();
-            renderBuilderBoard();
-            showToast(`${p1.name} movido a ${toPos}.`);
-        };
-
-        window.filterPlayerResults = function() {
-            const pos = gameState.activeSlotPos;
-            const query = document.getElementById('player-search-input').value.trim().toLowerCase();
-            // STRICT RULE: Exclude players already selected anywhere in this team
-            const selectedIds = new Set(Object.values(gameState.lineup).filter(Boolean).map(p => p.id));
-
-            let candidates = PLAYERS_DB.filter(p => p.pos.includes(pos) && !selectedIds.has(p.id));
-
-            if (gameState.league === 'WBC') candidates = candidates.filter(p => p.wbc);
-            if (gameState.league === 'LIDOM') candidates = candidates.filter(p => p.lidom);
-            if (gameState.league === '162-0') {
-                const strict162 = candidates.filter(p => p.team === gameState.draftTeam && p.decade === gameState.draftDecade);
-                if (strict162.length > 0) candidates = strict162;
-            }
-
-            if (query) {
-                candidates = candidates.filter(p => p.name.toLowerCase().includes(query));
-            }
-
-            const resultsEl = document.getElementById('player-search-results');
-            if (candidates.length === 0) {
-                resultsEl.innerHTML = `<p class="text-xs text-[var(--text-muted)] py-3 text-center">No hay jugadores disponibles para ${pos}.</p>`;
-                return;
-            }
-
-            // OVR stays hidden during selection
-            resultsEl.innerHTML = candidates.map(p => `
-                <button onclick="selectPlayerForSlot('${p.id}')" class="w-full p-2.5 rounded-xl bg-[var(--bg-elevated)] hover:border-amber-400 border border-transparent flex items-center justify-between text-left transition">
-                    <div>
-                        <span class="text-xs font-bold block">${p.name}</span>
-                        <span class="text-[10px] text-[var(--text-muted)]">${p.team} • ${p.decade} • Pos: ${p.pos.join(', ')}</span>
-                    </div>
-                    <span class="px-2.5 py-1 rounded-lg bg-amber-400/15 text-amber-400 text-[11px] font-bold">Fichar</span>
-                </button>
-            `).join('');
-        };
-
-        window.selectPlayerForSlot = function(playerId) {
-            const pos = gameState.activeSlotPos;
-            const player = PLAYERS_DB.find(p => p.id === playerId);
-            if (!player) return;
-
-            // Double check no duplicate in same team
-            const alreadyInTeam = Object.values(gameState.lineup).some(p => p && p.id === player.id);
-            if (alreadyInTeam) {
-                showToast('Este jugador ya está en tu equipo.');
-                return;
-            }
-
-            gameState.lineup[pos] = player;
-            closePlayerModal();
-            if (gameState.league === '162-0') roll162Prompt();
-            renderBuilderBoard();
-        };
-
-        // ================= SUBMIT LINEUP: SEND ASYNC VS CHALLENGE OR SIMULATE =================
-        window.handleLineupSubmit = async function() {
-            const filledCount = POSITIONS.filter(p => gameState.lineup[p] !== null).length;
-            if (filledCount < 11) return;
-
-            // CASE 1: VS MODE — SENDING CHALLENGE TO FRIEND
-            if (gameState.mainMode === 'VS' && !gameState.vsIsResponder) {
-                const matchPayload = {
-                    challengerUid: userProfile.uid,
-                    challengerName: userProfile.name,
-                    opponentUid: gameState.vsOpponent.uid,
-                    opponentName: gameState.vsOpponent.name,
-                    league: gameState.league,
-                    challengerLineup: gameState.lineup,
-                    status: 'pending',
-                    createdAt: Date.now()
-                };
-
-                if (db) {
-                    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'vs_matches'), matchPayload);
-                } else {
-                    allAsyncMatches.push({ id: 'local_vs_' + Date.now(), ...matchPayload });
-                }
-
-                showToast(`Reto enviado a ${gameState.vsOpponent.name}. Cuando entre a VS podrá simular.`);
-                selectMainMode('VS');
-                return;
-            }
-
-            // CASE 2: VS MODE — RESPONDER SIMULATES AGAINST CHALLENGER'S LINEUP
-            if (gameState.mainMode === 'VS' && gameState.vsIsResponder) {
-                if (db && gameState.vsMatchId) {
-                    try {
-                        await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'vs_matches', gameState.vsMatchId), {
-                            status: 'completed',
-                            completedAt: Date.now()
-                        });
-                    } catch (e) {}
-                }
-                simulateFinalSeries(
-                    userProfile.name,
-                    gameState.lineup,
-                    gameState.vsOpponent.name,
-                    gameState.vsChallengerLineup
-                );
-                return;
-            }
-
-            // CASE 3: SOLO MODE — GENERATE AI LINEUP BY DIFFICULTY & SIMULATE
-            const aiLineup = buildAILineup(gameState.league, gameState.soloDifficulty);
-            simulateFinalSeries(userProfile.name, gameState.lineup, `IA (${gameState.soloDifficulty})`, aiLineup);
-        };
-
-        function buildAILineup(league, difficulty) {
-            const aiTeam = {};
-            const usedIds = new Set();
-            let pool = [...PLAYERS_DB];
-            if (league === 'WBC') pool = pool.filter(p => p.wbc);
-            if (league === 'LIDOM') pool = pool.filter(p => p.lidom);
-
-            POSITIONS.forEach(pos => {
-                let candidates = pool.filter(p => p.pos.includes(pos) && !usedIds.has(p.id));
-                if (candidates.length === 0) candidates = PLAYERS_DB.filter(p => p.pos.includes(pos) && !usedIds.has(p.id));
-                candidates.sort((a, b) => b.ovr - a.ovr);
-
-                let chosen;
-                if (difficulty === 'HOF') {
-                    chosen = candidates[0];
-                } else if (difficulty === 'MVP') {
-                    chosen = candidates[Math.min(1, candidates.length - 1)];
-                } else {
-                    chosen = candidates[candidates.length - 1];
-                }
-                aiTeam[pos] = chosen;
-                usedIds.add(chosen.id);
-            });
-            return aiTeam;
-        }
-
-        // ================= BEST-OF-7 SERIES SIMULATION, MVP, CY YOUNG & REWARDS =================
-        async function simulateFinalSeries(teamAName, lineupA, teamBName, lineupB) {
-            const avgA = Math.round(POSITIONS.reduce((s, p) => s + (lineupA[p]?.ovr || 85), 0) / 11);
-            const avgB = Math.round(POSITIONS.reduce((s, p) => s + (lineupB[p]?.ovr || 85), 0) / 11);
-
-            let diffMod = 0;
-            if (gameState.mainMode === 'SOLO') {
-                if (gameState.soloDifficulty === 'ROOKIE') diffMod = 4;
-                if (gameState.soloDifficulty === 'HOF') diffMod = -4;
-            }
-
-            let winsA = 0, winsB = 0;
-            const games = [];
-            while (winsA < 4 && winsB < 4) {
-                const gameNum = games.length + 1;
-                const probA = 0.5 + ((avgA - avgB + diffMod) * 0.025);
-                const aWon = Math.random() < Math.max(0.15, Math.min(0.85, probA));
-                let runsA = Math.floor(1 + Math.random() * 7);
-                let runsB = Math.floor(1 + Math.random() * 7);
-                if (aWon && runsA <= runsB) runsA = runsB + Math.floor(1 + Math.random() * 3);
-                if (!aWon && runsB <= runsA) runsB = runsA + Math.floor(1 + Math.random() * 3);
-                if (aWon) winsA++; else winsB++;
-                games.push({ label: `J${gameNum}`, runsA, runsB, aWon });
-            }
-
-            const userWon = winsA === 4;
-            const winnerName = userWon ? teamAName : teamBName;
-            const winningLineup = userWon ? lineupA : lineupB;
-
-            // Pick MVP (Position Player) & CY YOUNG (Pitcher) from winning lineup
-            const batters = ['C', '1B', '2B', 'SS', '3B', 'LF', 'CF', 'RF'].map(p => winningLineup[p]);
-            batters.sort((a, b) => b.ovr - a.ovr);
-            const mvpPlayer = batters[0];
-            const mvpHR = Math.floor(2 + Math.random() * 4);
-            const mvpRBI = mvpHR * 2 + Math.floor(2 + Math.random() * 5);
-            const mvpAVG = `.${340 + Math.floor(Math.random() * 95)}`;
-
-            const pitchers = ['SP1', 'RP', 'CP'].map(p => winningLineup[p]);
-            pitchers.sort((a, b) => b.ovr - a.ovr);
-            const cyPlayer = pitchers[0];
-            const cySO = Math.floor(11 + Math.random() * 14);
-            const cyERA = `0.${45 + Math.floor(Math.random() * 95)}`;
-            // Update Crowns (+3 on win, -2 on loss), Stars & Record
-            if (userWon) {
-                userProfile.wins += 1;
-                userProfile.crowns += 3;
-                userProfile.stars += 50;
-                document.getElementById('result-reward-badge').textContent = '+3 Coronas • +50 Estrellas';
-            } else {
-                userProfile.losses += 1;
-                userProfile.crowns = Math.max(0, (userProfile.crowns || 0) - 2);
-                userProfile.stars += 15;
-                document.getElementById('result-reward-badge').textContent = '-2 Coronas • +15 Estrellas';
-            }
-            await syncProfileToCloud();
-            refreshAllUI();
-
-            // Store summary for sharing
-            const gamesText = games.map(g => `${g.label} ${g.runsA}-${g.runsB}`).join(', ');
-            gameState.lastResultSummary =
-                `🏆 BASEBALL FINAL CUP (${gameState.league})\n` +
-                `Campeón: ${winnerName} (${winsA}-${winsB})\n` +
-                `Juegos: ${gamesText}\n` +
-                `MVP: ${mvpPlayer.name} (${mvpAVG}, ${mvpHR} HR, ${mvpRBI} RBI)\n` +
-                `CY YOUNG: ${cyPlayer.name} (${cyERA} ERA, ${cySO} K)`;
-
-            // Render Results View
-            hideAllViews();
-            document.getElementById('view-results').classList.remove('hidden');
-            document.getElementById('result-winner-banner').textContent = `CAMPEÓN: ${winnerName}`;
-            document.getElementById('result-series-score').textContent = `${winsA} - ${winsB}`;
-            document.getElementById('result-mvp-name').textContent = mvpPlayer.name;
-            document.getElementById('result-mvp-stats').textContent = `${mvpAVG} AVG • ${mvpHR} HR • ${mvpRBI} RBI`;
-            document.getElementById('result-cy-name').textContent = cyPlayer.name;
-            document.getElementById('result-cy-stats').textContent = `${cyERA} ERA • ${cySO} Ponches`;
-
-            // Render Game-by-Game Box Scores
-            document.getElementById('result-games-grid').innerHTML = games.map(g => `
-                <div class="p-2.5 rounded-xl bg-[var(--bg-elevated)] border ${g.aWon ? 'border-emerald-500/30' : 'border-rose-500/30'} text-center">
-                    <span class="text-[10px] font-bold uppercase text-[var(--text-muted)] block">${g.label}</span>
-                    <strong class="font-display text-base ${g.aWon ? 'text-emerald-400' : 'text-rose-400'}">${g.runsA} - ${g.runsB}</strong>
-                </div>
-            `).join('');
-
-            // Reveal Lineups & OVR Comparison
-            document.getElementById('res-teamA-label').textContent = teamAName;
-            document.getElementById('res-teamA-ovr').textContent = `OVR ${avgA}`;
-            document.getElementById('res-teamA-list').innerHTML = POSITIONS.map(p => `
-                <div class="flex items-center justify-between py-1 px-2 rounded bg-[var(--bg-elevated)]">
-                    <span><strong class="text-amber-400">${p}</strong> ${lineupA[p]?.name || '—'}</span>
-                    <span class="font-bold">${lineupA[p]?.ovr || 0}</span>
-                </div>
-            `).join('');
-
-            document.getElementById('res-teamB-label').textContent = teamBName;
-            document.getElementById('res-teamB-ovr').textContent = `OVR ${avgB}`;
-            document.getElementById('res-teamB-list').innerHTML = POSITIONS.map(p => `
-                <div class="flex items-center justify-between py-1 px-2 rounded bg-[var(--bg-elevated)]">
-                    <span><strong class="text-sky-400">${p}</strong> ${lineupB[p]?.name || '—'}</span>
-                    <span class="font-bold">${lineupB[p]?.ovr || 0}</span>
-                </div>
-            `).join('');
-
-            const returnBtn = document.getElementById('btn-post-game-return');
-            returnBtn.textContent = gameState.mainMode === 'VS' ? 'Volver a VS' : 'Volver al Inicio';
-        }
-
-        window.copyPlayerSixDigitId = function() {
-            copyToClipboard(String(userProfile.sixDigitId || '000000'), `ID #${userProfile.sixDigitId} copiado.`);
-        };
-
-        window.shareSeriesResultCard = async function() {
-            if (!gameState.lastResultSummary) return;
-            if (navigator.share) {
-                try {
-                    await navigator.share({
-                        title: 'BASEBALL FINAL CUP — Resultado',
-                        text: gameState.lastResultSummary
-                    });
-                    return;
-                } catch (e) {}
-            }
-            copyToClipboard(gameState.lastResultSummary, 'Tarjeta de resultado copiada para compartir.');
-        };
-
-        window.returnAfterMatch = function() {
-            if (gameState.mainMode === 'VS') {
-                selectMainMode('VS');
-            } else {
-                goHome();
-            }
-        };
-
-        function copyToClipboard(text, successMsg) {
-            const ta = document.createElement('textarea');
-            ta.value = text;
-            document.body.appendChild(ta);
-            ta.select();
-            document.execCommand('copy');
-            document.body.removeChild(ta);
-            showToast(successMsg);
-        }
-
-        // ================= SETTINGS & DISPLAY CONTROLS =================
-        window.openSettingsModal = function() { document.getElementById('settings-modal').classList.remove('hidden'); };
-        window.closeSettingsModal = function() { document.getElementById('settings-modal').classList.add('hidden'); };
-
-        window.setThemeMode = function(mode) {
-            if (mode === 'light') {
-                document.documentElement.classList.add('light-mode');
-            } else {
-                document.documentElement.classList.remove('light-mode');
-            }
-        };
-
-        window.setFontSize = function(size) {
-            document.documentElement.classList.remove('font-size-sm', 'font-size-md', 'font-size-lg');
-            document.documentElement.classList.add(`font-size-${size}`);
-        };
-
-        window.setFontWeight = function(weight) {
-            if (weight === 'bold') {
-                document.documentElement.classList.add('font-weight-bold');
-            } else {
-                document.documentElement.classList.remove('font-weight-bold');
-            }
-        };
-
-        function showToast(msg) {
-            const box = document.getElementById('toast-box');
-            document.getElementById('toast-msg').textContent = msg;
-            box.classList.remove('translate-x-full', 'opacity-0');
-            setTimeout(() => box.classList.add('translate-x-full', 'opacity-0'), 3200);
-        }
-
-        // Initialize App on Window Load
-        window.onload = function() {
-            setRandomSplashTip();
-            setupNativePWAManifest();
-            refreshAllUI();
-            initCloud();
-        };
-
-        // ================= NATIVE STORE / PWA MANIFEST & SERVICE WORKER =================
-        function setupNativePWAManifest() {
-            const manifestObj = {
-                name: "BASEBALL FINAL CUP",
-                short_name: "Final Cup",
-                description: "Simulador oficial de Serie Final de Béisbol — MLB, WBC, LIDOM y 162-0.",
-                start_url: "./",
-                display: "standalone",
-                orientation: "portrait",
-                background_color: "#0B0F17",
-                theme_color: "#0B0F17",
-                icons: [
-                    {
-                        src: "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="110" fill="#061D3D"/><circle cx="256" cy="210" r="110" fill="#FFFFFF" stroke="#D4AF37" stroke-width="18"/><text x="256" y="425" text-anchor="middle" fill="#D4AF37" font-family="sans-serif" font-weight="900" font-size="78">BFC</text></svg>`),
-                        sizes: "512x512",
-                        type: "image/svg+xml",
-                        purpose: "any maskable"
-                    }
-                ]
-            };
-            const blob = new Blob([JSON.stringify(manifestObj)], { type: 'application/json' });
-            const manifestLink = document.getElementById('pwa-manifest');
-            if (manifestLink) manifestLink.href = URL.createObjectURL(blob);
-        }
-    </script>
-</body>
-</html>
+                                <span class="text-[10px] ${presence.online ? 'text-emerald-
