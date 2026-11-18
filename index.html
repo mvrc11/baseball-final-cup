@@ -455,7 +455,7 @@
             </div>
 
             <div class="pt-4">
-                <span class="text-[10px] font-mono tracking-widest text-[var(--text-muted)]/35 select-none">V0.001.6</span>
+                <span id="app-version-tag" class="text-[10px] font-mono tracking-widest text-[var(--text-muted)]/35 select-none">V0.001.8</span>
             </div>
         </section>
 
@@ -803,7 +803,10 @@
                         <span class="text-[10px] font-bold uppercase tracking-widest text-amber-400 block">Carrera Guardada en Curso</span>
                         <strong id="career-resume-info" class="text-sm font-bold">—</strong>
                     </div>
-                    <button onclick="resumeSavedCareer()" class="px-4 py-2 rounded-xl btn-primary-gold text-xs uppercase font-bold">Continuar Carrera →</button>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button onclick="cancelSavedCareer()" class="px-3.5 py-2 rounded-xl bg-rose-600/20 border border-rose-500/45 text-rose-400 hover:bg-rose-600 hover:text-white text-xs uppercase font-bold transition">Cancelar Carrera</button>
+                        <button onclick="resumeSavedCareer()" class="px-4 py-2 rounded-xl btn-primary-gold text-xs uppercase font-bold">Continuar Carrera →</button>
+                    </div>
                 </div>
 
                 <div id="career-hub-solo-panel" class="p-4 rounded-2xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] space-y-3">
@@ -831,7 +834,7 @@
                         <span id="career-room-badge" class="hidden text-[10px] font-mono font-bold text-amber-400 uppercase block mb-0.5">SALA VS: ------</span>
                         <h2 class="font-display text-2xl font-bold uppercase text-amber-400">Creación del Prospecto</h2>
                     </div>
-                    <span class="text-xs font-bold text-[var(--text-muted)]">Paso 1 de 5</span>
+                    <span class="text-xs font-bold text-[var(--text-muted)]">Paso 1 de 4</span>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -923,13 +926,13 @@
                         </div>
                     </div>
                     <div class="w-full h-2 rounded-full bg-[var(--bg-elevated)] overflow-hidden">
-                        <div id="career-progress-bar" class="h-full transition-all duration-500" style="width: 16%; background: var(--theme-accent);"></div>
+                        <div id="career-progress-bar" class="h-full transition-all duration-500" style="width: 25%; background: var(--theme-accent);"></div>
                     </div>
                 </div>
 
                 <div id="career-decision-panel" class="card-minimal rounded-2xl p-5 space-y-4 border-amber-400/30">
                     <div>
-                        <span id="career-stage-kicker" class="text-[10px] font-bold uppercase tracking-widest text-amber-400">ETAPA 1 DE 6</span>
+                        <span id="career-stage-kicker" class="text-[10px] font-bold uppercase tracking-widest text-amber-400">ETAPA 1 DE 4</span>
                         <h2 id="career-stage-title" class="font-display text-2xl font-bold uppercase">DRAFT DE LIGAS MENORES</h2>
                         <p id="career-stage-desc" class="text-xs text-[var(--text-muted)] mt-0.5">Selecciona la organización de Minor League Baseball donde iniciarás tu desarrollo profesional.</p>
                     </div>
@@ -971,33 +974,60 @@
                     </div>
                 </div>
 
+                <!-- SEQUENTIAL STAGE DRAW REPORT: 1) CONTRATO -> 2) BATEO -> 3) PITCHEO (SI APLICA) -> 4) PREMIOS -->
                 <div id="career-stage-report" class="hidden card-minimal rounded-2xl p-5 space-y-4 border-amber-400/40">
                     <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border-subtle)] pb-3">
                         <div>
-                            <span class="text-[10px] font-bold uppercase tracking-widest text-amber-400">RESUMEN DE CONTRATO Y RENDIMIENTO</span>
-                            <h3 id="report-team-headline" class="font-display text-xl font-bold uppercase">New York Yankees — 4 Temporadas</h3>
+                            <span id="report-phase-kicker" class="text-[10px] font-bold uppercase tracking-widest text-amber-400">FASE 1: SORTEO DE CONTRATO Y DURACIÓN</span>
+                            <h3 id="report-team-headline" class="font-display text-xl font-bold uppercase">New York Yankees</h3>
                         </div>
-                        <span id="report-contract-total" class="px-3 py-1 rounded-xl bg-amber-400/15 border border-amber-400/35 font-display text-sm font-bold text-amber-400">Total: $48.0M</span>
+                        <span id="report-contract-total" class="px-3 py-1 rounded-xl bg-amber-400/15 border border-amber-400/35 font-display text-sm font-bold text-amber-400">Por definir</span>
                     </div>
 
-                    <div id="report-contract-details" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center"></div>
-                    <div id="report-stats-grid" class="grid grid-cols-3 sm:grid-cols-7 gap-2 text-center"></div>
-
-                    <div id="report-stats-draw-box" class="hidden space-y-2.5 p-3.5 rounded-2xl bg-[var(--bg-elevated)] border border-amber-400/30">
+                    <!-- PHASE 1: RANDOM DRAW FOR YEARS & ANNUAL SALARY -->
+                    <div id="report-contract-draw-box" class="space-y-2.5 p-3.5 rounded-2xl bg-[var(--bg-elevated)] border border-amber-400/30">
                         <div class="flex flex-wrap items-center justify-between gap-2">
                             <div>
-                                <span class="text-[11px] font-bold uppercase tracking-wider text-amber-400 block">Sorteo de Estadísticas de la Etapa</span>
-                                <span id="report-stats-draw-subtitle" class="text-[10px] text-[var(--text-muted)]">Sortea las estadísticas clave; los promedios se calcularán automáticamente.</span>
+                                <span class="text-[11px] font-bold uppercase tracking-wider text-amber-400 block">Paso 1: Sorteo de Años y Pago del Contrato</span>
+                                <span class="text-[10px] text-[var(--text-muted)]">Sortea al azar la duración (años) y el salario anual de tu firma.</span>
                             </div>
-                            <span id="report-stats-progress" class="text-[11px] font-display font-bold uppercase text-amber-400">0/4 Reveladas</span>
+                            <span id="report-contract-progress" class="text-[11px] font-display font-bold uppercase text-amber-400">0/2 Revelados</span>
                         </div>
-                        <div id="report-stats-roulette" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5"></div>
+                        <div id="report-contract-roulette" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
+                        <div id="report-contract-details" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center pt-1"></div>
                     </div>
 
-                    <div class="space-y-2.5 p-3.5 rounded-2xl bg-[var(--bg-elevated)] border border-amber-400/30">
+                    <!-- PHASE 2: RANDOM DRAW FOR BATTING STATS (H, HR, RBI, SB) -->
+                    <div id="report-batting-draw-box" class="hidden space-y-2.5 p-3.5 rounded-2xl bg-[var(--bg-elevated)] border border-amber-400/30">
                         <div class="flex flex-wrap items-center justify-between gap-2">
                             <div>
-                                <span class="text-[11px] font-bold uppercase tracking-wider text-amber-400 block">Sorteo de Premios de la Etapa</span>
+                                <span class="text-[11px] font-bold uppercase tracking-wider text-amber-400 block">Paso 2: Sorteo de Estadísticas de Bateo</span>
+                                <span class="text-[10px] text-[var(--text-muted)]">Sortea H, HR, RBI y SB; el AVG y OPS se calcularán automáticamente.</span>
+                            </div>
+                            <span id="report-batting-progress" class="text-[11px] font-display font-bold uppercase text-amber-400">0/4 Reveladas</span>
+                        </div>
+                        <div id="report-batting-roulette" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5"></div>
+                        <div id="report-batting-grid" class="grid grid-cols-3 sm:grid-cols-7 gap-2 text-center pt-1"></div>
+                    </div>
+
+                    <!-- PHASE 3 (IF PITCHER PRIMARY OR SECONDARY): RANDOM DRAW FOR PITCHING STATS (W, L, K, BB) -->
+                    <div id="report-pitching-draw-box" class="hidden space-y-2.5 p-3.5 rounded-2xl bg-[var(--bg-elevated)] border border-amber-400/30">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div>
+                                <span class="text-[11px] font-bold uppercase tracking-wider text-amber-400 block">Paso 3: Sorteo de Estadísticas de Pitcheo</span>
+                                <span class="text-[10px] text-[var(--text-muted)]">Sortea W, L, K y BB; la ERA y el WHIP se calcularán automáticamente.</span>
+                            </div>
+                            <span id="report-pitching-progress" class="text-[11px] font-display font-bold uppercase text-amber-400">0/4 Reveladas</span>
+                        </div>
+                        <div id="report-pitching-roulette" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5"></div>
+                        <div id="report-pitching-grid" class="grid grid-cols-3 sm:grid-cols-7 gap-2 text-center pt-1"></div>
+                    </div>
+
+                    <!-- PHASE 4: RANDOM DRAW FOR AWARDS -->
+                    <div id="report-awards-draw-box" class="hidden space-y-2.5 p-3.5 rounded-2xl bg-[var(--bg-elevated)] border border-amber-400/30">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div>
+                                <span id="report-awards-step-title" class="text-[11px] font-bold uppercase tracking-wider text-amber-400 block">Paso 3: Sorteo de Premios de la Etapa</span>
                                 <span class="text-[10px] text-[var(--text-muted)]">Presiona el botón de cada premio para descubrir al azar si lo ganas y cuántas veces.</span>
                             </div>
                             <span id="report-awards-progress" class="text-[11px] font-display font-bold uppercase text-amber-400">0/5 Revelados</span>
@@ -1008,7 +1038,7 @@
 
                     <div class="pt-2 flex justify-end">
                         <button id="btn-career-next-stage" onclick="advanceCareerStage()" class="px-6 py-3 rounded-xl btn-primary-gold text-xs uppercase tracking-wider shadow-lg disabled:opacity-40 disabled:cursor-not-allowed">
-                            Siguiente Etapa →
+                            Siguiente →
                         </button>
                     </div>
                 </div>
@@ -1022,7 +1052,7 @@
                             <div>
                                 <span id="final-card-legacy-badge" class="px-3 py-0.5 rounded-full text-[10px] font-display font-bold uppercase tracking-widest tier-hof">SALÓN DE LA FAMA</span>
                                 <h2 id="final-card-name" class="font-display text-2xl sm:text-3xl font-bold uppercase mt-1">Mateo Ramírez</h2>
-                                <span id="final-card-bio" class="text-xs text-[var(--text-muted)]">Pos: SS • 17 Temp. MLB</span>
+                                <span id="final-card-bio" class="text-xs text-[var(--text-muted)]">Pos: SS • 11 Temp. MLB</span>
                             </div>
                         </div>
                         <div class="px-5 py-3 rounded-2xl bg-[var(--bg-primary)]/80 border border-amber-400/45 text-center shrink-0">
@@ -1032,8 +1062,13 @@
                     </div>
 
                     <div class="space-y-1.5">
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-amber-400 block">Estadísticas Totales en MLB</span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-amber-400 block">Estadísticas Totales de Bateo en MLB</span>
                         <div id="final-card-stats" class="grid grid-cols-4 sm:grid-cols-7 gap-2 text-center"></div>
+                    </div>
+
+                    <div id="final-card-pitching-wrap" class="hidden space-y-1.5">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-amber-400 block">Estadísticas Totales de Pitcheo en MLB</span>
+                        <div id="final-card-pitching-stats" class="grid grid-cols-4 sm:grid-cols-7 gap-2 text-center"></div>
                     </div>
 
                     <div class="space-y-1.5">
@@ -1260,7 +1295,6 @@
                 </button>
             </div>
 
-            <!-- Category Tabs (Including TEMAS) -->
             <!-- Category Tabs (MLB, BANDERAS, TEMAS) -->
             <div class="flex flex-wrap gap-2">
                 <button onclick="filterStoreTab('MLB')" id="store-tab-MLB" class="store-tab px-4 py-2 rounded-xl bg-amber-400 text-xs font-bold uppercase">MLB</button>
@@ -1508,8 +1542,8 @@
                     <div class="p-3 rounded-xl bg-[var(--bg-primary)]/70 border border-[var(--border-subtle)] space-y-1.5">
                         <span class="font-display text-xs font-bold uppercase tracking-wider text-amber-400 block">3. Modo Mi Carrera (SOLO vs IA y VS Amigo)</span>
                         <p class="text-[var(--text-muted)]"><strong class="text-[var(--text-primary)]">Creación del Prospecto:</strong> Define nombre y apellido, año de nacimiento, número de jersey (0–99), posición primaria y posición secundaria opcional.</p>
-                        <p class="text-[var(--text-muted)]"><strong class="text-[var(--text-primary)]">Etapas de Trayectoria:</strong> 1) <strong class="text-[var(--text-primary)]">Draft MiLB</strong> (eliges entre 3 equipos de Ligas Menores), 2) <strong class="text-[var(--text-primary)]">Elección de Liga (AL/NL) y División (EAST/CENTRAL/WEST) + 1er Contrato MLB</strong>, 3) <strong class="text-[var(--text-primary)]">2do Contrato MLB</strong>, 4) <strong class="text-[var(--text-primary)]">3er Contrato MLB</strong>, 5) <strong class="text-[var(--text-primary)]">4to Contrato MLB</strong> y 6) <strong class="text-[var(--text-primary)]">Gira de Retiro</strong>.</p>
-                        <p class="text-[var(--text-muted)]"><strong class="text-[var(--text-primary)]">Premios y Legado:</strong> En cada etapa seleccionas una tarjeta cerrada al azar por cada premio para descubrir si lo ganas y cuántos obtienes (All-Star, MVP, Cy Young, Guante de Oro, Bate de Plata, Serie Mundial). Al retirarte obtienes tu <strong class="text-amber-400">Tarjeta Coleccionable</strong> (desde Jugador Promedio hasta Salón de la Fama) que puedes guardar en tu Perfil.</p>
+                        <p class="text-[var(--text-muted)]"><strong class="text-[var(--text-primary)]">Etapas de Trayectoria:</strong> 1) <strong class="text-[var(--text-primary)]">Draft MiLB</strong> (eliges entre 3 equipos de Ligas Menores), 2) <strong class="text-[var(--text-primary)]">Elección de Liga (AL/NL) y División (EAST/CENTRAL/WEST) + 1er Contrato MLB</strong>, 3) <strong class="text-[var(--text-primary)]">2do Contrato MLB</strong> y 4) <strong class="text-[var(--text-primary)]">Contrato de Año de Retiro</strong> (3 contratos totales en MLB).</p>
+                        <p class="text-[var(--text-muted)]"><strong class="text-[var(--text-primary)]">Sorteo Secuencial por Contrato:</strong> En cada contrato primero sorteas al azar los <strong class="text-amber-400">Años y el Pago</strong>, luego las estadísticas de bateo (<strong class="text-amber-400">H, HR, RBI, SB</strong>; si elegiste <strong class="text-amber-400">Pitcher</strong> como primaria o secundaria, también sorteas <strong class="text-amber-400">W, L, K, BB</strong>) y finalmente tus <strong class="text-amber-400">Premios</strong> (incluyendo Cy Young y Relevista del Año si eres Pitcher) antes de pasar al siguiente contrato.</p>
                     </div>
 
                     <div class="p-3 rounded-xl bg-[var(--bg-primary)]/70 border border-[var(--border-subtle)] space-y-1.5">
@@ -1526,6 +1560,8 @@
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
         import { getAuth, signInAnonymously, signInWithCustomToken, GoogleAuthProvider, signInWithPopup, linkWithPopup, onAuthStateChanged, setPersistence, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
         import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, addDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
+
+        const APP_VERSION = 'V0.001.8';
 
         const userFirebaseConfig = {
             apiKey: "AIzaSyBXQlRxOsii_nf-YjRw0bakkdAG_1J1zDI",
@@ -1608,7 +1644,7 @@
             { id: 'mlb_tex', code: 'TEX', name: 'Texas Rangers', cat: 'MLB', c1: '#003278', c2: '#C0111F', c3: '#FFFFFF', pattern: 'star', price: 145 },
             { id: 'mlb_tor', code: 'TOR', name: 'Toronto Blue Jays', cat: 'MLB', c1: '#134A8E', c2: '#E8291C', c3: '#FFFFFF', pattern: 'shield', price: 145 },
             { id: 'mlb_wsh', code: 'WSH', name: 'Washington Nationals', cat: 'MLB', c1: '#AB0003', c2: '#14225A', c3: '#FFFFFF', pattern: 'ring', price: 140 },
-            // BANDERAS (República Dominicana + las 11 banderas más famosas del mundo)
+            // BANDERAS
             { id: 'flag_dom', code: 'DOM', name: 'República Dominicana', cat: 'BANDERAS', flagType: 'dom', c1: '#002D62', c2: '#CE1126', price: 180 },
             { id: 'flag_usa', code: 'USA', name: 'Estados Unidos', cat: 'BANDERAS', flagType: 'usa', c1: '#0A3161', c2: '#B31942', price: 180 },
             { id: 'flag_jpn', code: 'JPN', name: 'Japón', cat: 'BANDERAS', flagType: 'jpn', c1: '#FFFFFF', c2: '#BC002D', price: 180 },
@@ -2140,6 +2176,8 @@
 
         window.exitToSplash = function() {
             hideAllSections();
+            const vTag = document.getElementById('app-version-tag');
+            if (vTag) vTag.textContent = APP_VERSION;
             const tipEl = document.getElementById('splash-random-tip');
             if (tipEl) tipEl.textContent = SPLASH_TIPS[Math.floor(Math.random() * SPLASH_TIPS.length)];
             document.getElementById('view-splash').classList.remove('hidden');
@@ -2464,6 +2502,7 @@
                 }
             }
         };
+
         // ================= STORE LOGIC (LOGOS & AESTHETIC THEMES WITH LIVE PREVIEW) =================
         window.filterStoreTab = function(cat, keepPreview = false) {
             if (cat !== 'TEMAS' && !keepPreview) {
@@ -3604,16 +3643,18 @@
             `).join('');
         };
 
-        // ================= MI CARRERA ENGINE (SOLO & VS SYNCED) =================
+        // ================= MI CARRERA ENGINE (3 MLB CONTRACTS & SEQUENTIAL STEP-BY-STEP DRAW) =================
         const CAREER_LOCAL_KEY = 'bfc_career_save_v1';
+        const TOTAL_CAREER_STAGES = 4; // 1: Draft MiLB, 2: 1er Contrato MLB, 3: 2do Contrato MLB, 4: Contrato de Año de Retiro
+
         const MILB_TEAMS = [
             { id: 'milb_dur', name: 'Durham Bulls', level: 'Triple-A', aff: 'TB', city: 'Durham, NC', c1: '#002D72', c2: '#FF5910' },
             { id: 'milb_swb', name: 'Scranton/WB RailRiders', level: 'Triple-A', aff: 'NYY', city: 'Moosic, PA', c1: '#0C2340', c2: '#C4CED4' },
             { id: 'milb_okc', name: 'Oklahoma City Comets', level: 'Triple-A', aff: 'LAD', city: 'Oklahoma City, OK', c1: '#005A9C', c2: '#FFFFFF' },
             { id: 'milb_nor', name: 'Norfolk Tides', level: 'Triple-A', aff: 'BAL', city: 'Norfolk, VA', c1: '#DF4601', c2: '#000000' },
             { id: 'milb_sug', name: 'Sugar Land Space Cowboys', level: 'Triple-A', aff: 'HOU', city: 'Sugar Land, TX', c1: '#002D62', c2: '#EB6E1F' },
-        { id: 'milb_gwn', name: 'Gwinnett Stripers', level: 'Triple-A', aff: 'ATL', city: 'Lawrenceville, GA', c1: '#CE1141', c2: '#13274F' }
-    ];
+            { id: 'milb_gwn', name: 'Gwinnett Stripers', level: 'Triple-A', aff: 'ATL', city: 'Lawrenceville, GA', c1: '#CE1141', c2: '#13274F' }
+        ];
 
         let careerState = {
             mode: 'SOLO',
@@ -3632,9 +3673,16 @@
             selectedMLBLeague: null,
             selectedMLBDivision: null,
             timeline: [],
-            awards: { 'All-Star': 0, 'MVP': 0, 'Cy Young': 0, 'Guante de Oro': 0, 'Bate de Plata': 0, 'Serie Mundial': 0, 'Rookie of the Year': 0 },
+            awards: { 'All-Star': 0, 'MVP': 0, 'Cy Young': 0, 'Guante de Oro': 0, 'Bate de Plata': 0, 'Serie Mundial': 0, 'Relevista del Año': 0 },
             stats: { G: 0, H: 0, HR: 0, RBI: 0, SB: 0, AB: 0, W: 0, L: 0, SO: 0, BB: 0, IP: 0, ER: 0, SV: 0 }
         };
+
+        let activeStageDraw = null;
+
+        function hasPitcherRole(player) {
+            if (!player) return false;
+            return player.pos1 === 'P' || player.pos2 === 'P';
+        }
 
         function saveCareerLocal() {
             if (!careerState) return;
@@ -3665,7 +3713,7 @@
             document.getElementById('career-hub-title').textContent = isVS ? 'Mi Carrera — Modo VS Amigo' : 'Mi Carrera — Modo SOLO';
             document.getElementById('career-hub-desc').textContent = isVS
                 ? 'Crea una sala con código único o únete al código de tu amigo para enfrentar sus carreras profesionalmente.'
-                : 'Forja la leyenda de tu pelotero desde el Draft de Ligas Menores hasta su ceremonia de retiro.';
+                : 'Forja la leyenda de tu pelotero desde el Draft de Ligas Menores y 3 contratos en MLB hasta su ceremonia de retiro.';
 
             document.getElementById('career-hub-solo-panel').classList.toggle('hidden', isVS);
             document.getElementById('career-hub-vs-panel').classList.toggle('hidden', !isVS);
@@ -3674,16 +3722,29 @@
             const resumeBanner = document.getElementById('career-resume-banner');
             if (!isVS && saved && !saved.retired && saved.mode === 'SOLO') {
                 resumeBanner.classList.remove('hidden');
-                document.getElementById('career-resume-info').textContent = `${saved.player.fullName} (#${saved.player.jersey}, ${saved.player.pos1}) — Etapa ${saved.stage}/6`;
+                const cappedStage = Math.min(TOTAL_CAREER_STAGES, saved.stage || 1);
+                document.getElementById('career-resume-info').textContent = `${saved.player.fullName} (#${saved.player.jersey}, ${saved.player.pos1}${saved.player.pos2 ? '/' + saved.player.pos2 : ''}) — Etapa ${cappedStage}/${TOTAL_CAREER_STAGES}`;
             } else {
                 resumeBanner.classList.add('hidden');
             }
+        };
+
+        window.cancelSavedCareer = function() {
+            try {
+                localStorage.removeItem(CAREER_LOCAL_KEY);
+            } catch (e) {}
+            activeStageDraw = null;
+            document.getElementById('career-resume-banner').classList.add('hidden');
+            showToast('Partida guardada cancelada y eliminada.');
         };
 
         window.resumeSavedCareer = function() {
             const saved = loadCareerLocal();
             if (!saved) return;
             careerState = saved;
+            if (careerState.stage > TOTAL_CAREER_STAGES) {
+                careerState.stage = TOTAL_CAREER_STAGES;
+            }
             document.getElementById('career-step-hub').classList.add('hidden');
             document.getElementById('career-step-stage').classList.remove('hidden');
             renderCareerDecisionStage();
@@ -3692,6 +3753,7 @@
         window.startCareerCreation = function(mode, roomCode = null) {
             const randomTiers = ['Fácil', 'Normal', 'Difícil', 'Leyenda'];
             const aiDiff = randomTiers[Math.floor(Math.random() * randomTiers.length)];
+            activeStageDraw = null;
             careerState = {
                 mode,
                 roomCode,
@@ -3709,7 +3771,7 @@
                 selectedMLBLeague: null,
                 selectedMLBDivision: null,
                 timeline: [],
-                awards: { 'All-Star': 0, 'MVP': 0, 'Cy Young': 0, 'Guante de Oro': 0, 'Bate de Plata': 0, 'Serie Mundial': 0, 'Rookie of the Year': 0 },
+                awards: { 'All-Star': 0, 'MVP': 0, 'Cy Young': 0, 'Guante de Oro': 0, 'Bate de Plata': 0, 'Serie Mundial': 0, 'Relevista del Año': 0 },
                 stats: { G: 0, H: 0, HR: 0, RBI: 0, SB: 0, AB: 0, W: 0, L: 0, SO: 0, BB: 0, IP: 0, ER: 0, SV: 0 }
             };
 
@@ -3808,11 +3870,11 @@
             const p = careerState.player;
             document.getElementById('career-hud-jersey').textContent = `#${p.jersey}`;
             document.getElementById('career-hud-name').textContent = p.fullName;
-            document.getElementById('career-hud-sub').textContent = `Edad ${careerState.age} • ${p.pos1}${p.pos2 ? '/' + p.pos2 : ''} • Etapa ${careerState.stage}/6`;
+            document.getElementById('career-hud-sub').textContent = `Edad ${careerState.age} • ${p.pos1}${p.pos2 ? '/' + p.pos2 : ''} • Etapa ${careerState.stage}/${TOTAL_CAREER_STAGES}`;
             document.getElementById('career-hud-earnings').textContent = `$${careerState.totalEarnings.toFixed(1)}M`;
             const totalAwards = Object.values(careerState.awards).reduce((a, b) => a + b, 0);
             document.getElementById('career-hud-awards').textContent = totalAwards;
-            document.getElementById('career-progress-bar').style.width = `${Math.min(100, Math.round((careerState.stage / 6) * 100))}%`;
+            document.getElementById('career-progress-bar').style.width = `${Math.min(100, Math.round((careerState.stage / TOTAL_CAREER_STAGES) * 100))}%`;
         }
 
         function renderCareerDecisionStage() {
@@ -3830,7 +3892,7 @@
             }
 
             if (stage === 1) {
-                document.getElementById('career-stage-kicker').textContent = 'ETAPA 1 DE 6 — LIGAS MENORES';
+                document.getElementById('career-stage-kicker').textContent = 'ETAPA 1 DE 4 — LIGAS MENORES';
                 document.getElementById('career-stage-title').textContent = 'Draft de Ligas Menores (MiLB)';
                 document.getElementById('career-stage-desc').textContent = 'Selecciona la organización afiliada de Ligas Menores donde iniciarás tu desarrollo profesional.';
 
@@ -3849,7 +3911,7 @@
                     </button>
                 `).join('');
             } else if (stage === 2 && !careerState.selectedMLBLeague) {
-                document.getElementById('career-stage-kicker').textContent = 'ETAPA 2 DE 6 — ASCENSO A GRANDES LIGAS';
+                document.getElementById('career-stage-kicker').textContent = 'ETAPA 2 DE 4 — ASCENSO A GRANDES LIGAS';
                 document.getElementById('career-stage-title').textContent = 'Elige tu Liga de Debut en MLB';
                 document.getElementById('career-stage-desc').textContent = 'Has sido promovido tras destacar en Ligas Menores. Selecciona entre la Liga Americana (AL) o la Liga Nacional (NL).';
 
@@ -3880,7 +3942,7 @@
                 `;
             } else if (stage === 2 && !careerState.selectedMLBDivision) {
                 const lgName = careerState.selectedMLBLeague === 'AL' ? 'American League (AL)' : 'National League (NL)';
-                document.getElementById('career-stage-kicker').textContent = `ETAPA 2 DE 6 — ${lgName.toUpperCase()}`;
+                document.getElementById('career-stage-kicker').textContent = `ETAPA 2 DE 4 — ${lgName.toUpperCase()}`;
                 document.getElementById('career-stage-title').textContent = 'Elige tu División en MLB';
                 document.getElementById('career-stage-desc').textContent = `Selecciona la división de la ${lgName} (EAST, CENTRAL o WEST) donde recibirás ofertas de contrato.`;
 
@@ -3902,13 +3964,11 @@
                 `).join('');
             } else {
                 const stageNames = {
-                    2: { k: `ETAPA 2 DE 6 — ${careerState.selectedMLBLeague} ${careerState.selectedMLBDivision}`, t: 'Primer Contrato en MLB', d: `Has sido promovido a las Grandes Ligas (${careerState.selectedMLBLeague} ${careerState.selectedMLBDivision}). Elige entre estas 3 franquicias para tu contrato inicial.` },
-                    3: { k: 'ETAPA 3 DE 6 — CONSOLIDACIÓN ESTELAR', t: 'Segundo Contrato en MLB', d: 'Entras en tus mejores años. Decide si renuevas o firmas como agente libre con un contendiente.' },
-                    4: { k: 'ETAPA 4 DE 6 — MEGA CONTRATO DE AGENCIA LIBRE', t: 'Tercer Contrato en MLB', d: 'Las franquicias más poderosas compiten por tu firma en el mercado abierto.' },
-                    5: { k: 'ETAPA 5 DE 6 — VETERANO DE ÉLITE', t: 'Cuarto Contrato en MLB', d: 'Tu experiencia y liderazgo son codiciados para buscar el campeonato.' },
-                    6: { k: 'ETAPA 6 DE 6 — ÚLTIMO CONTRATO Y GIRA DE RETIRO', t: 'Equipo donde te Retiras', d: 'Elige la franquicia con la que disputarás tus últimas temporadas antes de colgarte los spikes.' }
+                    2: { k: `ETAPA 2 DE 4 — ${careerState.selectedMLBLeague} ${careerState.selectedMLBDivision}`, t: 'Primer Contrato en MLB', d: `Has sido promovido a las Grandes Ligas (${careerState.selectedMLBLeague} ${careerState.selectedMLBDivision}). Elige entre estas 3 franquicias para tu primer contrato.` },
+                    3: { k: 'ETAPA 3 DE 4 — SEGUNDO CONTRATO', t: 'Segundo Contrato en MLB', d: 'Entras en la etapa clave de tu carrera en Grandes Ligas. Decide si renuevas o firmas con un contendiente.' },
+                    4: { k: 'ETAPA 4 DE 4 — CONTRATO DE RETIRO', t: 'Contrato de Año de Retiro', d: 'Elige la franquicia con la que firmarás tu tercer y último contrato antes de tu ceremonia de retiro.' }
                 };
-                const info = stageNames[stage] || stageNames[6];
+                const info = stageNames[stage] || stageNames[4];
                 document.getElementById('career-stage-kicker').textContent = info.k;
                 document.getElementById('career-stage-title').textContent = info.t;
                 document.getElementById('career-stage-desc').textContent = info.d;
@@ -3928,7 +3988,7 @@
                     choices = [...MLB_FRANCHISES].sort(() => Math.random() - 0.5).slice(0, 3);
                 }
 
-                optionsGrid.innerHTML = choices.map((t, i) => {
+                optionsGrid.innerHTML = choices.map(t => {
                     const isStay = careerState.currentTeam && t.id === careerState.currentTeam.id;
                     const meta = MLB_TEAMS_META[t.code];
                     const divTag = meta ? `${meta.league} ${meta.division}` : 'MLB';
@@ -4043,125 +4103,124 @@
             showToast('¡Has sido ascendido a las Grandes Ligas (MLB)!');
         };
 
+        function buildStageAwardDrawCards(years, canPitch) {
+            const defs = canPitch
+                ? [
+                    { key: 'All-Star', label: 'Juego de Estrellas (All-Star)', maxCount: years, winChance: 0.72 },
+                    { key: 'Cy Young', label: 'Premio Cy Young', maxCount: Math.min(years, 2), winChance: 0.44 },
+                    { key: 'Relevista del Año', label: 'Relevista del Año', maxCount: Math.min(years, 2), winChance: 0.38 },
+                    { key: 'Guante de Oro', label: 'Guante de Oro', maxCount: Math.min(years, 2), winChance: 0.45 },
+                    { key: 'Serie Mundial', label: 'Campeón Serie Mundial', maxCount: Math.min(years, 2), winChance: 0.38 }
+                ]
+                : [
+                    { key: 'All-Star', label: 'Juego de Estrellas (All-Star)', maxCount: years, winChance: 0.72 },
+                    { key: 'MVP', label: 'Jugador Más Valioso (MVP)', maxCount: Math.min(years, 2), winChance: 0.42 },
+                    { key: 'Bate de Plata', label: 'Bate de Plata', maxCount: Math.min(years, 2), winChance: 0.50 },
+                    { key: 'Guante de Oro', label: 'Guante de Oro', maxCount: Math.min(years, 2), winChance: 0.45 },
+                    { key: 'Serie Mundial', label: 'Campeón Serie Mundial', maxCount: Math.min(years, 2), winChance: 0.38 }
+                ];
+
+            return defs.map((d, idx) => {
+                const won = Math.random() < d.winChance;
+                const count = won ? Math.max(1, Math.ceil(Math.random() * d.maxCount)) : 0;
+                return {
+                    idx,
+                    key: d.key,
+                    label: d.label,
+                    won,
+                    count,
+                    revealed: false
+                };
+            });
+        }
+
         window.selectCareerMLBTeam = function(mlbId) {
             const team = MLB_FRANCHISES.find(t => t.id === mlbId);
             if (!team) return;
 
             const stage = careerState.stage;
-            const years = stage === 6 ? Math.floor(1 + Math.random() * 2) : Math.floor(3 + Math.random() * 3);
-            const annual = stage === 2 ? +(2.5 + Math.random() * 5).toFixed(1)
-                : stage === 3 ? +(14 + Math.random() * 14).toFixed(1)
-                : stage === 4 ? +(26 + Math.random() * 18).toFixed(1)
-                : stage === 5 ? +(18 + Math.random() * 14).toFixed(1)
-                : +(8 + Math.random() * 9).toFixed(1);
+            // Contrato 1 (stage 2): 3-6 años | Contrato 2 (stage 3): 4-8 años | Contrato de Retiro (stage 4): 1-3 años
+            const years = stage === 2 ? Math.floor(3 + Math.random() * 4)
+                : stage === 3 ? Math.floor(4 + Math.random() * 5)
+                : Math.floor(1 + Math.random() * 3);
+
+            const annual = stage === 2 ? +(3.0 + Math.random() * 7.5).toFixed(1)
+                : stage === 3 ? +(22.0 + Math.random() * 20.0).toFixed(1)
+                : +(10.0 + Math.random() * 12.0).toFixed(1);
 
             const totalContract = +(years * annual).toFixed(1);
             careerState.currentTeam = team;
-            careerState.totalEarnings += totalContract;
-            if (totalContract > careerState.maxContract) careerState.maxContract = totalContract;
-            careerState.age += years;
-            careerState.seasonsPlayed += years;
 
-            const stageLabels = { 2: '1er Contrato MLB', 3: '2do Contrato MLB', 4: '3er Contrato MLB', 5: '4to Contrato MLB', 6: 'Gira de Retiro' };
-            careerState.timeline.push({ label: stageLabels[stage] || 'MLB', team: team.name, code: team.code, years, money: totalContract });
-
-            const isPitcher = careerState.player.pos1 === 'P';
             const seasonRoll = Math.random();
-            // Puede tener una temporada mala (slump/lesión), normal o estelar de forma impredecible
-            const qualityFactor = seasonRoll < 0.28
-                ? (0.58 + Math.random() * 0.22)   // Temporada floja / difícil
+            const qualityFactor = seasonRoll < 0.26
+                ? (0.60 + Math.random() * 0.22)
                 : seasonRoll < 0.72
-                    ? (0.85 + Math.random() * 0.25) // Temporada sólida / promedio
-                    : (1.12 + Math.random() * 0.26); // Temporada explosiva / élite
+                    ? (0.86 + Math.random() * 0.24)
+                    : (1.12 + Math.random() * 0.26);
 
-            if (!isPitcher) {
-                const g = years * Math.floor(118 + Math.random() * 42);
-                const ab = g * 4;
-                const avg = Math.min(0.348, Math.max(0.205, +(0.215 + (Math.random() * 0.095 * qualityFactor)).toFixed(3)));
-                const h = Math.round(ab * avg);
-                const hr = Math.max(2, Math.round(years * (7 + Math.random() * 26 * qualityFactor)));
-                const rbi = Math.max(15, Math.round(hr * 2.45 + years * (14 + Math.random() * 18 * qualityFactor)));
-                const sb = Math.round(years * (2 + Math.random() * 22 * qualityFactor));
+            const canPitch = hasPitcherRole(careerState.player);
 
-                careerState.stats.G += g;
-                careerState.stats.AB += ab;
+            // Pre-generate Batting numbers for this contract
+            const batGames = years * Math.floor(118 + Math.random() * 42);
+            const batAB = batGames * 4;
+            const avg = Math.min(0.348, Math.max(0.205, +(0.215 + (Math.random() * 0.095 * qualityFactor)).toFixed(3)));
+            const h = Math.round(batAB * avg);
+            const hr = Math.max(2, Math.round(years * (7 + Math.random() * 26 * qualityFactor)));
+            const rbi = Math.max(15, Math.round(hr * 2.45 + years * (14 + Math.random() * 18 * qualityFactor)));
+            const sb = Math.round(years * (2 + Math.random() * 22 * qualityFactor));
 
-                activeStatDrawContext = { isPitcher: false, g, ab, years };
-                activeStatDrawCards = [
+            // Pre-generate Pitching numbers if primary or secondary position is Pitcher (P)
+            const pitchGames = years * Math.floor(24 + Math.random() * 9);
+            const ip = +(pitchGames * (4.9 + Math.random() * 1.6)).toFixed(1);
+            const w = Math.max(2, Math.round(years * (5 + Math.random() * 11 * qualityFactor)));
+            const l = Math.max(3, Math.round(years * (15 - Math.min(10, 6 * qualityFactor) + Math.random() * 5)));
+            const so = Math.max(45, Math.round(ip * (0.68 + Math.random() * 0.45 * qualityFactor)));
+            const bb = Math.max(18, Math.round(ip * (0.48 - Math.min(0.24, 0.16 * qualityFactor) + Math.random() * 0.16)));
+            const era = +(Math.min(5.65, Math.max(2.05, 4.95 - (qualityFactor * 1.85) + (Math.random() * 0.65)))).toFixed(2);
+            const er = Math.round((era * ip) / 9);
+
+            activeStageDraw = {
+                team,
+                stage,
+                phase: 'contract', // 'contract' -> 'batting' -> ('pitching' if canPitch) -> 'awards'
+                years,
+                annual,
+                totalContract,
+                contractCards: [
+                    { idx: 0, key: 'years', label: 'Duración del Contrato', display: `${years} Año${years > 1 ? 's' : ''}`, revealed: false },
+                    { idx: 1, key: 'annual', label: 'Salario Anual', display: `$${annual.toFixed(1)}M / año`, revealed: false }
+                ],
+                contractCommitted: false,
+                canPitch,
+                battingCtx: { g: batGames, ab: batAB, years },
+                battingCards: [
                     { idx: 0, key: 'H', label: 'Hits (H)', value: h, revealed: false },
                     { idx: 1, key: 'HR', label: 'Jonrones (HR)', value: hr, revealed: false },
                     { idx: 2, key: 'RBI', label: 'Impulsadas (RBI)', value: rbi, revealed: false },
                     { idx: 3, key: 'SB', label: 'Bases Robadas (SB)', value: sb, revealed: false }
-                ];
-
-                showStageReport(team, years, annual, totalContract, []);
-            } else {
-                const g = years * Math.floor(24 + Math.random() * 9);
-                const ip = +(g * (4.9 + Math.random() * 1.6)).toFixed(1);
-                const w = Math.max(2, Math.round(years * (5 + Math.random() * 11 * qualityFactor)));
-                const l = Math.max(3, Math.round(years * (15 - Math.min(10, 6 * qualityFactor) + Math.random() * 5)));
-                const so = Math.max(45, Math.round(ip * (0.68 + Math.random() * 0.45 * qualityFactor)));
-                const bb = Math.max(18, Math.round(ip * (0.48 - Math.min(0.24, 0.16 * qualityFactor) + Math.random() * 0.16)));
-                const era = +(Math.min(5.65, Math.max(2.05, 4.95 - (qualityFactor * 1.85) + (Math.random() * 0.65)))).toFixed(2);
-                const er = Math.round((era * ip) / 9);
-
-                careerState.stats.G += g;
-                careerState.stats.IP = +(careerState.stats.IP + ip).toFixed(1);
-                careerState.stats.ER += er;
-
-                activeStatDrawContext = { isPitcher: true, g, ip, er, era, years };
-                activeStatDrawCards = [
+                ],
+                battingCommitted: false,
+                pitchingCtx: { g: pitchGames, ip, er, era, years },
+                pitchingCards: [
                     { idx: 0, key: 'W', label: 'Victorias (W)', value: w, revealed: false },
                     { idx: 1, key: 'L', label: 'Derrotas (L)', value: l, revealed: false },
                     { idx: 2, key: 'SO', label: 'Ponches (K)', value: so, revealed: false },
                     { idx: 3, key: 'BB', label: 'Bases por Bolas (BB)', value: bb, revealed: false }
-                ];
+                ],
+                pitchingCommitted: false,
+                awardCards: buildStageAwardDrawCards(years, canPitch)
+            };
 
-                showStageReport(team, years, annual, totalContract, []);
-            }
-
-            saveCareerLocal();
+            document.getElementById('career-decision-panel').classList.add('hidden');
+            document.getElementById('career-stage-report').classList.remove('hidden');
+            renderActiveStageDrawUI();
         };
 
-        let activeAwardDrawCards = [];
-        let activeStatDrawCards = [];
-        let activeStatDrawContext = null;
-
-        function computeStageStatsSummary() {
-            const ctx = activeStatDrawContext || { isPitcher: false, g: 150, ab: 600, ip: 180, er: 70, era: 3.50, years: 1 };
-            const getCard = (k) => activeStatDrawCards.find(c => c.key === k);
-            const allRevealed = activeStatDrawCards.length > 0 && activeStatDrawCards.every(c => c.revealed);
-
-            if (ctx.isPitcher) {
-                const wCard = getCard('W');
-                const lCard = getCard('L');
-                const soCard = getCard('SO');
-                const bbCard = getCard('BB');
-
-                const wVal = wCard && wCard.revealed ? wCard.value : 0;
-                const lVal = lCard && lCard.revealed ? lCard.value : 0;
-                const soVal = soCard && soCard.revealed ? soCard.value : 0;
-                const bbVal = bbCard && bbCard.revealed ? bbCard.value : 0;
-
-                let eraDisplay = '---';
-                let whipDisplay = '---';
-                if (allRevealed && ctx.ip > 0) {
-                    const hitsAllowed = Math.max(Math.round(ctx.ip * 0.65), Math.round(ctx.er * 1.95 + (lVal * 3.5) - (soVal * 0.08)));
-                    const whipNum = (hitsAllowed + bbVal) / ctx.ip;
-                    eraDisplay = Number(ctx.era).toFixed(2);
-                    whipDisplay = Math.min(1.75, Math.max(0.84, whipNum)).toFixed(2);
-                }
-
-                return [
-                    { k: 'J', v: ctx.g },
-                    { k: 'IP', v: ctx.ip },
-                    { k: 'W', v: wCard && wCard.revealed ? wVal : '?' },
-                    { k: 'L', v: lCard && lCard.revealed ? lVal : '?' },
-                    { k: 'K', v: soCard && soCard.revealed ? soVal : '?' },
-                    { k: 'BB', v: bbCard && bbCard.revealed ? bbVal : '?' },
-                    { k: 'ERA / WHIP', v: allRevealed ? `${eraDisplay} / ${whipDisplay}` : '---' }
-                ];
-            }
+        function computeSequentialBattingSummary() {
+            const ctx = activeStageDraw.battingCtx;
+            const cards = activeStageDraw.battingCards;
+            const getCard = (k) => cards.find(c => c.key === k);
+            const allRevealed = cards.every(c => c.revealed);
 
             const hCard = getCard('H');
             const hrCard = getCard('HR');
@@ -4195,42 +4254,106 @@
             ];
         }
 
-        function updateStageNextButtonLock() {
-            const nextBtn = document.getElementById('btn-career-next-stage');
-            if (!nextBtn) return;
-            const statsPending = activeStatDrawCards.some(c => !c.revealed);
-            const awardsPending = activeAwardDrawCards.some(c => !c.revealed);
-            nextBtn.disabled = statsPending || awardsPending;
+        function computeSequentialPitchingSummary() {
+            const ctx = activeStageDraw.pitchingCtx;
+            const cards = activeStageDraw.pitchingCards;
+            const getCard = (k) => cards.find(c => c.key === k);
+            const allRevealed = cards.every(c => c.revealed);
+
+            const wCard = getCard('W');
+            const lCard = getCard('L');
+            const soCard = getCard('SO');
+            const bbCard = getCard('BB');
+
+            const wVal = wCard && wCard.revealed ? wCard.value : 0;
+            const lVal = lCard && lCard.revealed ? lCard.value : 0;
+            const soVal = soCard && soCard.revealed ? soCard.value : 0;
+            const bbVal = bbCard && bbCard.revealed ? bbCard.value : 0;
+
+            let eraDisplay = '---';
+            let whipDisplay = '---';
+            if (allRevealed && ctx.ip > 0) {
+                const hitsAllowed = Math.max(Math.round(ctx.ip * 0.65), Math.round(ctx.er * 1.95 + (lVal * 3.5) - (soVal * 0.08)));
+                const whipNum = (hitsAllowed + bbVal) / ctx.ip;
+                eraDisplay = Number(ctx.era).toFixed(2);
+                whipDisplay = Math.min(1.75, Math.max(0.84, whipNum)).toFixed(2);
+            }
+
+            return [
+                { k: 'J', v: ctx.g },
+                { k: 'IP', v: ctx.ip },
+                { k: 'W', v: wCard && wCard.revealed ? wVal : '?' },
+                { k: 'L', v: lCard && lCard.revealed ? lVal : '?' },
+                { k: 'K', v: soCard && soCard.revealed ? soVal : '?' },
+                { k: 'BB', v: bbCard && bbCard.revealed ? bbVal : '?' },
+                { k: 'ERA / WHIP', v: allRevealed ? `${eraDisplay} / ${whipDisplay}` : '---' }
+            ];
         }
 
-        function renderStageStatsRoulette() {
-            const box = document.getElementById('report-stats-draw-box');
-            const rouletteEl = document.getElementById('report-stats-roulette');
-            const progEl = document.getElementById('report-stats-progress');
-            const subEl = document.getElementById('report-stats-draw-subtitle');
-            const statsGrid = document.getElementById('report-stats-grid');
+        function renderActiveStageDrawUI() {
+            if (!activeStageDraw) return;
+            updateCareerHUD();
 
-            if (!activeStatDrawCards || activeStatDrawCards.length === 0) {
-                if (box) box.classList.add('hidden');
-                return;
-            }
+            const d = activeStageDraw;
+            const yearsRev = d.contractCards[0].revealed;
+            const annualRev = d.contractCards[1].revealed;
+            const bothContractRev = yearsRev && annualRev;
 
-            if (box) box.classList.remove('hidden');
-            if (subEl) {
-                subEl.textContent = activeStatDrawContext?.isPitcher
-                    ? 'Sortea W, L, K y BB; la ERA y el WHIP se calcularán automáticamente.'
-                    : 'Sortea H, HR, RBI y SB; el AVG y OPS se calcularán automáticamente.';
-            }
-            const revealedCount = activeStatDrawCards.filter(c => c.revealed).length;
-            const totalCount = activeStatDrawCards.length;
-            if (progEl) progEl.textContent = `${revealedCount}/${totalCount} Reveladas`;
+            // Header
+            const phaseTitles = {
+                contract: 'FASE 1: SORTEO DE AÑOS Y SALARIO DEL CONTRATO',
+                batting: 'FASE 2: SORTEO DE ESTADÍSTICAS DE BATEO',
+                pitching: 'FASE 3: SORTEO DE ESTADÍSTICAS DE PITCHEO',
+                awards: d.canPitch ? 'FASE 4: SORTEO DE PREMIOS DE LA ETAPA' : 'FASE 3: SORTEO DE PREMIOS DE LA ETAPA'
+            };
+            document.getElementById('report-phase-kicker').textContent = phaseTitles[d.phase] || '';
+            document.getElementById('report-team-headline').textContent = yearsRev
+                ? `${d.team.name} — ${d.years} Temporada${d.years > 1 ? 's' : ''}`
+                : `${d.team.name} — Nuevo Contrato`;
+            document.getElementById('report-contract-total').textContent = bothContractRev
+                ? `Total: $${d.totalContract.toFixed(1)}M`
+                : 'Contrato por sortear';
 
-            if (rouletteEl) {
-                rouletteEl.innerHTML = activeStatDrawCards.map(c => {
+            // 1. Contract Section (Always visible so player sees their signed deal)
+            const cRevCount = d.contractCards.filter(c => c.revealed).length;
+            document.getElementById('report-contract-progress').textContent = `${cRevCount}/2 Revelados`;
+            document.getElementById('report-contract-roulette').innerHTML = d.contractCards.map(c => {
+                if (!c.revealed) {
+                    return `<button type="button" onclick="revealCareerContractCard(${c.idx})" class="p-3 rounded-xl bg-[var(--bg-surface)] border border-amber-400/45 hover:border-amber-400 flex items-center justify-between gap-2 text-left transition shadow-sm">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 block">Sorteo de Contrato</span>
+                            <strong class="text-xs font-bold block">${c.label}</strong>
+                        </div>
+                        <span class="px-3 py-1.5 rounded-lg btn-primary-gold text-[10px] font-display font-bold uppercase shrink-0">Sortear</span>
+                    </button>`;
+                }
+                return `<div class="p-3 rounded-xl bg-amber-400/15 border border-amber-400 flex items-center justify-between gap-2">
+                    <div>
+                        <span class="text-[10px] font-bold uppercase text-emerald-400 block">${c.label}</span>
+                        <strong class="font-display text-base font-bold text-amber-400">${c.display}</strong>
+                    </div>
+                    <span class="text-xs font-bold text-emerald-400">✓</span>
+                </div>`;
+            }).join('');
+
+            document.getElementById('report-contract-details').innerHTML = `
+                <div class="p-2.5 rounded-xl bg-[var(--bg-surface)]"><span class="text-[10px] text-[var(--text-muted)] block uppercase">Duración</span><strong class="font-display text-sm">${yearsRev ? d.years + ' Años' : '?'}</strong></div>
+                <div class="p-2.5 rounded-xl bg-[var(--bg-surface)]"><span class="text-[10px] text-[var(--text-muted)] block uppercase">Salario Anual</span><strong class="font-display text-sm text-emerald-400">${annualRev ? '$' + d.annual.toFixed(1) + 'M/año' : '?'}</strong></div>
+                <div class="p-2.5 rounded-xl bg-[var(--bg-surface)]"><span class="text-[10px] text-[var(--text-muted)] block uppercase">Valor Total</span><strong class="font-display text-sm text-amber-400">${bothContractRev ? '$' + d.totalContract.toFixed(1) + 'M' : '?'}</strong></div>
+                <div class="p-2.5 rounded-xl bg-[var(--bg-surface)]"><span class="text-[10px] text-[var(--text-muted)] block uppercase">Edad Actual</span><strong class="font-display text-sm">${careerState.age} Años</strong></div>
+            `;
+
+            // 2. Batting Section (Shown once phase reaches 'batting' or beyond)
+            const batBox = document.getElementById('report-batting-draw-box');
+            if (d.phase === 'batting' || d.phase === 'pitching' || d.phase === 'awards') {
+                batBox.classList.remove('hidden');
+                const bRevCount = d.battingCards.filter(c => c.revealed).length;
+                document.getElementById('report-batting-progress').textContent = `${bRevCount}/4 Reveladas`;
+                document.getElementById('report-batting-roulette').innerHTML = d.battingCards.map(c => {
                     if (!c.revealed) {
-                        return `<button type="button" onclick="revealCareerStatCard(${c.idx})" class="p-3 rounded-xl bg-[var(--bg-surface)] border border-amber-400/45 hover:border-amber-400 flex flex-col items-start justify-between gap-2 text-left transition shadow-sm">
+                        return `<button type="button" onclick="revealCareerBattingCard(${c.idx})" class="p-3 rounded-xl bg-[var(--bg-surface)] border border-amber-400/45 hover:border-amber-400 flex flex-col items-start justify-between gap-2 text-left transition shadow-sm">
                             <div>
-                                <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 block">Sorteo</span>
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 block">Bateo</span>
                                 <strong class="text-xs font-bold block">${c.label}</strong>
                             </div>
                             <span class="w-full text-center px-2.5 py-1 rounded-lg btn-primary-gold text-[10px] font-display font-bold uppercase">Sortear</span>
@@ -4241,110 +4364,63 @@
                         <strong class="font-display text-lg font-bold text-amber-400">${c.value}</strong>
                     </div>`;
                 }).join('');
-            }
 
-            if (statsGrid) {
-                const items = computeStageStatsSummary();
-                statsGrid.innerHTML = items.map(s => `
-                    <div class="p-2 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)]">
+                const batSummary = computeSequentialBattingSummary();
+                document.getElementById('report-batting-grid').innerHTML = batSummary.map(s => `
+                    <div class="p-2 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
                         <span class="text-[10px] text-[var(--text-muted)] block uppercase">${s.k}</span>
                         <strong class="font-display text-sm">${s.v}</strong>
                     </div>
                 `).join('');
-            }
-
-            updateStageNextButtonLock();
-        }
-
-        window.revealCareerStatCard = function(idx) {
-            const card = activeStatDrawCards[idx];
-            if (!card || card.revealed) return;
-            card.revealed = true;
-            careerState.stats[card.key] = (careerState.stats[card.key] || 0) + card.value;
-            saveCareerLocal();
-            renderStageStatsRoulette();
-            showToast(`${card.label}: ${card.value}`);
-        };
-
-        function buildStageAwardDrawCards(years, isPitcher) {
-            const defs = isPitcher
-                ? [
-                    { key: 'All-Star', label: 'Juego de Estrellas (All-Star)', maxCount: years, winChance: 0.72 },
-                    { key: 'Cy Young', label: 'Premio Cy Young', maxCount: Math.min(years, 2), winChance: 0.42 },
-                    { key: 'Guante de Oro', label: 'Guante de Oro', maxCount: Math.min(years, 2), winChance: 0.45 },
-                    { key: 'Serie Mundial', label: 'Campeón Serie Mundial', maxCount: Math.min(years, 2), winChance: 0.38 }
-                ]
-                : [
-                    { key: 'All-Star', label: 'Juego de Estrellas (All-Star)', maxCount: years, winChance: 0.72 },
-                    { key: 'MVP', label: 'Jugador Más Valioso (MVP)', maxCount: Math.min(years, 2), winChance: 0.42 },
-                    { key: 'Bate de Plata', label: 'Bate de Plata', maxCount: Math.min(years, 2), winChance: 0.50 },
-                    { key: 'Guante de Oro', label: 'Guante de Oro', maxCount: Math.min(years, 2), winChance: 0.45 },
-                    { key: 'Serie Mundial', label: 'Campeón Serie Mundial', maxCount: Math.min(years, 2), winChance: 0.38 }
-                ];
-
-            return defs.map((d, idx) => {
-                const won = Math.random() < d.winChance;
-                const count = won ? Math.max(1, Math.ceil(Math.random() * d.maxCount)) : 0;
-                return {
-                    idx,
-                    key: d.key,
-                    label: d.label,
-                    won,
-                    count,
-                    revealed: false
-                };
-            });
-        }
-
-        function showStageReport(team, years, annual, totalContract, statItems, _unusedPreAwards = []) {
-            updateCareerHUD();
-            document.getElementById('career-decision-panel').classList.add('hidden');
-            document.getElementById('career-stage-report').classList.remove('hidden');
-
-            document.getElementById('report-team-headline').textContent = `${team.name} — ${years} Temporada${years > 1 ? 's' : ''}`;
-            document.getElementById('report-contract-total').textContent = `Total: $${totalContract.toFixed(1)}M`;
-
-            document.getElementById('report-contract-details').innerHTML = `
-                <div class="p-2.5 rounded-xl bg-[var(--bg-elevated)]"><span class="text-[10px] text-[var(--text-muted)] block uppercase">Duración</span><strong class="font-display text-sm">${years} Años</strong></div>
-                <div class="p-2.5 rounded-xl bg-[var(--bg-elevated)]"><span class="text-[10px] text-[var(--text-muted)] block uppercase">Salario Anual</span><strong class="font-display text-sm text-emerald-400">$${annual.toFixed(1)}M/año</strong></div>
-                <div class="p-2.5 rounded-xl bg-[var(--bg-elevated)]"><span class="text-[10px] text-[var(--text-muted)] block uppercase">Valor Total</span><strong class="font-display text-sm text-amber-400">$${totalContract.toFixed(1)}M</strong></div>
-                <div class="p-2.5 rounded-xl bg-[var(--bg-elevated)]"><span class="text-[10px] text-[var(--text-muted)] block uppercase">Edad Actual</span><strong class="font-display text-sm">${careerState.age} Años</strong></div>
-            `;
-
-            if (activeStatDrawCards.length > 0) {
-                renderStageStatsRoulette();
             } else {
-                document.getElementById('report-stats-draw-box').classList.add('hidden');
-                document.getElementById('report-stats-grid').innerHTML = statItems.map(s => `
-                    <div class="p-2 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)]">
+                batBox.classList.add('hidden');
+            }
+
+            // 3. Pitching Section (Shown ONLY if player has P as primary or secondary position and phase reaches 'pitching' or 'awards')
+            const pitchBox = document.getElementById('report-pitching-draw-box');
+            if (d.canPitch && (d.phase === 'pitching' || d.phase === 'awards')) {
+                pitchBox.classList.remove('hidden');
+                const pRevCount = d.pitchingCards.filter(c => c.revealed).length;
+                document.getElementById('report-pitching-progress').textContent = `${pRevCount}/4 Reveladas`;
+                document.getElementById('report-pitching-roulette').innerHTML = d.pitchingCards.map(c => {
+                    if (!c.revealed) {
+                        return `<button type="button" onclick="revealCareerPitchingCard(${c.idx})" class="p-3 rounded-xl bg-[var(--bg-surface)] border border-amber-400/45 hover:border-amber-400 flex flex-col items-start justify-between gap-2 text-left transition shadow-sm">
+                            <div>
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 block">Pitcheo</span>
+                                <strong class="text-xs font-bold block">${c.label}</strong>
+                            </div>
+                            <span class="w-full text-center px-2.5 py-1 rounded-lg btn-primary-gold text-[10px] font-display font-bold uppercase">Sortear</span>
+                        </button>`;
+                    }
+                    return `<div class="p-3 rounded-xl bg-amber-400/15 border border-amber-400 flex flex-col justify-between gap-1">
+                        <span class="text-[10px] font-bold uppercase text-emerald-400 block">${c.label}</span>
+                        <strong class="font-display text-lg font-bold text-amber-400">${c.value}</strong>
+                    </div>`;
+                }).join('');
+
+                const pitchSummary = computeSequentialPitchingSummary();
+                document.getElementById('report-pitching-grid').innerHTML = pitchSummary.map(s => `
+                    <div class="p-2 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
                         <span class="text-[10px] text-[var(--text-muted)] block uppercase">${s.k}</span>
                         <strong class="font-display text-sm">${s.v}</strong>
                     </div>
                 `).join('');
+            } else {
+                pitchBox.classList.add('hidden');
             }
 
-            const isPitcher = careerState.player.pos1 === 'P';
-            activeAwardDrawCards = buildStageAwardDrawCards(years, isPitcher);
-            renderStageAwardsRoulette();
+            // 4. Awards Section (Shown ONLY once phase reaches 'awards')
+            const awardsBox = document.getElementById('report-awards-draw-box');
+            if (d.phase === 'awards') {
+                awardsBox.classList.remove('hidden');
+                document.getElementById('report-awards-step-title').textContent = d.canPitch
+                    ? 'Paso 4: Sorteo de Premios de la Etapa'
+                    : 'Paso 3: Sorteo de Premios de la Etapa';
+                const aRevCount = d.awardCards.filter(c => c.revealed).length;
+                const aTotal = d.awardCards.length;
+                document.getElementById('report-awards-progress').textContent = `${aRevCount}/${aTotal} Revelados`;
 
-            const nextBtn = document.getElementById('btn-career-next-stage');
-            nextBtn.textContent = careerState.stage >= 6 ? 'Ceremonia de Retiro →' : `Continuar a Etapa ${careerState.stage + 1} de 6 →`;
-        }
-
-        function renderStageAwardsRoulette() {
-            const rouletteEl = document.getElementById('report-awards-roulette');
-            const summaryEl = document.getElementById('report-awards-list');
-            const progEl = document.getElementById('report-awards-progress');
-
-            const revealedCount = activeAwardDrawCards.filter(c => c.revealed).length;
-            const totalCount = activeAwardDrawCards.length;
-            const allRevealed = revealedCount >= totalCount;
-
-            if (progEl) progEl.textContent = `${revealedCount}/${totalCount} Revelados`;
-            updateStageNextButtonLock();
-
-            if (rouletteEl) {
-                rouletteEl.innerHTML = activeAwardDrawCards.map(c => {
+                document.getElementById('report-awards-roulette').innerHTML = d.awardCards.map(c => {
                     if (!c.revealed) {
                         return `<button type="button" onclick="revealCareerAwardCard(${c.idx})" class="p-3 rounded-xl bg-[var(--bg-surface)] border border-amber-400/45 hover:border-amber-400 flex items-center justify-between gap-2 text-left transition shadow-sm">
                             <div>
@@ -4371,22 +4447,108 @@
                         <span class="text-[11px] font-bold text-[var(--text-muted)] shrink-0">0x</span>
                     </div>`;
                 }).join('');
-            }
 
-            if (summaryEl) {
-                const wonCards = activeAwardDrawCards.filter(c => c.revealed && c.won);
-                if (!allRevealed) {
-                    summaryEl.innerHTML = `<span class="text-[11px] text-[var(--text-muted)]">Abre todas las tarjetas de premios para desbloquear la siguiente etapa.</span>`;
+                const wonCards = d.awardCards.filter(c => c.revealed && c.won);
+                const summaryEl = document.getElementById('report-awards-list');
+                if (aRevCount < aTotal) {
+                    summaryEl.innerHTML = `<span class="text-[11px] text-[var(--text-muted)]">Abre todas las tarjetas de premios para desbloquear el siguiente paso.</span>`;
                 } else if (wonCards.length === 0) {
                     summaryEl.innerHTML = `<span class="text-xs text-[var(--text-muted)]">No obtuviste premios individuales en esta etapa.</span>`;
                 } else {
                     summaryEl.innerHTML = wonCards.map(w => `<span class="px-3 py-1 rounded-full bg-amber-400/15 border border-amber-400/40 text-amber-400 text-xs font-bold">${w.count}x ${w.key}</span>`).join('');
                 }
+            } else {
+                awardsBox.classList.add('hidden');
+            }
+
+            // Next Button State & Label
+            const nextBtn = document.getElementById('btn-career-next-stage');
+            if (d.phase === 'contract') {
+                nextBtn.disabled = !bothContractRev;
+                nextBtn.textContent = 'Continuar a Estadísticas de Bateo →';
+            } else if (d.phase === 'batting') {
+                nextBtn.disabled = !d.battingCards.every(c => c.revealed);
+                nextBtn.textContent = d.canPitch ? 'Continuar a Estadísticas de Pitcheo →' : 'Continuar a Premios →';
+            } else if (d.phase === 'pitching') {
+                nextBtn.disabled = !d.pitchingCards.every(c => c.revealed);
+                nextBtn.textContent = 'Continuar a Premios →';
+            } else {
+                nextBtn.disabled = !d.awardCards.every(c => c.revealed);
+                nextBtn.textContent = careerState.stage >= TOTAL_CAREER_STAGES
+                    ? 'Ceremonia de Retiro →'
+                    : `Continuar a Etapa ${careerState.stage + 1} de ${TOTAL_CAREER_STAGES} →`;
             }
         }
 
+        window.revealCareerContractCard = function(idx) {
+            if (!activeStageDraw) return;
+            const card = activeStageDraw.contractCards[idx];
+            if (!card || card.revealed) return;
+            card.revealed = true;
+
+            if (activeStageDraw.contractCards.every(c => c.revealed) && !activeStageDraw.contractCommitted) {
+                activeStageDraw.contractCommitted = true;
+                careerState.totalEarnings += activeStageDraw.totalContract;
+                if (activeStageDraw.totalContract > careerState.maxContract) {
+                    careerState.maxContract = activeStageDraw.totalContract;
+                }
+                careerState.age += activeStageDraw.years;
+                careerState.seasonsPlayed += activeStageDraw.years;
+                const stageLabels = { 2: '1er Contrato MLB', 3: '2do Contrato MLB', 4: 'Contrato de Retiro' };
+                careerState.timeline.push({
+                    label: stageLabels[activeStageDraw.stage] || 'MLB',
+                    team: activeStageDraw.team.name,
+                    code: activeStageDraw.team.code,
+                    years: activeStageDraw.years,
+                    money: activeStageDraw.totalContract
+                });
+                saveCareerLocal();
+            }
+
+            renderActiveStageDrawUI();
+            showToast(`${card.label}: ${card.display}`);
+        };
+
+        window.revealCareerBattingCard = function(idx) {
+            if (!activeStageDraw) return;
+            const card = activeStageDraw.battingCards[idx];
+            if (!card || card.revealed) return;
+            card.revealed = true;
+            careerState.stats[card.key] = (careerState.stats[card.key] || 0) + card.value;
+
+            if (activeStageDraw.battingCards.every(c => c.revealed) && !activeStageDraw.battingCommitted) {
+                activeStageDraw.battingCommitted = true;
+                careerState.stats.G += activeStageDraw.battingCtx.g;
+                careerState.stats.AB += activeStageDraw.battingCtx.ab;
+            }
+            saveCareerLocal();
+            renderActiveStageDrawUI();
+            showToast(`${card.label}: ${card.value}`);
+        };
+
+        window.revealCareerPitchingCard = function(idx) {
+            if (!activeStageDraw) return;
+            const card = activeStageDraw.pitchingCards[idx];
+            if (!card || card.revealed) return;
+            card.revealed = true;
+            careerState.stats[card.key] = (careerState.stats[card.key] || 0) + card.value;
+
+            if (activeStageDraw.pitchingCards.every(c => c.revealed) && !activeStageDraw.pitchingCommitted) {
+                activeStageDraw.pitchingCommitted = true;
+                if (careerState.player.pos1 === 'P') {
+                    careerState.stats.G += activeStageDraw.pitchingCtx.g;
+                }
+                careerState.stats.IP = +(careerState.stats.IP + activeStageDraw.pitchingCtx.ip).toFixed(1);
+                careerState.stats.ER += activeStageDraw.pitchingCtx.er;
+            }
+            saveCareerLocal();
+            renderActiveStageDrawUI();
+            showToast(`${card.label}: ${card.value}`);
+        };
+
         window.revealCareerAwardCard = function(idx) {
-            const card = activeAwardDrawCards[idx];
+            if (!activeStageDraw) return;
+            const card = activeStageDraw.awardCards[idx];
             if (!card || card.revealed) return;
             card.revealed = true;
             if (card.won && card.count > 0) {
@@ -4395,21 +4557,51 @@
             } else {
                 showToast(`No ganaste ${card.key} en esta etapa.`);
             }
-            updateCareerHUD();
             saveCareerLocal();
-            renderStageAwardsRoulette();
+            renderActiveStageDrawUI();
         };
 
         window.advanceCareerStage = function() {
-            if (activeStatDrawCards.some(c => !c.revealed)) {
-                showToast('Sortea todas las estadísticas (H, HR, RBI, SB) antes de continuar.');
+            if (!activeStageDraw) return;
+            const d = activeStageDraw;
+
+            if (d.phase === 'contract') {
+                if (!d.contractCards.every(c => c.revealed)) {
+                    showToast('Sortea los años y el salario del contrato antes de continuar.');
+                    return;
+                }
+                d.phase = 'batting';
+                renderActiveStageDrawUI();
                 return;
             }
-            if (activeAwardDrawCards.some(c => !c.revealed)) {
+
+            if (d.phase === 'batting') {
+                if (!d.battingCards.every(c => c.revealed)) {
+                    showToast('Sortea todas las estadísticas de bateo (H, HR, RBI, SB) antes de continuar.');
+                    return;
+                }
+                d.phase = d.canPitch ? 'pitching' : 'awards';
+                renderActiveStageDrawUI();
+                return;
+            }
+
+            if (d.phase === 'pitching') {
+                if (!d.pitchingCards.every(c => c.revealed)) {
+                    showToast('Sortea todas las estadísticas de pitcheo (W, L, K, BB) antes de continuar.');
+                    return;
+                }
+                d.phase = 'awards';
+                renderActiveStageDrawUI();
+                return;
+            }
+
+            if (!d.awardCards.every(c => c.revealed)) {
                 showToast('Sortea todos los premios de esta etapa antes de continuar.');
                 return;
             }
-            if (careerState.stage < 6) {
+
+            activeStageDraw = null;
+            if (careerState.stage < TOTAL_CAREER_STAGES) {
                 careerState.stage += 1;
                 saveCareerLocal();
                 renderCareerDecisionStage();
@@ -4426,18 +4618,18 @@
             if (isPitcher) {
                 const era = c.stats.IP > 0 ? (c.stats.ER * 9) / c.stats.IP : 4.50;
                 const eraScore = Math.max(-4, (4.45 - era) * 7.2);
-                const winScore = Math.min(9, c.stats.W * 0.042);
-                const soScore = Math.min(8, c.stats.SO * 0.0028);
+                const winScore = Math.min(9, c.stats.W * 0.055);
+                const soScore = Math.min(8, c.stats.SO * 0.0038);
                 const bbPenalty = c.stats.IP > 0 ? Math.max(0, ((c.stats.BB * 9) / c.stats.IP - 2.6) * 1.4) : 0;
-                const awardScore = Math.min(5, totalAwards * 0.45);
+                const awardScore = Math.min(6, totalAwards * 0.65);
                 rawOvr = Math.round(74 + eraScore + winScore + soScore + awardScore - bbPenalty);
             } else {
                 const avg = c.stats.AB > 0 ? c.stats.H / c.stats.AB : 0.240;
                 const avgScore = Math.max(-4, (avg - 0.245) * 145);
-                const hrScore = Math.min(8.5, c.stats.HR * 0.017);
-                const hitScore = Math.min(6.5, c.stats.H * 0.0025);
-                const rbiScore = Math.min(4.5, c.stats.RBI * 0.003);
-                const awardScore = Math.min(5, totalAwards * 0.45);
+                const hrScore = Math.min(8.5, c.stats.HR * 0.024);
+                const hitScore = Math.min(6.5, c.stats.H * 0.0036);
+                const rbiScore = Math.min(4.5, c.stats.RBI * 0.0042);
+                const awardScore = Math.min(6, totalAwards * 0.65);
                 rawOvr = Math.round(74 + avgScore + hrScore + hitScore + rbiScore + awardScore);
             }
 
@@ -4459,20 +4651,9 @@
             saveCareerLocal();
 
             const p = careerState.player;
-            const isPitcher = p.pos1 === 'P';
-            const careerEra = careerState.stats.IP > 0 ? ((careerState.stats.ER * 9) / careerState.stats.IP).toFixed(2) : '0.00';
-            const careerWhip = careerState.stats.IP > 0
-                ? Math.min(1.80, Math.max(0.85, ((careerState.stats.ER * 1.95 + (careerState.stats.BB || 0)) / careerState.stats.IP))).toFixed(2)
-                : '1.15';
-            const finalStats = isPitcher ? [
-                { k: 'J', v: careerState.stats.G },
-                { k: 'G-P', v: `${careerState.stats.W}-${careerState.stats.L}` },
-                { k: 'ERA', v: careerEra },
-                { k: 'IP', v: careerState.stats.IP },
-                { k: 'K', v: careerState.stats.SO },
-                { k: 'BB', v: careerState.stats.BB || 0 },
-                { k: 'WHIP', v: careerWhip }
-            ] : [
+            const canPitch = hasPitcherRole(p);
+
+            const battingFinalStats = [
                 { k: 'J', v: careerState.stats.G },
                 { k: 'AVG', v: careerState.stats.AB > 0 ? (careerState.stats.H / careerState.stats.AB).toFixed(3).replace(/^0/, '') : '.000' },
                 { k: 'H', v: careerState.stats.H },
@@ -4480,6 +4661,20 @@
                 { k: 'RBI', v: careerState.stats.RBI },
                 { k: 'SB', v: careerState.stats.SB },
                 { k: 'OPS', v: careerState.stats.AB > 0 ? ((careerState.stats.H / careerState.stats.AB) + 0.54 + (careerState.stats.HR / careerState.stats.AB) * 2.2).toFixed(3).replace(/^0/, '') : '.750' }
+            ];
+
+            const careerEra = careerState.stats.IP > 0 ? ((careerState.stats.ER * 9) / careerState.stats.IP).toFixed(2) : '0.00';
+            const careerWhip = careerState.stats.IP > 0
+                ? Math.min(1.80, Math.max(0.85, ((careerState.stats.ER * 1.95 + (careerState.stats.BB || 0)) / careerState.stats.IP))).toFixed(2)
+                : '1.15';
+            const pitchingFinalStats = [
+                { k: 'IP', v: careerState.stats.IP },
+                { k: 'G-P', v: `${careerState.stats.W}-${careerState.stats.L}` },
+                { k: 'ERA', v: careerEra },
+                { k: 'K', v: careerState.stats.SO },
+                { k: 'BB', v: careerState.stats.BB || 0 },
+                { k: 'WHIP', v: careerWhip },
+                { k: 'CONTRATOS', v: `$${careerState.totalEarnings.toFixed(1)}M` }
             ];
 
             const earnedAwards = Object.entries(careerState.awards).filter(([, cnt]) => cnt > 0);
@@ -4500,7 +4695,7 @@
                     ovr: legacy.ovr,
                     legacyTier: legacy.tier,
                     legacyCss: legacy.css,
-                    statsList: finalStats,
+                    statsList: p.pos1 === 'P' ? pitchingFinalStats : battingFinalStats,
                     awardsList: awardsFormatted,
                     updatedAt: Date.now()
                 };
@@ -4518,15 +4713,28 @@
             badge.className = `px-3 py-0.5 rounded-full text-[10px] font-display font-bold uppercase tracking-widest ${legacy.css}`;
 
             document.getElementById('final-card-name').textContent = p.fullName;
-            document.getElementById('final-card-bio').textContent = `Pos: ${p.pos1}${p.pos2 ? '/' + p.pos2 : ''} • ${careerState.seasonsPlayed} Temp. MLB`;
+            document.getElementById('final-card-bio').textContent = `Pos: ${p.pos1}${p.pos2 ? '/' + p.pos2 : ''} • ${careerState.seasonsPlayed} Temp. MLB • $${careerState.totalEarnings.toFixed(1)}M`;
             document.getElementById('final-card-ovr').textContent = legacy.ovr;
 
-            document.getElementById('final-card-stats').innerHTML = finalStats.map(s => `
+            document.getElementById('final-card-stats').innerHTML = battingFinalStats.map(s => `
                 <div class="p-2 rounded-xl bg-[var(--bg-elevated)]">
                     <span class="text-[10px] text-[var(--text-muted)] block uppercase">${s.k}</span>
                     <strong class="font-display text-sm">${s.v}</strong>
                 </div>
             `).join('');
+
+            const pitchWrap = document.getElementById('final-card-pitching-wrap');
+            if (canPitch) {
+                pitchWrap.classList.remove('hidden');
+                document.getElementById('final-card-pitching-stats').innerHTML = pitchingFinalStats.map(s => `
+                    <div class="p-2 rounded-xl bg-[var(--bg-elevated)]">
+                        <span class="text-[10px] text-[var(--text-muted)] block uppercase">${s.k}</span>
+                        <strong class="font-display text-sm">${s.v}</strong>
+                    </div>
+                `).join('');
+            } else {
+                pitchWrap.classList.add('hidden');
+            }
 
             document.getElementById('final-card-awards').innerHTML = awardsFormatted.length
                 ? awardsFormatted.map(label => `<span class="px-3 py-1 rounded-full bg-amber-400/15 border border-amber-400/35 text-amber-400 text-xs font-bold">${label}</span>`).join('')
