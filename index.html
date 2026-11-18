@@ -10,9 +10,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Final Cup">
     <link rel="manifest" href="./manifest.json">
-    <link rel="icon" type="image/svg+xml" sizes="192x192" href="./icon-192.svg">
-    <link rel="icon" type="image/svg+xml" sizes="512x512" href="./icon-512.svg">
-    <link rel="apple-touch-icon" sizes="180x180" href="./icon-180.svg">
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
     <title>BASEBALL FINAL CUP — Serie Final MLB</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -228,8 +228,22 @@
             background-color: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
+            min-height: 100dvh;
+            width: 100%;
+            max-width: 100vw;
+            padding-bottom: env(safe-area-inset-bottom, 16px);
             overflow-x: hidden;
             transition: background-color 0.25s ease, color 0.25s ease;
+        }
+        /* Safe Area Support for iPhone Notch / Dynamic Island in Standalone PWA Mode */
+        .ios-safe-header {
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-left: env(safe-area-inset-left, 0px);
+            padding-right: env(safe-area-inset-right, 0px);
+        }
+        .ios-safe-toast {
+            top: calc(env(safe-area-inset-top, 0px) + 64px);
+            right: calc(env(safe-area-inset-right, 0px) + 12px);
         }
         .font-display { font-family: 'Oswald', sans-serif; letter-spacing: 0.03em; }
         .card-minimal {
@@ -322,7 +336,7 @@
 <body class="antialiased selection:bg-amber-400 selection:text-slate-950">
 
     <!-- Toast Notification -->
-    <div id="toast-box" class="fixed top-4 right-4 z-50 transform translate-x-full opacity-0 transition-all duration-300 pointer-events-none">
+    <div id="toast-box" class="fixed ios-safe-toast z-50 transform translate-x-full opacity-0 transition-all duration-300 pointer-events-none">
         <div class="bg-[var(--bg-surface)] border border-[var(--theme-accent-border)] text-[var(--text-primary)] px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 text-xs font-semibold backdrop-blur-md">
             <span class="w-2 h-2 rounded-full bg-amber-400"></span>
             <span id="toast-msg">Notificación</span>
@@ -330,11 +344,11 @@
     </div>
 
     <!-- Top Minimal Navigation Bar -->
-    <header class="sticky top-0 z-40 border-b border-[var(--border-subtle)] bg-[var(--bg-primary)]/90 backdrop-blur-md">
-        <div class="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between gap-2">
+    <header class="sticky top-0 z-40 ios-safe-header border-b border-[var(--border-subtle)] bg-[var(--bg-primary)]/95 backdrop-blur-md w-full">
+        <div class="max-w-5xl mx-auto px-3 sm:px-4 h-14 flex items-center justify-between gap-1.5 sm:gap-2">
             <!-- Brand Title with Official Transparent Emblem -->
-            <button onclick="goHome()" class="flex items-center gap-2.5 text-left group">
-                <div class="w-12 h-8 flex items-center justify-center shrink-0">
+            <button onclick="goHome()" class="flex items-center gap-2 text-left group shrink-0">
+                <div class="w-11 h-7 sm:w-12 sm:h-8 flex items-center justify-center shrink-0">
                     <svg class="w-full h-full drop-shadow" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <defs>
                             <linearGradient id="navGold" x1="0" y1="0" x2="1" y2="1">
@@ -369,21 +383,21 @@
             </button>
 
             <!-- Compact Right Controls: Mini Player Pill + Stars + Settings -->
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-1.5 sm:gap-2 min-w-0">
                 <!-- Stars / Coins Pill -->
-                <div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-400/25 text-amber-400 text-xs font-bold" title="Estrellas / Monedas">
-                    <svg class="w-3.5 h-3.5" style="fill: var(--theme-accent);" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <div class="flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-400/25 text-amber-400 text-xs font-bold shrink-0" title="Estrellas / Monedas">
+                    <svg class="w-3.5 h-3.5 shrink-0" style="fill: var(--theme-accent);" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                     <span id="top-stars-count">0</span>
                 </div>
 
                 <!-- Compact Player Identity Pill -->
-                <button onclick="openSection('profile')" class="flex items-center gap-2 pl-1.5 pr-3 py-1 rounded-full bg-[var(--bg-surface)] border border-[var(--border-subtle)] hover:border-amber-400/50 transition max-w-[155px]">
+                <button onclick="openSection('profile')" class="flex items-center gap-1.5 pl-1 pr-2.5 py-1 rounded-full bg-[var(--bg-surface)] border border-[var(--border-subtle)] hover:border-amber-400/50 transition min-w-0 max-w-[125px] sm:max-w-[155px]">
                     <div id="top-avatar-slot" class="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center shrink-0"></div>
                     <span id="top-player-name" class="text-xs font-semibold truncate">Manager</span>
                 </button>
 
                 <!-- Compact Settings Wheel Button -->
-                <button onclick="openSettingsModal()" title="Ajustes y Ayuda" class="w-8 h-8 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] hover:border-amber-400/50 flex items-center justify-center text-[var(--text-muted)] hover:text-amber-400 transition">
+                <button onclick="openSettingsModal()" title="Ajustes y Ayuda" class="w-9 h-9 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] hover:border-amber-400/50 flex items-center justify-center text-[var(--text-muted)] hover:text-amber-400 transition shrink-0">
                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="3"/>
                         <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
@@ -394,11 +408,11 @@
     </header>
 
     <!-- MAIN CONTENT CONTAINER -->
-    <main class="max-w-5xl mx-auto px-4 py-6">
+    <main class="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
 
         <!-- ================= 0. SPLASH / WELCOME SCREEN (PLAY BALL) ================= -->
-        <section id="view-splash" class="min-h-[80vh] flex flex-col items-center justify-center text-center px-4 py-6 space-y-6">
-            <div id="official-game-logo-slot" class="w-full max-w-[380px] sm:max-w-[490px] mx-auto flex items-center justify-center relative select-none">
+        <section id="view-splash" class="min-h-[calc(100dvh-6rem)] flex flex-col items-center justify-center text-center px-3 py-4 space-y-5">
+            <div id="official-game-logo-slot" class="w-full max-w-[320px] sm:max-w-[490px] mx-auto flex items-center justify-center relative select-none">
                 <svg class="w-full h-auto drop-shadow-[0_24px_38px_rgba(0,0,0,0.65)]" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
@@ -460,7 +474,7 @@
             </div>
 
             <div class="pt-4">
-                <span id="app-version-tag" class="text-[10px] font-mono tracking-widest text-[var(--text-muted)]/35 select-none">V0.001.8</span>
+                <span id="app-version-tag" class="text-[10px] font-mono tracking-widest text-[var(--text-muted)]/35 select-none">V0.001.9</span>
             </div>
         </section>
 
@@ -1566,7 +1580,7 @@
         import { getAuth, signInAnonymously, signInWithCustomToken, GoogleAuthProvider, signInWithPopup, linkWithPopup, onAuthStateChanged, setPersistence, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
         import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, addDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
 
-        const APP_VERSION = 'V0.001.8';
+        const APP_VERSION = 'V0.001.9';
 
         const userFirebaseConfig = {
             apiKey: "AIzaSyBXQlRxOsii_nf-YjRw0bakkdAG_1J1zDI",
@@ -1597,7 +1611,7 @@
             console.warn('Running in offline fallback mode:', e);
         }
 
-        // ================= PERSISTENT DISPLAY & THEME SETTINGS (WITH EPHEMERAL STORE PREVIEW) =================
+        // ================= PERSISTENT DISPLAY & THEME SETTINGS =================
         const SETTINGS_STORAGE_KEY = 'bfc_display_settings_v3';
         let displaySettings = {
             themeMode: 'dark',
@@ -1618,7 +1632,6 @@
         ];
 
         const STORE_LOGOS = [
-            // 30 EQUIPOS OFICIALES DE MLB
             { id: 'mlb_ari', code: 'ARI', name: 'Arizona Diamondbacks', cat: 'MLB', c1: '#A71930', c2: '#E3D4AD', c3: '#000000', pattern: 'diamond', price: 140 },
             { id: 'mlb_ath', code: 'ATH', name: 'Athletics', cat: 'MLB', c1: '#003831', c2: '#EFB21E', c3: '#FFFFFF', pattern: 'ring', price: 130 },
             { id: 'mlb_atl', code: 'ATL', name: 'Atlanta Braves', cat: 'MLB', c1: '#13274F', c2: '#CE1141', c3: '#FFFFFF', pattern: 'tomahawk', price: 150 },
@@ -1649,7 +1662,6 @@
             { id: 'mlb_tex', code: 'TEX', name: 'Texas Rangers', cat: 'MLB', c1: '#003278', c2: '#C0111F', c3: '#FFFFFF', pattern: 'star', price: 145 },
             { id: 'mlb_tor', code: 'TOR', name: 'Toronto Blue Jays', cat: 'MLB', c1: '#134A8E', c2: '#E8291C', c3: '#FFFFFF', pattern: 'shield', price: 145 },
             { id: 'mlb_wsh', code: 'WSH', name: 'Washington Nationals', cat: 'MLB', c1: '#AB0003', c2: '#14225A', c3: '#FFFFFF', pattern: 'ring', price: 140 },
-            // BANDERAS
             { id: 'flag_dom', code: 'DOM', name: 'República Dominicana', cat: 'BANDERAS', flagType: 'dom', c1: '#002D62', c2: '#CE1126', price: 180 },
             { id: 'flag_usa', code: 'USA', name: 'Estados Unidos', cat: 'BANDERAS', flagType: 'usa', c1: '#0A3161', c2: '#B31942', price: 180 },
             { id: 'flag_jpn', code: 'JPN', name: 'Japón', cat: 'BANDERAS', flagType: 'jpn', c1: '#FFFFFF', c2: '#BC002D', price: 180 },
@@ -1798,6 +1810,8 @@
             uid: 'local_' + Math.random().toString(36).substring(2, 10),
             sixDigitId: String(Math.floor(100000 + Math.random() * 900000)),
             name: 'Manager',
+            isGoogleAccount: false,
+            email: '',
             crowns: 0,
             stars: 200,
             wins: 0,
@@ -1808,8 +1822,11 @@
             equippedLogo: '',
             ownedLogos: [],
             ownedThemes: ['default'],
+            aestheticTheme: 'default',
+            themeMode: 'dark',
             friends: [],
             bestCareerCard: null,
+            activeCareer: null,
             seasonMonth: new Date().toISOString().slice(0, 7)
         };
 
@@ -1820,1847 +1837,73 @@
             }
         } catch (e) {}
 
-        function getLeagueTier(crowns) {
-            if (crowns >= 45) return { name: 'HALL OF FAME', css: 'tier-hof', heroCss: 'hero-tier-hof' };
-            if (crowns >= 25) return { name: 'LEYENDA', css: 'tier-legend', heroCss: 'hero-tier-legend' };
-            if (crowns >= 12) return { name: 'MVP', css: 'tier-mvp', heroCss: 'hero-tier-mvp' };
-            if (crowns >= 5) return { name: 'PRO', css: 'tier-pro', heroCss: 'hero-tier-pro' };
-            return { name: 'ROOKIE', css: 'tier-rookie', heroCss: 'hero-tier-rookie' };
-        }
-
-        function renderTeamCrestSVG(logoObj, sizeClass = 'w-12 h-12') {
-            if (!logoObj) return '';
-            if (logoObj.cat === 'BANDERAS') {
-                let flagPattern = '';
-                switch (logoObj.flagType) {
-                    case 'dom':
-                        flagPattern = `
-                            <rect x="0" y="0" width="32" height="32" fill="#002D62"/>
-                            <rect x="32" y="0" width="32" height="32" fill="#CE1126"/>
-                            <rect x="0" y="32" width="32" height="32" fill="#CE1126"/>
-                            <rect x="32" y="32" width="32" height="32" fill="#002D62"/>
-                            <rect x="27" y="0" width="10" height="64" fill="#FFFFFF"/>
-                            <rect x="0" y="27" width="64" height="10" fill="#FFFFFF"/>`;
-                        break;
-                    case 'usa':
-                        flagPattern = `
-                            <rect width="64" height="64" fill="#B31942"/>
-                            <rect y="9" width="64" height="7" fill="#FFFFFF"/>
-                            <rect y="23" width="64" height="7" fill="#FFFFFF"/>
-                            <rect y="37" width="64" height="7" fill="#FFFFFF"/>
-                            <rect y="51" width="64" height="7" fill="#FFFFFF"/>
-                            <rect width="30" height="34" fill="#0A3161"/>`;
-                        break;
-                    case 'jpn':
-                        flagPattern = `
-                            <rect width="64" height="64" fill="#FFFFFF"/>
-                            <circle cx="32" cy="32" r="15" fill="#BC002D"/>`;
-                        break;
-                    case 'bra':
-                        flagPattern = `
-                            <rect width="64" height="64" fill="#009739"/>
-                            <polygon points="32,8 58,32 32,56 6,32" fill="#FEDD00"/>
-                            <circle cx="32" cy="32" r="11" fill="#012169"/>`;
-                        break;
-                    case 'gbr':
-                        flagPattern = `
-                            <rect width="64" height="64" fill="#012169"/>
-                            <path d="M0 0L64 64M64 0L0 64" stroke="#FFFFFF" stroke-width="10"/>
-                            <path d="M0 0L64 64M64 0L0 64" stroke="#C8102E" stroke-width="5"/>
-                            <rect x="26" y="0" width="12" height="64" fill="#FFFFFF"/>
-                            <rect x="0" y="26" width="64" height="12" fill="#FFFFFF"/>
-                            <rect x="28" y="0" width="8" height="64" fill="#C8102E"/>
-                            <rect x="0" y="28" width="64" height="8" fill="#C8102E"/>`;
-                        break;
-                    case 'fra':
-                        flagPattern = `
-                            <rect x="0" y="0" width="21.3" height="64" fill="#002395"/>
-                            <rect x="21.3" y="0" width="21.4" height="64" fill="#FFFFFF"/>
-                            <rect x="42.7" y="0" width="21.3" height="64" fill="#ED2939"/>`;
-                        break;
-                    case 'esp':
-                        flagPattern = `
-                            <rect x="0" y="0" width="64" height="16" fill="#AA151B"/>
-                            <rect x="0" y="16" width="64" height="32" fill="#F1BF00"/>
-                            <rect x="0" y="48" width="64" height="16" fill="#AA151B"/>`;
-                        break;
-                    case 'ita':
-                        flagPattern = `
-                            <rect x="0" y="0" width="21.3" height="64" fill="#009246"/>
-                            <rect x="21.3" y="0" width="21.4" height="64" fill="#FFFFFF"/>
-                            <rect x="42.7" y="0" width="21.3" height="64" fill="#CE2B37"/>`;
-                        break;
-                    case 'ger':
-                        flagPattern = `
-                            <rect x="0" y="0" width="64" height="21.3" fill="#111111"/>
-                            <rect x="0" y="21.3" width="64" height="21.4" fill="#DD0000"/>
-                            <rect x="0" y="42.7" width="64" height="21.3" fill="#FFCE00"/>`;
-                        break;
-                    case 'can':
-                        flagPattern = `
-                            <rect x="0" y="0" width="16" height="64" fill="#D80621"/>
-                            <rect x="16" y="0" width="32" height="64" fill="#FFFFFF"/>
-                            <rect x="48" y="0" width="16" height="64" fill="#D80621"/>
-                            <polygon points="32,16 37,27 44,26 39,34 42,42 32,38 22,42 25,34 20,26 27,27" fill="#D80621"/>`;
-                        break;
-                    case 'mex':
-                        flagPattern = `
-                            <rect x="0" y="0" width="21.3" height="64" fill="#006847"/>
-                            <rect x="21.3" y="0" width="21.4" height="64" fill="#FFFFFF"/>
-                            <rect x="42.7" y="0" width="21.3" height="64" fill="#CE1126"/>
-                            <circle cx="32" cy="32" r="5" fill="#8C6239"/>`;
-                        break;
-                    case 'arg':
-                    default:
-                        flagPattern = `
-                            <rect x="0" y="0" width="64" height="21.3" fill="#74ACDF"/>
-                            <rect x="0" y="21.3" width="64" height="21.4" fill="#FFFFFF"/>
-                            <rect x="0" y="42.7" width="64" height="21.3" fill="#74ACDF"/>
-                            <circle cx="32" cy="32" r="6" fill="#F6B40E"/>`;
-                        break;
-                }
-                const clipId = `flagClip_${logoObj.id}_${Math.random().toString(36).slice(2, 6)}`;
-                return `<svg class="${sizeClass}" viewBox="0 0 64 64" fill="none">
-                    <defs><clipPath id="${clipId}"><rect width="64" height="64" rx="14"/></clipPath></defs>
-                    <g clip-path="url(#${clipId})">${flagPattern}</g>
-                    <rect x="2" y="2" width="60" height="60" rx="12" stroke="rgba(255,255,255,0.45)" stroke-width="2"/>
-                    <rect x="11" y="21" width="42" height="22" rx="6" fill="rgba(9,13,22,0.78)"/>
-                    <text x="32" y="36.5" text-anchor="middle" fill="#FFFFFF" font-family="Oswald, sans-serif" font-weight="700" font-size="14" letter-spacing="1">${logoObj.code}</text>
-                </svg>`;
-            }
-
-            const c1 = logoObj.c1 || '#0C2340';
-            const c2 = logoObj.c2 || '#FFFFFF';
-            const c3 = logoObj.c3 || c2;
-            const clipId = `mlbClip_${logoObj.id}_${Math.random().toString(36).slice(2, 6)}`;
-            let motif = '';
-
-            switch (logoObj.pattern) {
-                case 'pinstripe':
-                    motif = `
-                        <g opacity="0.22" stroke="${c2}" stroke-width="2.5">
-                            <line x1="12" y1="0" x2="12" y2="64"/><line x1="22" y1="0" x2="22" y2="64"/>
-                            <line x1="32" y1="0" x2="32" y2="64"/><line x1="42" y1="0" x2="42" y2="64"/>
-                            <line x1="52" y1="0" x2="52" y2="64"/>
-                        </g>`;
-                    break;
-                case 'diamond':
-                    motif = `
-                        <polygon points="32,5 59,32 32,59 5,32" fill="${c2}" fill-opacity="0.18" stroke="${c2}" stroke-width="2.2"/>`;
-                    break;
-                case 'star':
-                    motif = `
-                        <polygon points="32,6 38,24 57,24 42,35 48,53 32,42 16,53 22,35 7,24 26,24" fill="${c2}" fill-opacity="0.22" stroke="${c3}" stroke-width="1.5"/>`;
-                    break;
-                case 'stitch':
-                    motif = `
-                        <circle cx="32" cy="32" r="24" stroke="${c3}" stroke-width="1.8" stroke-dasharray="4 3" fill="none"/>
-                        <path d="M13 14C20 24 20 40 13 50M51 14C44 24 44 40 51 50" stroke="${c2}" stroke-width="2.2" stroke-linecap="round"/>`;
-                    break;
-                case 'split':
-                    motif = `
-                        <polygon points="0,64 64,0 64,64" fill="${c2}" fill-opacity="0.28"/>
-                        <line x1="0" y1="64" x2="64" y2="0" stroke="${c3}" stroke-width="2.2"/>`;
-                    break;
-                case 'shield':
-                    motif = `
-                        <path d="M12 10H52V32C52 45 32 56 32 56C32 56 12 45 12 32V10Z" fill="${c2}" fill-opacity="0.22" stroke="${c2}" stroke-width="2.2"/>`;
-                    break;
-                case 'mountain':
-                    motif = `
-                        <polygon points="4,54 22,22 34,40 44,24 60,54" fill="${c2}" fill-opacity="0.26"/>`;
-                    break;
-                case 'tomahawk':
-                    motif = `
-                        <line x1="10" y1="52" x2="54" y2="12" stroke="${c2}" stroke-width="4" stroke-linecap="round"/>
-                        <polygon points="44,10 56,10 52,22" fill="${c3}"/>`;
-                    break;
-                case 'ring':
-                default:
-                    motif = `
-                        <circle cx="32" cy="32" r="23" stroke="${c2}" stroke-width="2.5" stroke-opacity="0.55"/>
-                        <circle cx="32" cy="32" r="18" stroke="${c3}" stroke-width="1.2" stroke-opacity="0.4"/>`;
-                    break;
-            }
-
-            return `<svg class="${sizeClass}" viewBox="0 0 64 64" fill="none">
-                <defs>
-                    <clipPath id="${clipId}"><rect width="64" height="64" rx="14"/></clipPath>
-                    <linearGradient id="grad_${clipId}" x1="0" y1="0" x2="1" y2="1">
-                        <stop offset="0%" stop-color="${c1}"/>
-                        <stop offset="100%" stop-color="#060911"/>
-                    </linearGradient>
-                </defs>
-                <g clip-path="url(#${clipId})">
-                    <rect width="64" height="64" fill="url(#grad_${clipId})"/>
-                    ${motif}
-                    <rect x="8" y="20" width="48" height="24" rx="7" fill="${c1}" fill-opacity="0.88" stroke="${c2}" stroke-width="1.8"/>
-                </g>
-                <rect x="2" y="2" width="60" height="60" rx="12" stroke="${c2}" stroke-opacity="0.55" stroke-width="2"/>
-                <text x="32" y="38.5" text-anchor="middle" fill="${c2}" font-family="Oswald, sans-serif" font-weight="700" font-size="18.5" letter-spacing="1">${logoObj.code}</text>
-            </svg>`;
-        }
-
-        function renderAvatarHTML(u, sizeClass = 'w-8 h-8 text-xs') {
-            if (u.equippedLogo) {
-                const logoObj = STORE_LOGOS.find(l => l.id === u.equippedLogo);
-                if (logoObj) return renderTeamCrestSVG(logoObj, sizeClass);
-            }
-            const letter = (u.avatarLetter || (u.name || 'M')[0] || 'M').toUpperCase();
-            const bg = u.avatarBg || '#1E3A8A';
-            return `<div class="${sizeClass} rounded-xl flex items-center justify-center font-display font-bold text-white" style="background:${bg};">${letter}</div>`;
-        }
-
-        function loadAndApplyDisplaySettings() {
-            try {
-                const raw = localStorage.getItem(SETTINGS_STORAGE_KEY);
-                if (raw) {
-                    displaySettings = { ...displaySettings, ...JSON.parse(raw) };
-                }
-            } catch (e) {}
-            applyDisplaySettingsToDOM();
-        }
-
-        function saveDisplaySettings() {
-            try {
-                localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(displaySettings));
-            } catch (e) {}
-            applyDisplaySettingsToDOM();
-        }
-
-        function applyDisplaySettingsToDOM() {
-            const root = document.documentElement;
-            root.classList.toggle('light-mode', displaySettings.themeMode === 'light');
-            root.classList.toggle('dark', displaySettings.themeMode !== 'light');
-
-            AESTHETIC_THEMES.forEach(t => {
-                if (t.cssClass) root.classList.remove(t.cssClass);
-            });
-            const activeThemeId = previewAestheticThemeId || displaySettings.aestheticTheme || 'default';
-            const themeObj = AESTHETIC_THEMES.find(t => t.id === activeThemeId);
-            if (themeObj && themeObj.cssClass) {
-                root.classList.add(themeObj.cssClass);
-            }
-
-            root.classList.remove('font-size-sm', 'font-size-md', 'font-size-lg');
-            root.classList.add(`font-size-${displaySettings.fontSize || 'md'}`);
-            root.classList.toggle('font-weight-bold', displaySettings.fontWeight === 'bold');
-
-            const darkBtn = document.getElementById('btn-theme-dark');
-            const lightBtn = document.getElementById('btn-theme-light');
-            if (darkBtn && lightBtn) {
-                darkBtn.className = displaySettings.themeMode === 'dark'
-                    ? 'py-2.5 px-3 rounded-xl btn-primary-gold text-xs font-display font-bold uppercase'
-                    : 'py-2.5 px-3 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-xs font-display font-bold uppercase';
-                lightBtn.className = displaySettings.themeMode === 'light'
-                    ? 'py-2.5 px-3 rounded-xl btn-primary-gold text-xs font-display font-bold uppercase'
-                    : 'py-2.5 px-3 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-xs font-display font-bold uppercase';
-            }
-
-            ['sm', 'md', 'lg'].forEach(sz => {
-                const b = document.getElementById(`btn-fs-${sz}`);
-                if (!b) return;
-                b.className = displaySettings.fontSize === sz
-                    ? 'py-2 rounded-lg btn-primary-gold text-xs font-bold'
-                    : 'py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-xs font-bold';
-            });
-
-            ['normal', 'bold'].forEach(fw => {
-                const b = document.getElementById(`btn-fw-${fw}`);
-                if (!b) return;
-                b.className = displaySettings.fontWeight === fw
-                    ? 'py-2 rounded-lg btn-primary-gold text-xs font-bold'
-                    : 'py-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-xs font-bold';
-            });
-
-            const previewBanner = document.getElementById('store-preview-banner');
-            if (previewBanner) {
-                if (previewAestheticThemeId) {
-                    const pTheme = AESTHETIC_THEMES.find(t => t.id === previewAestheticThemeId);
-                    document.getElementById('store-preview-theme-name').textContent = `Probando: ${pTheme?.name || 'Tema'}`;
-                    previewBanner.classList.remove('hidden');
-                } else {
-                    previewBanner.classList.add('hidden');
-                }
-            }
-        }
-
-        function clearThemePreviewIfActive() {
-            if (previewAestheticThemeId) {
-                previewAestheticThemeId = null;
-                applyDisplaySettingsToDOM();
-            }
-        }
-
-        window.setThemeMode = function(mode) {
-            displaySettings.themeMode = mode;
-            saveDisplaySettings();
-        };
-
-        window.setFontSize = function(sz) {
-            displaySettings.fontSize = sz;
-            saveDisplaySettings();
-        };
-
-        window.setFontWeight = function(fw) {
-            displaySettings.fontWeight = fw;
-            saveDisplaySettings();
-        };
-
-        window.setAestheticTheme = function(themeId) {
-            previewAestheticThemeId = null;
-            displaySettings.aestheticTheme = themeId;
-            saveDisplaySettings();
-            renderSettingsThemesGrid();
-            if (activeStoreTab === 'TEMAS') filterStoreTab('TEMAS');
-        };
-
-        window.previewStoreTheme = function(themeId) {
-            previewAestheticThemeId = themeId;
-            applyDisplaySettingsToDOM();
-            filterStoreTab('TEMAS', true);
-            const t = AESTHETIC_THEMES.find(x => x.id === themeId);
-            showToast(`Vista previa activa: ${t?.name || themeId}`);
-        };
-
-        window.cancelThemePreview = function() {
-            clearThemePreviewIfActive();
-            if (activeStoreTab === 'TEMAS') filterStoreTab('TEMAS');
-            showToast('Vista previa finalizada.');
-        };
-
-        function renderSettingsThemesGrid() {
-            const grid = document.getElementById('settings-aesthetic-themes-grid');
-            if (!grid) return;
-            const ownedThemes = new Set(['default', ...(userProfile.ownedThemes || [])]);
-            grid.innerHTML = AESTHETIC_THEMES.filter(t => ownedThemes.has(t.id)).map(t => {
-                const isEquipped = displaySettings.aestheticTheme === t.id;
-                return `<button onclick="setAestheticTheme('${t.id}')" class="p-2.5 rounded-xl bg-[var(--bg-elevated)] border ${isEquipped ? 'border-amber-400' : 'border-[var(--border-subtle)]'} flex items-center justify-between gap-2 text-left transition">
-                    <div class="flex items-center gap-2 min-w-0">
-                        <span class="w-6 h-6 rounded-lg shrink-0 border border-white/20" style="background:linear-gradient(135deg, ${t.colorA} 50%, ${t.colorB} 50%);"></span>
-                        <span class="text-xs font-bold truncate">${t.name}</span>
-                    </div>
-                    <span class="text-[10px] font-bold uppercase ${isEquipped ? 'text-amber-400' : 'text-[var(--text-muted)]'}">${isEquipped ? 'Activo ✓' : 'Usar'}</span>
-                </button>`;
-            }).join('');
-        }
-
-        window.openSettingsModal = function() {
-            renderSettingsThemesGrid();
-            applyDisplaySettingsToDOM();
-            document.getElementById('settings-modal').classList.remove('hidden');
-        };
-
-        window.closeSettingsModal = function() {
-            document.getElementById('settings-modal').classList.add('hidden');
-        };
-
-        // ================= NAVIGATION & VIEW MANAGEMENT =================
-        const ALL_VIEWS = [
-            'view-splash', 'view-home', 'view-league-select', 'view-historic-setup',
-            'view-historic-game', 'view-historic-results', 'view-career',
-            'view-vs-lobby', 'view-game', 'view-results', 'view-ranking',
-            'view-store', 'view-friends', 'view-profile'
-        ];
-
-        function hideAllSections() {
-            clearThemePreviewIfActive();
-            ALL_VIEWS.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.classList.add('hidden');
-            });
-            document.getElementById('profile-edit-card')?.classList.add('hidden');
-        }
-
-        const SPLASH_TIPS = [
-            'Completa las 12 posiciones para descubrir el OVR oculto de tu alineación.',
-            'En el modo 162-0 dispones de 3 comodines de equipo y 3 de década.',
-            'Gana series finales para acumular Coronas y ascender hasta Hall of Fame.',
-            'Prueba cualquier tema estético gratis en la Tienda antes de comprarlo.'
-        ];
-
-        window.exitToSplash = function() {
-            hideAllSections();
-            const vTag = document.getElementById('app-version-tag');
-            if (vTag) vTag.textContent = APP_VERSION;
-            const tipEl = document.getElementById('splash-random-tip');
-            if (tipEl) tipEl.textContent = SPLASH_TIPS[Math.floor(Math.random() * SPLASH_TIPS.length)];
-            document.getElementById('view-splash').classList.remove('hidden');
-        };
-
-        window.enterMainMenu = function() {
-            goHome();
-        };
-
-        window.goHome = function() {
-            hideAllSections();
-            updateAllProfileUI();
-            document.getElementById('view-home').classList.remove('hidden');
-        };
-
-        window.openSection = function(sec) {
-            hideAllSections();
-            if (sec === 'ranking') {
-                renderRanking();
-                document.getElementById('view-ranking').classList.remove('hidden');
-            } else if (sec === 'store') {
-                filterStoreTab('MLB');
-                document.getElementById('view-store').classList.remove('hidden');
-            } else if (sec === 'friends') {
-                renderFriendsDirectory();
-                document.getElementById('view-friends').classList.remove('hidden');
-            } else if (sec === 'profile') {
-                updateAllProfileUI();
-                document.getElementById('view-profile').classList.remove('hidden');
-            }
-        };
-
-        // ================= PROFILE UI, EDITOR & AUTH =================
-        function updateAllProfileUI() {
-            const tier = getLeagueTier(userProfile.crowns || 0);
-            document.getElementById('top-stars-count').textContent = userProfile.stars || 0;
-            document.getElementById('top-player-name').textContent = userProfile.name || 'Manager';
-            document.getElementById('top-avatar-slot').innerHTML = renderAvatarHTML(userProfile, 'w-6 h-6 text-[11px]');
-
-            const heroCard = document.getElementById('home-hero-card');
-            if (heroCard) {
-                heroCard.className = `px-5 py-5 rounded-2xl card-minimal ${tier.heroCss} flex flex-col items-center justify-center text-center space-y-2.5 shadow-lg`;
-            }
-            const homeName = document.getElementById('home-player-name');
-            if (homeName) homeName.textContent = userProfile.name || 'Manager';
-            const homeBadge = document.getElementById('home-league-badge');
-            if (homeBadge) {
-                homeBadge.textContent = tier.name;
-                homeBadge.className = `px-4 py-1 rounded-full text-xs sm:text-sm font-display font-bold uppercase tracking-widest ${tier.css} shadow-sm`;
-            }
-            const homeCrowns = document.getElementById('home-crowns-count');
-            if (homeCrowns) homeCrowns.textContent = userProfile.crowns || 0;
-
-            const profAvatar = document.getElementById('profile-main-avatar');
-            if (profAvatar) profAvatar.innerHTML = renderAvatarHTML(userProfile, 'w-20 h-20 text-3xl');
-            const profName = document.getElementById('profile-display-name');
-            if (profName) profName.textContent = userProfile.name || 'Manager';
-            const profTier = document.getElementById('profile-league-tier');
-            if (profTier) {
-                profTier.textContent = tier.name;
-                profTier.className = `px-3 py-0.5 rounded-full text-xs font-display font-bold uppercase ${tier.css}`;
-            }
-            const profSix = document.getElementById('profile-six-id');
-            if (profSix) profSix.textContent = userProfile.sixDigitId || '000000';
-            const statCrowns = document.getElementById('profile-stat-crowns');
-            if (statCrowns) statCrowns.textContent = userProfile.crowns || 0;
-            const statStars = document.getElementById('profile-stat-stars');
-            if (statStars) statStars.textContent = userProfile.stars || 0;
-            const statRec = document.getElementById('profile-stat-record');
-            if (statRec) statRec.textContent = `${userProfile.wins || 0}-${userProfile.losses || 0}`;
-
-            const bestCard = userProfile.bestCareerCard;
-            const ovrPill = document.getElementById('profile-best-career-ovr-pill');
-            const cardsContainer = document.getElementById('profile-saved-career-cards');
-            if (ovrPill) {
-                ovrPill.textContent = bestCard ? `RÉCORD OVR ${bestCard.ovr}` : 'SIN RÉCORD';
-            }
-            if (cardsContainer) {
-                if (!bestCard) {
-                    cardsContainer.innerHTML = `<p class="text-xs text-[var(--text-muted)]">Aún no has completado ninguna trayectoria en Mi Carrera.</p>`;
-                } else {
-                    const statsHtml = (bestCard.statsList || []).map(s => `
-                        <div class="p-1.5 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-center">
-                            <span class="text-[9px] text-[var(--text-muted)] block uppercase">${s.k}</span>
-                            <strong class="font-display text-xs">${s.v}</strong>
-                        </div>
-                    `).join('');
-                    const awardsHtml = (bestCard.awardsList && bestCard.awardsList.length)
-                        ? bestCard.awardsList.map(a => `<span class="px-2.5 py-0.5 rounded-full bg-amber-400/15 border border-amber-400/35 text-amber-400 text-[10px] font-bold">${a}</span>`).join('')
-                        : `<span class="text-[11px] text-[var(--text-muted)]">Sin premios individuales</span>`;
-
-                    cardsContainer.innerHTML = `
-                        <div class="p-4 rounded-2xl bg-[var(--bg-elevated)] border border-amber-400/45 space-y-3">
-                            <div class="flex items-center justify-between gap-3">
-                                <div class="flex items-center gap-3 min-w-0">
-                                    <div class="w-12 h-12 rounded-xl btn-primary-gold flex items-center justify-center font-display text-xl font-bold shrink-0">#${bestCard.jersey}</div>
-                                    <div class="min-w-0">
-                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-display font-bold uppercase ${bestCard.legacyCss || 'tier-mvp'}">${bestCard.legacyTier}</span>
-                                        <strong class="block font-display text-lg uppercase truncate mt-0.5">${bestCard.name}</strong>
-                                        <span class="text-[11px] text-[var(--text-muted)] block">${bestCard.pos} • ${bestCard.seasons} Temp. MLB</span>
-                                    </div>
-                                </div>
-                                <div class="px-3.5 py-2 rounded-xl bg-[var(--bg-surface)] border border-amber-400/40 text-center shrink-0">
-                                    <span class="text-[9px] font-bold uppercase text-amber-400 block">OVR</span>
-                                    <strong class="font-display text-2xl font-bold text-amber-400 leading-none">${bestCard.ovr}</strong>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-4 sm:grid-cols-7 gap-1.5">${statsHtml}</div>
-                            <div class="flex flex-wrap gap-1.5 pt-1 border-t border-[var(--border-subtle)]">${awardsHtml}</div>
-                        </div>
-                    `;
-                }
-            }
-        }
-
-        window.copyPlayerSixDigitId = function() {
-            copyToClipboard(`#${userProfile.sixDigitId}`, `ID #${userProfile.sixDigitId} copiado al portapapeles`);
-        };
-
-        let tempEditAvatar = { letter: 'M', bg: '#1E3A8A', logo: '' };
-        const AVATAR_COLORS = ['#1E3A8A', '#B91C1C', '#047857', '#B45309', '#6D28D9', '#0F172A', '#BE185D', '#0369A1'];
-
-        window.openProfileEditor = function() {
-            tempEditAvatar = {
-                letter: userProfile.avatarLetter || (userProfile.name || 'M')[0].toUpperCase(),
-                bg: userProfile.avatarBg || '#1E3A8A',
-                logo: userProfile.equippedLogo || ''
-            };
-            document.getElementById('edit-username-input').value = userProfile.name || 'Manager';
-            const costHint = document.getElementById('name-change-cost-hint');
-            if (costHint) {
-                costHint.textContent = (userProfile.nameChanges || 0) === 0
-                    ? '(Primer cambio de nombre gratis)'
-                    : '(Cambiar nombre cuesta 50 Estrellas)';
-            }
-
-            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-            document.getElementById('edit-letters-grid').innerHTML = letters.map(l => `
-                <button type="button" onclick="selectEditLetter('${l}')" class="py-1.5 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border-subtle)] hover:border-amber-400 font-display text-xs font-bold">${l}</button>
-            `).join('');
-
-            document.getElementById('edit-colors-grid').innerHTML = AVATAR_COLORS.map(col => `
-                <button type="button" onclick="selectEditColor('${col}')" class="w-8 h-8 rounded-full border-2 border-white/25" style="background:${col};"></button>
-            `).join('');
-
-            const owned = (userProfile.ownedLogos || []).map(id => STORE_LOGOS.find(l => l.id === id)).filter(Boolean);
-            document.getElementById('edit-owned-logos-grid').innerHTML = owned.length
-                ? owned.map(l => `
-                    <button type="button" onclick="selectEditLogo('${l.id}')" class="p-2 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] hover:border-amber-400 flex items-center gap-2 text-left">
-                        ${renderTeamCrestSVG(l, 'w-7 h-7')}
-                        <span class="text-xs font-bold truncate">${l.name}</span>
-                    </button>
-                `).join('')
-                : `<p class="text-xs text-[var(--text-muted)] col-span-full">Compra emblemas en la Tienda para equiparlos aquí.</p>`;
-
-            refreshEditAvatarPreview();
-            document.getElementById('profile-edit-card').classList.remove('hidden');
-        };
-
-        function refreshEditAvatarPreview() {
-            document.getElementById('edit-preview-avatar').innerHTML = renderAvatarHTML({
-                avatarLetter: tempEditAvatar.letter,
-                avatarBg: tempEditAvatar.bg,
-                equippedLogo: tempEditAvatar.logo
-            }, 'w-12 h-12 text-lg');
-        }
-
-        window.selectEditLetter = function(l) {
-            tempEditAvatar.letter = l;
-            tempEditAvatar.logo = '';
-            refreshEditAvatarPreview();
-        };
-
-        window.selectEditColor = function(col) {
-            tempEditAvatar.bg = col;
-            tempEditAvatar.logo = '';
-            refreshEditAvatarPreview();
-        };
-
-        window.selectEditLogo = function(logoId) {
-            tempEditAvatar.logo = logoId;
-            refreshEditAvatarPreview();
-        };
-
-        window.cancelProfileEdit = function() {
-            document.getElementById('profile-edit-card').classList.add('hidden');
-        };
-
-        window.saveProfileChanges = async function() {
-            const newName = document.getElementById('edit-username-input').value.trim();
-            if (!newName) {
-                showToast('El nombre no puede estar vacío.');
-                return;
-            }
-            if (newName !== userProfile.name) {
-                if ((userProfile.nameChanges || 0) > 0) {
-                    if ((userProfile.stars || 0) < 50) {
-                        showToast('Necesitas 50 Estrellas para volver a cambiar tu nombre.');
-                        return;
-                    }
-                    userProfile.stars -= 50;
-                }
-                userProfile.name = newName;
-                userProfile.nameChanges = (userProfile.nameChanges || 0) + 1;
-            }
-            userProfile.avatarLetter = tempEditAvatar.letter;
-            userProfile.avatarBg = tempEditAvatar.bg;
-            userProfile.equippedLogo = tempEditAvatar.logo;
-            await saveUserProfile();
-            document.getElementById('profile-edit-card').classList.add('hidden');
-            showToast('Perfil actualizado correctamente.');
-        };
-
         async function saveUserProfile() {
             try {
                 localStorage.setItem(PROFILE_LOCAL_KEY, JSON.stringify(userProfile));
             } catch (e) {}
-            updateAllProfileUI();
-            if (db && currentUser) {
+
+            if (db && currentUser && !currentUser.isAnonymous) {
                 try {
-                    await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'users', currentUser.uid), {
-                        ...userProfile,
+                    const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'data');
+                    await setDoc(userDocRef, userProfile, { merge: true });
+
+                    const publicDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', currentUser.uid);
+                    await setDoc(publicDocRef, {
                         uid: currentUser.uid,
+                        sixDigitId: userProfile.sixDigitId,
+                        name: userProfile.name,
+                        crowns: userProfile.crowns,
+                        avatarLetter: userProfile.avatarLetter,
+                        avatarBg: userProfile.avatarBg,
+                        equippedLogo: userProfile.equippedLogo,
+                        isGoogleAccount: true,
                         updatedAt: Date.now()
                     }, { merge: true });
-                } catch (e) {}
+                } catch (e) {
+                    console.warn('Cloud profile sync error:', e);
+                }
+            }
+        }
+
+        async function hydrateProfileFromCloud(user) {
+            if (!db || !user) return;
+            try {
+                const userDocRef = doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'data');
+                const snap = await getDoc(userDocRef);
+                if (snap.exists()) {
+                    const cloudData = snap.data();
+                    userProfile = {
+                        ...userProfile,
+                        ...cloudData,
+                        uid: user.uid,
+                        isGoogleAccount: true,
+                        email: user.email || cloudData.email || ''
+                    };
+                } else {
+                    userProfile.uid = user.uid;
+                    userProfile.isGoogleAccount = true;
+                    userProfile.email = user.email || '';
+                    if (user.displayName && userProfile.name === 'Manager') {
+                        userProfile.name = user.displayName.slice(0, 18);
+                    }
+                    await saveUserProfile();
+                }
+            } catch (e) {
+                console.warn('Hydrate profile error:', e);
             }
         }
 
         function checkMonthlySeasonReset() {
             const currentMonth = new Date().toISOString().slice(0, 7);
             if (userProfile.seasonMonth && userProfile.seasonMonth !== currentMonth) {
-                userProfile.crowns = Math.floor((userProfile.crowns || 0) * 0.3);
+                const preservedCrowns = Math.floor((userProfile.crowns || 0) * 0.3);
+                userProfile.crowns = preservedCrowns;
                 userProfile.seasonMonth = currentMonth;
                 saveUserProfile();
             }
         }
 
-        async function initAuth() {
-            checkMonthlySeasonReset();
-            if (!auth) return;
-            try {
-                await setPersistence(auth, browserLocalPersistence);
-                onAuthStateChanged(auth, async (user) => {
-                    if (user) {
-                        currentUser = user;
-                        userProfile.uid = user.uid;
-                        if (user.displayName && userProfile.name === 'Manager') {
-                            userProfile.name = user.displayName.slice(0, 18);
-                        }
-                        if (!user.isAnonymous) {
-                            const lbl1 = document.getElementById('google-btn-label');
-                            const lbl2 = document.getElementById('google-splash-label');
-                            if (lbl1) lbl1.textContent = 'Google Conectado ✓';
-                            if (lbl2) lbl2.textContent = `Conectado (${userProfile.name})`;
-                        }
-                        if (db) {
-                            try {
-                                const userRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', user.uid);
-                                const snap = await getDoc(userRef);
-                                if (snap.exists()) {
-                                    userProfile = { ...userProfile, ...snap.data(), uid: user.uid };
-                                }
-                                await saveUserProfile();
-                                startFirestoreListeners();
-                            } catch (e) {}
-                        }
-                        updateAllProfileUI();
-                    } else {
-                        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                            await signInWithCustomToken(auth, __initial_auth_token);
-                        } else {
-                            await signInAnonymously(auth);
-                        }
-                    }
-                });
-            } catch (e) {
-                console.warn('Auth init skipped:', e);
-            }
-        }
-
-        function startFirestoreListeners() {
-            if (!db) return;
-            try {
-                onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'users'), (snap) => {
-                    allPublicUsers = snap.docs.map(d => d.data());
-                    if (!document.getElementById('view-ranking').classList.contains('hidden')) renderRanking();
-                    if (!document.getElementById('view-friends').classList.contains('hidden')) renderFriendsDirectory();
-                }, () => {});
-
-                onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'matches'), (snap) => {
-                    allAsyncMatches = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                    updatePendingMatchesBadge();
-                    if (!document.getElementById('view-vs-lobby').classList.contains('hidden')) renderVSLobby();
-                }, () => {});
-            } catch (e) {}
-        }
-
-        window.signInWithGoogle = async function() {
-            if (!auth) {
-                showToast('Autenticación en modo local.');
-                return;
-            }
-            const provider = new GoogleAuthProvider();
-            try {
-                if (auth.currentUser && auth.currentUser.isAnonymous) {
-                    await linkWithPopup(auth.currentUser, provider);
-                } else {
-                    await signInWithPopup(auth, provider);
-                }
-                showToast('¡Cuenta de Google vinculada!');
-            } catch (err) {
-                if (err.code === 'auth/credential-already-in-use') {
-                    try {
-                        await signInWithPopup(auth, provider);
-                        showToast('¡Sesión iniciada con Google!');
-                    } catch (e2) {
-                        showToast('No se pudo completar el inicio con Google.');
-                    }
-                } else {
-                    showToast('Inicio con Google cancelado o no disponible.');
-                }
-            }
-        };
-
-        // ================= STORE LOGIC (LOGOS & AESTHETIC THEMES WITH LIVE PREVIEW) =================
-        window.filterStoreTab = function(cat, keepPreview = false) {
-            if (cat !== 'TEMAS' && !keepPreview) {
-                clearThemePreviewIfActive();
-            }
-            activeStoreTab = cat;
-            document.querySelectorAll('.store-tab').forEach(b => {
-                b.className = 'store-tab px-4 py-2 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs font-bold uppercase';
-            });
-            const activeBtn = document.getElementById(`store-tab-${cat}`);
-            if (activeBtn) {
-                activeBtn.className = 'store-tab px-4 py-2 rounded-xl bg-amber-400 text-xs font-bold uppercase';
-            }
-
-            const grid = document.getElementById('store-items-grid');
-
-            if (cat === 'TEMAS') {
-                const ownedThemes = new Set(['default', ...(userProfile.ownedThemes || [])]);
-                grid.innerHTML = AESTHETIC_THEMES.map(theme => {
-                    const isOwned = ownedThemes.has(theme.id);
-                    const isEquipped = displaySettings.aestheticTheme === theme.id && !previewAestheticThemeId;
-                    const isPreviewing = previewAestheticThemeId === theme.id;
-
-                    return `<div class="card-minimal rounded-2xl p-3.5 flex flex-col items-center text-center justify-between gap-2.5 ${isPreviewing ? 'border-amber-400 ring-2 ring-amber-400/40' : ''}">
-                        <div class="w-14 h-14 rounded-2xl border-2 border-white/25 shadow-lg flex items-center justify-center relative overflow-hidden" style="background:linear-gradient(135deg, ${theme.colorA} 50%, ${theme.colorB} 50%);">
-                            <span class="px-1.5 py-0.5 rounded bg-black/70 text-white font-display text-[9px] font-bold uppercase tracking-wider">TEMA</span>
-                        </div>
-                        <div class="space-y-0.5">
-                            <strong class="text-xs font-bold block leading-tight">${theme.name}</strong>
-                            <span class="text-[10px] text-[var(--text-muted)] block leading-tight">${theme.desc}</span>
-                        </div>
-                        ${isOwned
-                            ? `<button onclick="setAestheticTheme('${theme.id}')" class="w-full py-2 rounded-xl ${isEquipped ? 'bg-emerald-500/20 border border-emerald-500/40 text-emerald-400' : 'btn-primary-blue'} text-[11px] font-bold uppercase">
-                                ${isEquipped ? 'Equipado ✓' : 'Equipar Tema'}
-                               </button>`
-                            : `<div class="w-full space-y-1.5">
-                                <button onclick="previewStoreTheme('${theme.id}')" class="w-full py-1.5 rounded-xl bg-[var(--bg-elevated)] border border-amber-400/40 text-amber-400 hover:bg-amber-400/15 text-[10px] font-bold uppercase transition">
-                                    ${isPreviewing ? 'Probando ahora ●' : 'Probar Estética'}
-                                </button>
-                                <button onclick="buyStoreTheme('${theme.id}')" class="w-full py-1.5 rounded-xl btn-primary-gold text-[11px] font-bold uppercase">
-                                    Comprar • ${theme.price} ★
-                                </button>
-                               </div>`
-                        }
-                    </div>`;
-                }).join('');
-                return;
-            }
-
-            const items = STORE_LOGOS.filter(l => l.cat === cat);
-            grid.innerHTML = items.map(item => {
-                const owned = (userProfile.ownedLogos || []).includes(item.id);
-                return `<div class="card-minimal rounded-2xl p-3.5 flex flex-col items-center text-center justify-between gap-2.5">
-                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-md overflow-hidden">${renderTeamCrestSVG(item, 'w-14 h-14')}</div>
-                    <div>
-                        <strong class="text-xs font-bold block leading-tight">${item.name}</strong>
-                        <span class="text-[10px] text-[var(--text-muted)]">${item.cat}</span>
-                    </div>
-                    ${owned
-                        ? `<span class="w-full py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[11px] font-bold uppercase">Adquirido ✓</span>`
-                        : `<button onclick="buyStoreLogo('${item.id}')" class="w-full py-1.5 rounded-xl btn-primary-gold text-[11px] uppercase">Comprar • ${item.price} ★</button>`
-                    }
-                </div>`;
-            }).join('');
-        };
-
-        window.buyStoreTheme = async function(themeId) {
-            const theme = AESTHETIC_THEMES.find(t => t.id === themeId);
-            if (!theme) return;
-            const ownedThemes = new Set(['default', ...(userProfile.ownedThemes || [])]);
-            if (ownedThemes.has(themeId)) return;
-            if ((userProfile.stars || 0) < theme.price) {
-                showToast(`Estrellas insuficientes. Necesitas ${theme.price} Estrellas para este tema.`);
-                return;
-            }
-            userProfile.stars -= theme.price;
-            userProfile.ownedThemes = [...ownedThemes, themeId];
-            previewAestheticThemeId = null;
-            displaySettings.aestheticTheme = themeId;
-            saveDisplaySettings();
-            await saveUserProfile();
-            filterStoreTab('TEMAS');
-            showToast(`¡Tema "${theme.name}" comprado y guardado!`);
-        };
-
-        window.buyStoreLogo = async function(logoId) {
-            const item = STORE_LOGOS.find(l => l.id === logoId);
-            if (!item) return;
-            if ((userProfile.ownedLogos || []).includes(logoId)) return;
-            if ((userProfile.stars || 0) < item.price) {
-                showToast('No tienes suficientes Estrellas.');
-                return;
-            }
-            userProfile.stars -= item.price;
-            userProfile.ownedLogos = [...(userProfile.ownedLogos || []), logoId];
-            await saveUserProfile();
-            filterStoreTab(activeStoreTab);
-            showToast(`¡${item.name} desbloqueado!`);
-        };
-
-        // ================= RANKING RENDERING =================
-        function renderRanking() {
-            const listEl = document.getElementById('ranking-list');
-            const pool = [...allPublicUsers];
-            if (!pool.some(u => u.uid === userProfile.uid)) {
-                pool.push({ ...userProfile });
-            }
-            pool.sort((a, b) => (b.crowns || 0) - (a.crowns || 0));
-
-            listEl.innerHTML = pool.map((u, idx) => {
-                const tier = getLeagueTier(u.crowns || 0);
-                const isMe = u.uid === userProfile.uid;
-                return `<div class="card-minimal rounded-xl p-3.5 flex items-center justify-between gap-3 ${isMe ? 'border-amber-400/60' : ''}">
-                    <div class="flex items-center gap-3 min-w-0">
-                        <span class="font-display text-base font-bold w-6 text-center ${idx < 3 ? 'text-amber-400' : 'text-[var(--text-muted)]'}">#${idx + 1}</span>
-                        <div class="w-9 h-9 rounded-xl overflow-hidden shrink-0">${renderAvatarHTML(u, 'w-9 h-9 text-sm')}</div>
-                        <div class="min-w-0">
-                            <div class="flex items-center gap-1.5">
-                                <strong class="text-sm font-bold truncate">${u.name}</strong>
-                                ${isMe ? '<span class="text-[10px] text-amber-400 font-bold">(Tú)</span>' : '<span class="text-[10px] font-mono text-[var(--text-muted)]">#' + (u.sixDigitId || '000000') + '</span>'}
-                            </div>
-                            <span class="inline-block px-2 py-0.2 rounded text-[9px] font-display font-bold uppercase ${tier.css}">${tier.name}</span>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-1.5 shrink-0">
-                        <svg class="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
-                        <span class="font-display text-base font-bold">${u.crowns || 0}</span>
-                    </div>
-                </div>`;
-            }).join('');
-        }
-
-        // ================= FRIENDS & ASYNC VS MULTIPLAYER =================
-        window.renderFriendsDirectory = function() {
-            const rawInput = (document.getElementById('friend-search-input')?.value || '').trim();
-            const q = rawInput.toLowerCase();
-            const cleanId = q.replace('#', '');
-            const resultsEl = document.getElementById('friends-search-results');
-            const myFriendsEl = document.getElementById('my-friends-list');
-
-            const others = allPublicUsers.filter(u => u.uid !== userProfile.uid);
-            const filtered = q
-                ? others.filter(u => (u.name || '').toLowerCase().includes(q) || String(u.sixDigitId || '').includes(cleanId))
-                : others.slice(0, 8);
-
-            if (q && filtered.length === 0) {
-                resultsEl.innerHTML = `<p class="text-xs text-[var(--text-muted)]">No se encontró ningún jugador con "${rawInput}".</p>`;
-            } else if (filtered.length > 0) {
-                resultsEl.innerHTML = filtered.slice(0, 12).map(u => {
-                    const already = (userProfile.friends || []).includes(u.uid);
-                    return `<div class="p-2.5 rounded-xl bg-[var(--bg-elevated)] flex items-center justify-between gap-2">
-                        <div class="flex items-center gap-2.5 min-w-0">
-                            <div class="w-8 h-8 rounded-lg overflow-hidden shrink-0">${renderAvatarHTML(u, 'w-8 h-8 text-xs')}</div>
-                            <div class="min-w-0">
-                                <strong class="text-xs font-bold block truncate">${u.name} <span class="font-mono text-[10px] text-amber-400">#${u.sixDigitId || '000000'}</span></strong>
-                                <span class="text-[10px] text-[var(--text-muted)]">${u.crowns || 0} Coronas</span>
-                            </div>
-                        </div>
-                        ${already
-                            ? `<span class="text-[10px] font-bold text-emerald-400">Amigo ✓</span>`
-                            : `<button onclick="addFriend('${u.uid}')" class="px-3 py-1 rounded-lg btn-primary-gold text-[11px] uppercase">Agregar +</button>`
-                        }
-                    </div>`;
-                }).join('');
-            } else {
-                resultsEl.innerHTML = `<p class="text-xs text-[var(--text-muted)]">Escribe un Nombre o ID de 6 dígitos para buscar jugadores.</p>`;
-            }
-
-            const friendObjs = others.filter(u => (userProfile.friends || []).includes(u.uid));
-            myFriendsEl.innerHTML = friendObjs.length ? friendObjs.map(f => `
-                <div class="p-2.5 rounded-xl bg-[var(--bg-elevated)] flex items-center justify-between gap-2">
-                    <div class="flex items-center gap-2.5 min-w-0">
-                        <div class="w-8 h-8 rounded-lg overflow-hidden shrink-0">${renderAvatarHTML(f, 'w-8 h-8 text-xs')}</div>
-                        <div class="min-w-0">
-                            <strong class="text-xs font-bold block truncate">${f.name} <span class="font-mono text-[10px] text-amber-400">#${f.sixDigitId || '000000'}</span></strong>
-                            <span class="text-[10px] text-[var(--text-muted)]">${getLeagueTier(f.crowns || 0).name} • ${f.crowns || 0} Coronas</span>
-                        </div>
-                    </div>
-                    <button onclick="challengeFriend('${f.uid}')" class="px-3 py-1.5 rounded-lg btn-primary-blue text-[11px] font-bold uppercase">Retar VS</button>
-                </div>
-            `).join('') : `<p class="text-xs text-[var(--text-muted)]">Aún no tienes amigos agregados.</p>`;
-        };
-
-        window.addFriend = async function(targetUid) {
-            userProfile.friends = [...new Set([...(userProfile.friends || []), targetUid])];
-            await saveUserProfile();
-            renderFriendsDirectory();
-            showToast('Amigo agregado a tu lista.');
-        };
-
-        // ================= GAMEPLAY STATE & LINEUP BUILDER =================
-        let gameState = {
-            mainMode: 'SOLO',
-            difficulty: 'MVP',
-            league: 'MLB',
-            era: 'ALL_TIME',
-            vsOpponent: null,
-            vsMatchId: null,
-            lineup: {},
-            activeSlot: null
-        };
-
-        window.selectMainMode = function(mode) {
-            gameState.mainMode = mode;
-            if (mode === 'VS') {
-                hideAllSections();
-                document.getElementById('view-vs-lobby').classList.remove('hidden');
-                renderVSLobby();
-                return;
-            }
-            hideAllSections();
-            document.getElementById('selected-mode-pill').textContent = `MODO ${mode}`;
-            document.getElementById('solo-difficulty-box').classList.remove('hidden');
-            const btn162 = document.getElementById('btn-league-162');
-            if (btn162) btn162.classList.remove('hidden');
-            document.getElementById('view-league-select').classList.remove('hidden');
-        };
-
-        window.setSoloDifficulty = function(diff) {
-            gameState.difficulty = diff;
-            document.querySelectorAll('.diff-btn').forEach(b => {
-                b.className = 'diff-btn py-2.5 px-3 rounded-xl border border-[var(--border-subtle)] text-xs font-display font-bold uppercase tracking-wider transition';
-            });
-            document.getElementById(`diff-${diff}`).className = 'diff-btn py-2.5 px-3 rounded-xl border border-amber-400 bg-amber-400/15 text-amber-400 text-xs font-display font-bold uppercase tracking-wider transition';
-        };
-
-        window.startLeague = function(league, era = 'ALL_TIME') {
-            gameState.league = league;
-            gameState.era = era;
-            gameState.lineup = {};
-            const eraLabel = era === 'ACTUAL' ? 'ACTUAL' : 'ALL TIME';
-            hideAllSections();
-            document.getElementById('view-game').classList.remove('hidden');
-            document.getElementById('game-league-title').textContent = `${league} • ${eraLabel}`;
-            document.getElementById('game-opponent-subtitle').textContent = gameState.mainMode === 'SOLO'
-                ? `vs IA (${gameState.difficulty})`
-                : `Reto VS contra ${gameState.vsOpponent?.name || 'Amigo'}`;
-            document.getElementById('btn-finish-lineup').textContent = gameState.mainMode === 'SOLO' ? 'Simular Serie' : 'Enviar Alineación';
-            renderBuilderBoard();
-        };
-
-        window.exitGameToMenu = function() {
-            gameState.vsOpponent = null;
-            gameState.vsMatchId = null;
-            goHome();
-        };
-
-        function getLeagueEligiblePlayers(posFilter = null) {
-            return PLAYERS_DB.filter(p => {
-                if (gameState.era === 'ACTUAL' && !p.active) return false;
-                if (gameState.league === 'MLB' && !p.mlb) return false;
-                if (gameState.league === 'WORLD CLASSIC' && !p.wbc) return false;
-                if (gameState.league === 'LIDOM' && !p.lidom) return false;
-                if (posFilter && !p.pos.includes(posFilter)) return false;
-                return true;
-            });
-        }
-
-        function getPlayerContextLabel(p) {
-            if (gameState.league === 'LIDOM') return p.lidomTeam || 'LIDOM';
-            if (gameState.league === 'WORLD CLASSIC') return p.wbcTeam || 'WBC';
-            return p.team || 'MLB';
-        }
-
-        function renderBuilderBoard() {
-            const filledCount = Object.keys(gameState.lineup).length;
-            document.getElementById('lineup-progress').textContent = `${filledCount}/12`;
-            document.getElementById('btn-finish-lineup').disabled = filledCount < 12;
-
-            const nodesEl = document.getElementById('diamond-nodes');
-            nodesEl.innerHTML = POSITIONS.map(pos => {
-                const c = DIAMOND_COORDS[pos];
-                const player = gameState.lineup[pos];
-                return `<button onclick="openPositionModal('${pos}')" style="top:${c.top}; left:${c.left}; transform:translate(-50%, -50%);" class="pos-node absolute flex flex-col items-center">
-                    <span class="px-2 py-0.5 rounded-md font-display text-[11px] font-bold shadow ${player ? 'btn-primary-gold' : 'bg-slate-950/90 text-white border border-white/25'}">${pos}</span>
-                    <span class="mt-0.5 px-1.5 py-0.5 rounded bg-black/80 text-[10px] font-semibold text-white max-w-[78px] truncate">${player ? player.name.split(' ').pop() : '+'}</span>
-                </button>`;
-            }).join('');
-
-            const listEl = document.getElementById('roster-list');
-            listEl.innerHTML = POSITIONS.map(pos => {
-                const player = gameState.lineup[pos];
-                return `<div onclick="openPositionModal('${pos}')" class="p-2.5 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] hover:border-amber-400/50 cursor-pointer flex items-center justify-between gap-2 transition">
-                    <div class="flex items-center gap-2.5 min-w-0">
-                        <span class="w-8 py-1 rounded-lg bg-[var(--bg-surface)] text-center font-display text-xs font-bold text-amber-400 shrink-0">${pos}</span>
-                        <div class="min-w-0">
-                            <strong class="text-xs font-bold block truncate">${player ? player.name : 'Vacante'}</strong>
-                            <span class="text-[10px] text-[var(--text-muted)]">${player ? getPlayerContextLabel(player) + ' • ' + player.pos.join('/') : 'Toca para fichar'}</span>
-                        </div>
-                    </div>
-                    <span class="text-[10px] font-bold uppercase ${player ? 'text-amber-400' : 'text-[var(--text-muted)]'}">${player ? 'Mover ⇄' : 'Fichar +'}</span>
-                </div>`;
-            }).join('');
-        }
-
-        window.openPositionModal = function(pos) {
-            gameState.activeSlot = pos;
-            const currentPlayer = gameState.lineup[pos];
-            document.getElementById('modal-pos-title').textContent = `Posición: ${pos}`;
-
-            if (currentPlayer) {
-                document.getElementById('modal-search-box').classList.add('hidden');
-                document.getElementById('modal-swap-box').classList.remove('hidden');
-                document.getElementById('modal-locked-player-name').textContent = `${currentPlayer.name} (${currentPlayer.pos.join(', ')})`;
-
-                const targets = currentPlayer.pos.filter(p => p !== pos && POSITIONS.includes(p));
-                const targetsEl = document.getElementById('modal-swap-targets');
-                if (targets.length === 0) {
-                    targetsEl.innerHTML = `<p class="text-xs text-rose-400">Este jugador solo juega ${pos} y ya está fijado en tu alineación.</p>`;
-                } else {
-                    targetsEl.innerHTML = targets.map(tPos => {
-                        const occupant = gameState.lineup[tPos];
-                        const canSwap = !occupant || occupant.pos.includes(pos);
-                        if (!canSwap) {
-                            return `<div class="p-2.5 rounded-xl bg-[var(--bg-elevated)] opacity-50 text-xs">No puede intercambiar con ${tPos} (${occupant.name} no juega ${pos})</div>`;
-                        }
-                        return `<button onclick="moveLockedPlayer('${pos}', '${tPos}')" class="p-3 rounded-xl bg-[var(--bg-elevated)] border border-amber-400/30 hover:border-amber-400 text-left text-xs font-bold flex items-center justify-between">
-                            <span>Mover a ${tPos} ${occupant ? '(Intercambiar con ' + occupant.name + ')' : '(Posición libre)'}</span>
-                            <span class="text-amber-400">Mover →</span>
-                        </button>`;
-                    }).join('');
-                }
-            } else {
-                document.getElementById('modal-swap-box').classList.add('hidden');
-                document.getElementById('modal-search-box').classList.remove('hidden');
-                document.getElementById('player-search-input').value = '';
-                filterPlayerResults();
-            }
-            document.getElementById('player-modal').classList.remove('hidden');
-        };
-
-        window.closePlayerModal = function() {
-            document.getElementById('player-modal').classList.add('hidden');
-        };
-
-        window.moveLockedPlayer = function(fromPos, toPos) {
-            const pA = gameState.lineup[fromPos];
-            const pB = gameState.lineup[toPos];
-            gameState.lineup[toPos] = pA;
-            if (pB) gameState.lineup[fromPos] = pB;
-            else delete gameState.lineup[fromPos];
-            closePlayerModal();
-            renderBuilderBoard();
-            showToast(`Jugador reubicado a ${toPos}.`);
-        };
-
-        window.filterPlayerResults = function() {
-            const q = document.getElementById('player-search-input').value.trim().toLowerCase();
-            const pos = gameState.activeSlot;
-            const signedIds = new Set(Object.values(gameState.lineup).map(p => p.id));
-
-            let candidates = getLeagueEligiblePlayers(pos).filter(p => !signedIds.has(p.id));
-            if (q) {
-                candidates = candidates.filter(p =>
-                    p.name.toLowerCase().includes(q) ||
-                    getPlayerContextLabel(p).toLowerCase().includes(q)
-                );
-            }
-
-            const resEl = document.getElementById('player-search-results');
-            if (candidates.length === 0) {
-                resEl.innerHTML = `<p class="text-xs text-[var(--text-muted)] text-center py-4">No se encontraron jugadores disponibles.</p>`;
-                return;
-            }
-            resEl.innerHTML = candidates.slice(0, 30).map(p => `
-                <button onclick="signPlayerToSlot('${p.id}')" class="w-full p-2.5 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] hover:border-amber-400 text-left flex items-center justify-between gap-2 transition">
-                    <div>
-                        <strong class="text-xs font-bold block">${p.name}</strong>
-                        <span class="text-[10px] text-[var(--text-muted)]">${getPlayerContextLabel(p)} • Pos: ${p.pos.join(', ')}</span>
-                    </div>
-                    <span class="px-2.5 py-1 rounded-lg btn-primary-gold text-[10px] uppercase">Fichar</span>
-                </button>
-            `).join('');
-        };
-
-        window.signPlayerToSlot = function(playerId) {
-            const player = PLAYERS_DB.find(p => p.id === playerId);
-            if (!player || !gameState.activeSlot) return;
-            gameState.lineup[gameState.activeSlot] = player;
-            closePlayerModal();
-            renderBuilderBoard();
-        };
-
-        // ================= ASYNC VS MULTIPLAYER FLOW =================
-        window.challengeFriend = function(friendUid) {
-            const friend = allPublicUsers.find(u => u.uid === friendUid);
-            if (!friend) return;
-            gameState.mainMode = 'VS';
-            gameState.vsOpponent = friend;
-            gameState.vsMatchId = null;
-
-            hideAllSections();
-            document.getElementById('selected-mode-pill').textContent = `VS vs ${friend.name}`;
-            document.getElementById('solo-difficulty-box').classList.add('hidden');
-            const btn162 = document.getElementById('btn-league-162');
-            if (btn162) btn162.classList.add('hidden');
-            document.getElementById('view-league-select').classList.remove('hidden');
-        };
-
-        function updatePendingMatchesBadge() {
-            const myUid = userProfile.uid;
-            const incoming = allAsyncMatches.filter(m =>
-                (m.playerB_uid === myUid && m.status === 'waiting_player_b') ||
-                (m.playerA_uid === myUid && m.status === 'completed' && !m.seenByA)
-            );
-            const badge = document.getElementById('vs-pending-badge');
-            if (incoming.length > 0) {
-                badge.textContent = incoming.length;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
-        }
-
-        function renderVSLobby() {
-            const myUid = userProfile.uid;
-            const pendingEl = document.getElementById('vs-pending-list');
-            const friendsChallengeEl = document.getElementById('vs-friends-challenge-list');
-
-            const relevant = allAsyncMatches.filter(m => m.playerA_uid === myUid || m.playerB_uid === myUid);
-            if (relevant.length === 0) {
-                pendingEl.innerHTML = `<p class="text-xs text-[var(--text-muted)]">No hay partidas VS activas.</p>`;
-            } else {
-                pendingEl.innerHTML = relevant.map(m => {
-                    const isPlayerBWaiting = m.playerB_uid === myUid && m.status === 'waiting_player_b';
-                    const isCompleted = m.status === 'completed';
-                    const eraTxt = m.era === 'ACTUAL' ? 'ACTUAL' : 'ALL TIME';
-                    return `<div class="p-3 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] flex items-center justify-between gap-2">
-                        <div>
-                            <strong class="text-xs font-bold block">${m.playerA_name} vs ${m.playerB_name} (${m.league} • ${eraTxt})</strong>
-                            <span class="text-[10px] text-[var(--text-muted)]">${isPlayerBWaiting ? '¡Te han retado! Arma tu alineación' : isCompleted ? 'Serie Finalizada' : 'Esperando alineación del rival...'}</span>
-                        </div>
-                        ${isPlayerBWaiting
-                            ? `<button onclick="acceptAsyncChallenge('${m.id}')" class="px-3 py-1.5 rounded-lg btn-primary-gold text-[11px] uppercase">Jugar Ahora</button>`
-                            : isCompleted
-                                ? `<button onclick="viewCompletedAsyncMatch('${m.id}')" class="px-3 py-1.5 rounded-lg btn-primary-blue text-[11px] font-bold uppercase">Ver Resultado</button>`
-                                : `<span class="text-[10px] font-bold text-amber-400">En espera</span>`
-                        }
-                    </div>`;
-                }).join('');
-            }
-
-            const friends = allPublicUsers.filter(u => (userProfile.friends || []).includes(u.uid));
-            friendsChallengeEl.innerHTML = friends.length ? friends.map(f => `
-                <div class="p-2.5 rounded-xl bg-[var(--bg-elevated)] flex items-center justify-between">
-                    <span class="text-xs font-bold">${f.name} <span class="font-mono text-[10px] text-amber-400">#${f.sixDigitId || '000000'}</span></span>
-                    <button onclick="challengeFriend('${f.uid}')" class="px-3 py-1 rounded-lg btn-primary-gold text-[11px] uppercase">Enviar Reto</button>
-                </div>
-            `).join('') : `<p class="text-xs text-[var(--text-muted)]">Agrega amigos en la sección Amigos para retarlos.</p>`;
-        }
-
-        window.acceptAsyncChallenge = function(matchId) {
-            const m = allAsyncMatches.find(x => x.id === matchId);
-            if (!m) return;
-            gameState.mainMode = 'VS';
-            gameState.league = m.league;
-            gameState.era = m.era || 'ALL_TIME';
-            gameState.vsMatchId = m.id;
-            gameState.vsOpponent = { uid: m.playerA_uid, name: m.playerA_name };
-            gameState.lineup = {};
-            const eraLabel = gameState.era === 'ACTUAL' ? 'ACTUAL' : 'ALL TIME';
-            hideAllSections();
-            document.getElementById('view-game').classList.remove('hidden');
-            document.getElementById('game-league-title').textContent = `${m.league} • ${eraLabel}`;
-            document.getElementById('game-opponent-subtitle').textContent = `Respondiendo reto de ${m.playerA_name}`;
-            document.getElementById('btn-finish-lineup').textContent = 'Simular Serie Final';
-            renderBuilderBoard();
-        };
-
-        window.viewCompletedAsyncMatch = async function(matchId) {
-            const m = allAsyncMatches.find(x => x.id === matchId);
-            if (!m || !m.result) return;
-            if (m.playerA_uid === userProfile.uid && !m.seenByA && db) {
-                try {
-                    await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'matches', m.id), { seenByA: true });
-                } catch (e) {}
-                if (m.result.winnerUid === userProfile.uid) {
-                    userProfile.crowns += 3;
-                    userProfile.stars += 50;
-                    userProfile.wins += 1;
-                } else {
-                    userProfile.stars += 15;
-                    userProfile.losses += 1;
-                }
-                await saveUserProfile();
-            }
-            displaySeriesResults(m.result);
-        };
-
-        // ================= BEST-OF-7 SIMULATION ENGINE =================
-        function buildCPULineup(league, difficulty, era = 'ALL_TIME') {
-            const pool = PLAYERS_DB.filter(p => {
-                if (era === 'ACTUAL' && !p.active) return false;
-                if (league === 'MLB') return p.mlb;
-                if (league === 'WORLD CLASSIC') return p.wbc;
-                if (league === 'LIDOM') return p.lidom;
-                return true;
-            });
-            const used = new Set();
-            const cpu = {};
-            POSITIONS.forEach(pos => {
-                let candidates = pool.filter(p => p.pos.includes(pos) && !used.has(p.id));
-                candidates.sort((a, b) => b.ovr - a.ovr);
-                if (difficulty === 'ROOKIE') candidates = candidates.slice(-Math.max(4, Math.floor(candidates.length * 0.6)));
-                else if (difficulty === 'MVP') candidates = candidates.slice(0, Math.max(6, Math.floor(candidates.length * 0.7)));
-                else candidates = candidates.slice(0, 4);
-
-                const pick = candidates[Math.floor(Math.random() * candidates.length)] || pool[0];
-                cpu[pos] = pick;
-                used.add(pick.id);
-            });
-            return cpu;
-        }
-
-        function calcTeamOVR(lineupObj) {
-            const vals = POSITIONS.map(pos => lineupObj[pos]?.ovr || 85);
-            return Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
-        }
-
-        function simulateBestOfSeven(nameA, lineupA, uidA, nameB, lineupB, uidB) {
-            const ovrA = calcTeamOVR(lineupA);
-            const ovrB = calcTeamOVR(lineupB);
-            let winsA = 0, winsB = 0;
-            const games = [];
-
-            const hitterStats = {};
-            const pitcherStats = {};
-            [...POSITIONS.slice(0, 9)].forEach(pos => {
-                if (lineupA[pos]) hitterStats[lineupA[pos].id] = { player: lineupA[pos], team: nameA, hr: 0, rbi: 0, h: 0 };
-                if (lineupB[pos]) hitterStats[lineupB[pos].id] = { player: lineupB[pos], team: nameB, hr: 0, rbi: 0, h: 0 };
-            });
-            ['SP1', 'RP', 'CP'].forEach(pos => {
-                if (lineupA[pos]) pitcherStats[lineupA[pos].id] = { player: lineupA[pos], team: nameA, so: 0, w: 0, sv: 0 };
-                if (lineupB[pos]) pitcherStats[lineupB[pos].id] = { player: lineupB[pos], team: nameB, so: 0, w: 0, sv: 0 };
-            });
-
-            while (winsA < 4 && winsB < 4) {
-                const gameNum = winsA + winsB + 1;
-                const probA = 0.5 + (ovrA - ovrB) * 0.025;
-                const aWinsGame = Math.random() < Math.min(0.85, Math.max(0.15, probA));
-                const winRuns = Math.floor(Math.random() * 6) + 3;
-                const loseRuns = Math.max(0, winRuns - (Math.floor(Math.random() * 3) + 1));
-
-                const scoreA = aWinsGame ? winRuns : loseRuns;
-                const scoreB = aWinsGame ? loseRuns : winRuns;
-                if (aWinsGame) winsA++; else winsB++;
-
-                const winLineup = aWinsGame ? lineupA : lineupB;
-                for (let r = 0; r < winRuns; r++) {
-                    const bPos = POSITIONS[Math.floor(Math.random() * 9)];
-                    const batter = winLineup[bPos];
-                    if (batter && hitterStats[batter.id]) {
-                        hitterStats[batter.id].h += 1;
-                        hitterStats[batter.id].rbi += 1;
-                        if (Math.random() < 0.35) hitterStats[batter.id].hr += 1;
-                    }
-                }
-                const sp = winLineup['SP1'];
-                if (sp && pitcherStats[sp.id]) {
-                    pitcherStats[sp.id].w += 1;
-                    pitcherStats[sp.id].so += Math.floor(Math.random() * 5) + 5;
-                }
-                const cp = winLineup['CP'];
-                if (cp && pitcherStats[cp.id] && (winRuns - loseRuns) <= 3) {
-                    pitcherStats[cp.id].sv += 1;
-                    pitcherStats[cp.id].so += 2;
-                }
-
-                games.push({ gameNum, scoreA, scoreB, winner: aWinsGame ? nameA : nameB });
-            }
-
-            const winnerUid = winsA === 4 ? uidA : uidB;
-            const winnerName = winsA === 4 ? nameA : nameB;
-
-            const winningHitters = Object.values(hitterStats).filter(h => h.team === winnerName);
-            winningHitters.sort((a, b) => (b.hr * 3 + b.rbi * 2 + b.h + b.player.ovr * 0.2) - (a.hr * 3 + a.rbi * 2 + a.h + a.player.ovr * 0.2));
-            const mvp = winningHitters[0] || Object.values(hitterStats)[0];
-
-            const winningPitchers = Object.values(pitcherStats).filter(p => p.team === winnerName);
-            winningPitchers.sort((a, b) => (b.w * 5 + b.sv * 4 + b.so + b.player.ovr * 0.2) - (a.w * 5 + a.sv * 4 + a.so + a.player.ovr * 0.2));
-            const cy = winningPitchers[0] || Object.values(pitcherStats)[0];
-
-            return {
-                nameA, uidA, ovrA, lineupA,
-                nameB, uidB, ovrB, lineupB,
-                winsA, winsB, winnerUid, winnerName,
-                games,
-                mvp: { name: mvp.player.name, team: mvp.team, stats: `${mvp.hr} HR • ${mvp.rbi} RBI • ${mvp.h} Hits (OVR ${mvp.player.ovr})` },
-                cy: { name: cy.player.name, team: cy.team, stats: `${cy.w} G • ${cy.sv} SV • ${cy.so} K (OVR ${cy.player.ovr})` }
-            };
-        }
-
-        window.handleLineupSubmit = async function() {
-            if (Object.keys(gameState.lineup).length < 12) return;
-
-            if (gameState.mainMode === 'SOLO') {
-                const cpuLineup = buildCPULineup(gameState.league, gameState.difficulty, gameState.era);
-                const result = simulateBestOfSeven(
-                    userProfile.name, gameState.lineup, userProfile.uid,
-                    `CPU (${gameState.difficulty})`, cpuLineup, 'cpu'
-                );
-
-                if (result.winnerUid === userProfile.uid) {
-                    const crownGain = gameState.difficulty === 'HOF' ? 4 : gameState.difficulty === 'MVP' ? 3 : 2;
-                    const starGain = gameState.difficulty === 'HOF' ? 60 : gameState.difficulty === 'MVP' ? 45 : 30;
-                    userProfile.crowns += crownGain;
-                    userProfile.stars += starGain;
-                    userProfile.wins += 1;
-                    document.getElementById('result-reward-badge').textContent = `+${crownGain} Coronas • +${starGain} Estrellas`;
-                } else {
-                    userProfile.stars += 10;
-                    userProfile.losses += 1;
-                    document.getElementById('result-reward-badge').textContent = '+10 Estrellas de Participación';
-                }
-                await saveUserProfile();
-                displaySeriesResults(result);
-            } else {
-                if (gameState.vsMatchId) {
-                    const match = allAsyncMatches.find(m => m.id === gameState.vsMatchId);
-                    if (!match) return;
-                    const result = simulateBestOfSeven(
-                        match.playerA_name, match.lineupA, match.playerA_uid,
-                        userProfile.name, gameState.lineup, userProfile.uid
-                    );
-                    if (db) {
-                        try {
-                            await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'matches', match.id), {
-                                lineupB: gameState.lineup,
-                                status: 'completed',
-                                result,
-                                seenByA: false
-                            });
-                        } catch (e) {}
-                    }
-                    if (result.winnerUid === userProfile.uid) {
-                        userProfile.crowns += 3;
-                        userProfile.stars += 50;
-                        userProfile.wins += 1;
-                        document.getElementById('result-reward-badge').textContent = '+3 Coronas • +50 Estrellas';
-                    } else {
-                        userProfile.stars += 15;
-                        userProfile.losses += 1;
-                        document.getElementById('result-reward-badge').textContent = '+15 Estrellas';
-                    }
-                    await saveUserProfile();
-                    displaySeriesResults(result);
-                } else {
-                    if (!db || !gameState.vsOpponent) {
-                        showToast('Necesitas conexión en la nube para enviar retos VS.');
-                        return;
-                    }
-                    try {
-                        await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'matches'), {
-                            league: gameState.league,
-                            era: gameState.era,
-                            playerA_uid: userProfile.uid,
-                            playerA_name: userProfile.name,
-                            lineupA: gameState.lineup,
-                            playerB_uid: gameState.vsOpponent.uid,
-                            playerB_name: gameState.vsOpponent.name,
-                            lineupB: null,
-                            status: 'waiting_player_b',
-                            seenByA: false,
-                            createdAt: Date.now()
-                        });
-                        showToast(`¡Alineación enviada a ${gameState.vsOpponent.name}!`);
-                        goHome();
-                    } catch (e) {
-                        showToast('Error al enviar la partida VS.');
-                    }
-                }
-            }
-        };
-
-        let lastSeriesResult = null;
-
-        function displaySeriesResults(res) {
-            lastSeriesResult = res;
-            hideAllSections();
-            document.getElementById('view-results').classList.remove('hidden');
-
-            document.getElementById('result-winner-banner').textContent = `CAMPEÓN: ${res.winnerName}`;
-            document.getElementById('result-series-score').textContent = `${res.winsA} - ${res.winsB}`;
-            document.getElementById('result-mvp-name').textContent = `${res.mvp.name} (${res.mvp.team})`;
-            document.getElementById('result-mvp-stats').textContent = res.mvp.stats;
-            document.getElementById('result-cy-name').textContent = `${res.cy.name} (${res.cy.team})`;
-            document.getElementById('result-cy-stats').textContent = res.cy.stats;
-
-            document.getElementById('result-games-grid').innerHTML = res.games.map(g => `
-                <div class="p-2.5 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-center">
-                    <span class="text-[10px] font-bold text-amber-400 block">JUEGO ${g.gameNum}</span>
-                    <strong class="font-display text-sm">${g.scoreA} - ${g.scoreB}</strong>
-                    <span class="text-[10px] text-[var(--text-muted)] block truncate">${g.winner}</span>
-                </div>
-            `).join('');
-
-            document.getElementById('res-teamA-label').textContent = res.nameA;
-            document.getElementById('res-teamA-ovr').textContent = `OVR ${res.ovrA}`;
-            document.getElementById('res-teamA-list').innerHTML = POSITIONS.map(pos => {
-                const p = res.lineupA[pos];
-                return `<div class="flex justify-between py-0.5 border-b border-white/5"><span><strong class="text-amber-400">${pos}</strong> ${p?.name || '-'}</span><span class="font-bold">OVR ${p?.ovr || '-'}</span></div>`;
-            }).join('');
-
-            document.getElementById('res-teamB-label').textContent = res.nameB;
-            document.getElementById('res-teamB-ovr').textContent = `OVR ${res.ovrB}`;
-            document.getElementById('res-teamB-list').innerHTML = POSITIONS.map(pos => {
-                const p = res.lineupB[pos];
-                return `<div class="flex justify-between py-0.5 border-b border-white/5"><span><strong class="text-amber-400">${pos}</strong> ${p?.name || '-'}</span><span class="font-bold">OVR ${p?.ovr || '-'}</span></div>`;
-            }).join('');
-        }
-
-        window.returnAfterMatch = function() {
-            gameState.vsMatchId = null;
-            gameState.vsOpponent = null;
-            goHome();
-        };
-
-        window.shareSeriesResultCard = function() {
-            if (!lastSeriesResult) return;
-            const r = lastSeriesResult;
-            const summary = `⚾ BASEBALL FINAL CUP 🏆\nCampeón: ${r.winnerName} (${r.winsA}-${r.winsB})\n${r.nameA} (OVR ${r.ovrA}) vs ${r.nameB} (OVR ${r.ovrB})\nMVP: ${r.mvp.name} (${r.mvp.stats})\nCy Young: ${r.cy.name} (${r.cy.stats})`;
-            if (navigator.share) {
-                navigator.share({ title: 'Baseball Final Cup — Resultado', text: summary }).catch(() => copyToClipboard(summary));
-            } else {
-                copyToClipboard(summary);
-            }
-        };
-
-        function copyToClipboard(text, customMsg = '¡Tarjeta de resultado copiada al portapapeles!') {
-            const ta = document.createElement('textarea');
-            ta.value = text;
-            document.body.appendChild(ta);
-            ta.select();
-            document.execCommand('copy');
-            document.body.removeChild(ta);
-            showToast(customMsg);
-        }
-
-        function showToast(msg) {
-            const box = document.getElementById('toast-box');
-            document.getElementById('toast-msg').textContent = msg;
-            box.classList.remove('translate-x-full', 'opacity-0');
-            clearTimeout(window._toastTimer);
-            window._toastTimer = setTimeout(() => {
-                box.classList.add('translate-x-full', 'opacity-0');
-            }, 3200);
-        }
-
-        // ================= 162-0 HISTORIC LINEUP MODE ENGINE =================
-        const HISTORIC_SLOTS = ['C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF', 'DH', 'SP1', 'SP2', 'SP3', 'SP4', 'SP5', 'RP1', 'RP2'];
-        const HISTORIC_DECADES = ['1900s', '1910s', '1920s', '1930s', '1940s', '1950s', '1960s', '1970s', '1980s', '1990s', '2000s', '2010s', '2020s'];
-        const MLB_TEAMS_META = {
-            NYY: { name: 'New York Yankees', c1: '#0C2340', c2: '#FFFFFF', league: 'AL', division: 'EAST' },
-            LAD: { name: 'Los Angeles Dodgers', c1: '#005A9C', c2: '#EF3E42', league: 'NL', division: 'WEST' },
-            BOS: { name: 'Boston Red Sox', c1: '#BD3039', c2: '#0C2340', league: 'AL', division: 'EAST' },
-            NYM: { name: 'New York Mets', c1: '#002D72', c2: '#FF5910', league: 'NL', division: 'EAST' },
-            ATL: { name: 'Atlanta Braves', c1: '#CE1141', c2: '#13274F', league: 'NL', division: 'EAST' },
-            HOU: { name: 'Houston Astros', c1: '#002D62', c2: '#EB6E1F', league: 'AL', division: 'WEST' },
-            SD:  { name: 'San Diego Padres', c1: '#2F241D', c2: '#FFC425', league: 'NL', division: 'WEST' },
-            PHI: { name: 'Philadelphia Phillies', c1: '#E81828', c2: '#002D72', league: 'NL', division: 'EAST' },
-            CHC: { name: 'Chicago Cubs', c1: '#0E3386', c2: '#CC3433', league: 'NL', division: 'CENTRAL' },
-            SF:  { name: 'San Francisco Giants', c1: '#FD5A1E', c2: '#27251F', league: 'NL', division: 'WEST' },
-            STL: { name: 'St. Louis Cardinals', c1: '#C41E3A', c2: '#0C2340', league: 'NL', division: 'CENTRAL' },
-            TEX: { name: 'Texas Rangers', c1: '#003278', c2: '#C0111F', league: 'AL', division: 'WEST' },
-            BAL: { name: 'Baltimore Orioles', c1: '#DF4601', c2: '#000000', league: 'AL', division: 'EAST' },
-            SEA: { name: 'Seattle Mariners', c1: '#0C2C56', c2: '#005C5C', league: 'AL', division: 'WEST' },
-            TOR: { name: 'Toronto Blue Jays', c1: '#134A8E', c2: '#E8291C', league: 'AL', division: 'EAST' },
-            CLE: { name: 'Cleveland Guardians', c1: '#00385D', c2: '#E50022', league: 'AL', division: 'CENTRAL' },
-            DET: { name: 'Detroit Tigers', c1: '#0C2340', c2: '#FA4616', league: 'AL', division: 'CENTRAL' },
-            MIN: { name: 'Minnesota Twins', c1: '#002B5C', c2: '#D31145', league: 'AL', division: 'CENTRAL' },
-            KC:  { name: 'Kansas City Royals', c1: '#004687', c2: '#BD9B60', league: 'AL', division: 'CENTRAL' },
-            ARI: { name: 'Arizona Diamondbacks', c1: '#A71930', c2: '#E3D4AD', league: 'NL', division: 'WEST' },
-            MIL: { name: 'Milwaukee Brewers', c1: '#12284B', c2: '#FFC52F', league: 'NL', division: 'CENTRAL' },
-            CIN: { name: 'Cincinnati Reds', c1: '#C6011F', c2: '#000000', league: 'NL', division: 'CENTRAL' },
-            PIT: { name: 'Pittsburgh Pirates', c1: '#27251F', c2: '#FDB827', league: 'NL', division: 'CENTRAL' },
-            TB:  { name: 'Tampa Bay Rays', c1: '#092C5C', c2: '#8FBCE6', league: 'AL', division: 'EAST' },
-            LAA: { name: 'Los Angeles Angels', c1: '#BA0021', c2: '#003263', league: 'AL', division: 'WEST' },
-            CWS: { name: 'Chicago White Sox', c1: '#27251F', c2: '#C4CED4', league: 'AL', division: 'CENTRAL' },
-            ATH: { name: 'Athletics', c1: '#003831', c2: '#EFB21E', league: 'AL', division: 'WEST' },
-            MIA: { name: 'Miami Marlins', c1: '#00A3E0', c2: '#EF3340', league: 'NL', division: 'EAST' },
-            WSH: { name: 'Washington Nationals', c1: '#AB0003', c2: '#14225A', league: 'NL', division: 'EAST' },
-            COL: { name: 'Colorado Rockies', c1: '#333366', c2: '#C4CED4', league: 'NL', division: 'WEST' }
-        };
-
-        const MLB_FRANCHISES = Object.keys(MLB_TEAMS_META).map(code => ({
-            id: 'mlb_' + code.toLowerCase(),
-            code,
-            name: MLB_TEAMS_META[code].name,
-            c1: MLB_TEAMS_META[code].c1,
-            c2: MLB_TEAMS_META[code].c2
-        }));
-
-        let historicState = {
-            managerName: '',
-            teamName: 'Immortal Legends',
-            targetGoal: '162-0',
-            roster: {},
-            usedPlayerIds: new Set(),
-            rollNumber: 1,
-            currentTeam: 'NYY',
-            currentDecade: '2020s',
-            teamWildcardsLeft: 3,
-            decadeWildcardsLeft: 3,
-            teamWildcardsUsed: 0,
-            decadeWildcardsUsed: 0,
-            rollsLog: []
-        };
-
-        function getPlayerHistoricSlots(player) {
-            const slots = [];
-            player.pos.forEach(p => {
-                if (p === 'SP1') {
-                    slots.push('SP1', 'SP2', 'SP3', 'SP4', 'SP5');
-                } else if (p === 'RP' || p === 'CP') {
-                    if (!slots.includes('RP1')) slots.push('RP1', 'RP2');
-                } else if (HISTORIC_SLOTS.includes(p)) {
-                    slots.push(p);
-                }
-            });
-            return slots;
-        }
-
-        function getOpenHistoricSlots() {
-            return HISTORIC_SLOTS.filter(s => !historicState.roster[s]);
-        }
-
-        function getEligibleHistoricPlayers(teamCode, decade) {
-            const openSlots = new Set(getOpenHistoricSlots());
-            return PLAYERS_DB.filter(p => {
-                if (!p.mlb || historicState.usedPlayerIds.has(p.id)) return false;
-                if (p.team !== teamCode || p.decade !== decade) return false;
-                const pSlots = getPlayerHistoricSlots(p);
-                return pSlots.some(s => openSlots.has(s));
-            }).sort((a, b) => b.ovr - a.ovr);
-        }
-
-        function getValidCombinationsForOpenSlots() {
-            const openSlots = new Set(getOpenHistoricSlots());
-            const combos = [];
-            const seen = new Set();
-            PLAYERS_DB.forEach(p => {
-                if (!p.mlb || historicState.usedPlayerIds.has(p.id) || !p.team || !p.decade) return;
-                const pSlots = getPlayerHistoricSlots(p);
-                if (pSlots.some(s => openSlots.has(s))) {
-                    const key = `${p.team}|${p.decade}`;
-                    if (!seen.has(key)) {
-                        seen.add(key);
-                        combos.push({ team: p.team, decade: p.decade });
-                    }
-                }
-            });
-            return combos;
-        }
-
-        function generateNextHistoricRoll(mode = 'both') {
-            const validCombos = getValidCombinationsForOpenSlots();
-            if (validCombos.length === 0) return;
-
-            if (mode === 'team') {
-                const sameDecade = validCombos.filter(c => c.decade === historicState.currentDecade && c.team !== historicState.currentTeam);
-                if (sameDecade.length > 0) {
-                    const pick = sameDecade[Math.floor(Math.random() * sameDecade.length)];
-                    historicState.currentTeam = pick.team;
-                    return;
-                }
-                const anyDiffTeam = validCombos.filter(c => c.team !== historicState.currentTeam);
-                const pick = (anyDiffTeam.length ? anyDiffTeam : validCombos)[Math.floor(Math.random() * (anyDiffTeam.length || validCombos.length))];
-                historicState.currentTeam = pick.team;
-                historicState.currentDecade = pick.decade;
-            } else if (mode === 'decade') {
-                const sameTeam = validCombos.filter(c => c.team === historicState.currentTeam && c.decade !== historicState.currentDecade);
-                if (sameTeam.length > 0) {
-                    const pick = sameTeam[Math.floor(Math.random() * sameTeam.length)];
-                    historicState.currentDecade = pick.decade;
-                    return;
-                }
-                const anyDiffDecade = validCombos.filter(c => c.decade !== historicState.currentDecade);
-                const pick = (anyDiffDecade.length ? anyDiffDecade : validCombos)[Math.floor(Math.random() * (anyDiffDecade.length || validCombos.length))];
-                historicState.currentTeam = pick.team;
-                historicState.currentDecade = pick.decade;
-            } else {
-                const pick = validCombos[Math.floor(Math.random() * validCombos.length)];
-                historicState.currentTeam = pick.team;
-                historicState.currentDecade = pick.decade;
-            }
-        }
-
-        window.openHistoricSetup = function() {
-            hideAllSections();
-            document.getElementById('hist-player-name').value = userProfile.name || 'Manager';
-            setHistoricTarget('162-0');
-            document.getElementById('view-historic-setup').classList.remove('hidden');
-        };
-
-        window.setHistoricTarget = function(goal) {
-            historicState.targetGoal = goal;
-            ['162-0', '150-12', '140-20'].forEach(g => {
-                const btn = document.getElementById(`hist-target-${g}`);
-                if (!btn) return;
-                btn.className = g === goal
-                    ? 'py-2.5 px-3 rounded-xl border border-amber-400 bg-amber-400/15 text-amber-400 text-xs font-display font-bold uppercase'
-                    : 'py-2.5 px-3 rounded-xl border border-[var(--border-subtle)] text-xs font-display font-bold uppercase';
-            });
-        };
-
-        window.startHistoricGame = function() {
-            const mName = document.getElementById('hist-player-name').value.trim() || userProfile.name;
-            const tName = document.getElementById('hist-team-name').value.trim() || 'Immortal Legends';
-            historicState = {
-                managerName: mName,
-                teamName: tName,
-                targetGoal: historicState.targetGoal || '162-0',
-                roster: {},
-                usedPlayerIds: new Set(),
-                rollNumber: 1,
-                currentTeam: 'NYY',
-                currentDecade: '2020s',
-                teamWildcardsLeft: 3,
-                decadeWildcardsLeft: 3,
-                teamWildcardsUsed: 0,
-                decadeWildcardsUsed: 0,
-                rollsLog: []
-            };
-            generateNextHistoricRoll('both');
-            hideAllSections();
-            document.getElementById('view-historic-game').classList.remove('hidden');
-            renderHistoricBoard();
-        };
-
-        window.useHistoricWildcard = function(type) {
-            if (getOpenHistoricSlots().length === 0) return;
-            if (type === 'team') {
-                if (historicState.teamWildcardsLeft <= 0) {
-                    showToast('Ya agotaste tus 3 comodines de cambio de equipo.');
-                    return;
-                }
-                historicState.teamWildcardsLeft -= 1;
-                historicState.teamWildcardsUsed += 1;
-                generateNextHistoricRoll('team');
-                showToast(`Comodín usado: Equipo cambiado a ${historicState.currentTeam} (${historicState.teamWildcardsLeft} restantes).`);
-            } else {
-                if (historicState.decadeWildcardsLeft <= 0) {
-                    showToast('Ya agotaste tus 3 comodines de cambio de década.');
-                    return;
-                }
-                historicState.decadeWildcardsLeft -= 1;
-                historicState.decadeWildcardsUsed += 1;
-                generateNextHistoricRoll('decade');
-                showToast(`Comodín usado: Década cambiada a ${historicState.currentDecade} (${historicState.decadeWildcardsLeft} restantes).`);
-            }
-            renderHistoricBoard();
-        };
-
-        function renderHistoricBoard() {
-            const filled = Object.keys(historicState.roster).length;
-            const isComplete = filled >= 16;
-            document.getElementById('hist-game-header-title').textContent = `${historicState.teamName} • 162-0`;
-            document.getElementById('hist-game-header-sub').textContent = `Manager: ${historicState.managerName} • Meta: ${historicState.targetGoal}`;
-            document.getElementById('hist-progress-count').textContent = `${filled}/16`;
-            document.getElementById('btn-hist-simulate').disabled = !isComplete;
-
-            const tMeta = MLB_TEAMS_META[historicState.currentTeam] || { name: historicState.currentTeam, c1: '#1E3A8A', c2: '#FFFFFF' };
-            const storeLogo = STORE_LOGOS.find(l => l.code === historicState.currentTeam && l.cat === 'MLB');
-            document.getElementById('hist-roll-crest').innerHTML = storeLogo
-                ? renderTeamCrestSVG(storeLogo, 'w-12 h-12')
-                : `<div class="w-12 h-12 flex items-center justify-center font-display font-bold text-sm" style="background:${tMeta.c1}; color:${tMeta.c2};">${historicState.currentTeam}</div>`;
-
-            document.getElementById('hist-roll-round-label').textContent = isComplete ? 'Plantilla Completa (16/16)' : `Tirada #${historicState.rollNumber} de 16`;
-            document.getElementById('hist-roll-team').textContent = `${historicState.currentTeam} (${tMeta.name})`;
-            document.getElementById('hist-roll-decade').textContent = historicState.currentDecade;
-
-            document.getElementById('hist-wc-team-left').textContent = historicState.teamWildcardsLeft;
-            document.getElementById('hist-wc-decade-left').textContent = historicState.decadeWildcardsLeft;
-            document.getElementById('hist-wc-team-btn').disabled = isComplete || historicState.teamWildcardsLeft <= 0;
-            document.getElementById('hist-wc-decade-btn').disabled = isComplete || historicState.decadeWildcardsLeft <= 0;
-
-            const selPanel = document.getElementById('hist-selection-panel');
-            if (isComplete) {
-                selPanel.classList.add('hidden');
-            } else {
-                selPanel.classList.remove('hidden');
-                const q = (document.getElementById('hist-player-search')?.value || '').trim().toLowerCase();
-                let candidates = getEligibleHistoricPlayers(historicState.currentTeam, historicState.currentDecade);
-                if (q) candidates = candidates.filter(p => p.name.toLowerCase().includes(q));
-
-                const openSet = new Set(getOpenHistoricSlots());
-                const gridEl = document.getElementById('hist-candidates-grid');
-                if (candidates.length === 0) {
-                    gridEl.innerHTML = `<div class="col-span-full p-3 rounded-xl bg-[var(--bg-primary)] text-xs text-[var(--text-muted)] text-center">No quedan jugadores disponibles para esta combinación. Usa un comodín de Equipo o Década.</div>`;
-                } else {
-                    gridEl.innerHTML = candidates.map(p => {
-                        const validOpen = getPlayerHistoricSlots(p).filter(s => openSet.has(s));
-                        return `<button onclick="pickHistoricPlayer('${p.id}')" class="p-2.5 rounded-xl bg-[var(--bg-primary)] border border-[var(--border-subtle)] hover:border-amber-400 text-left flex items-center justify-between gap-2 transition">
-                            <div class="min-w-0">
-                                <strong class="text-xs font-bold block truncate">${p.name}</strong>
-                                <span class="text-[10px] text-[var(--text-muted)]">Elegible: <strong class="text-amber-400">${validOpen.join(', ')}</strong> • OVR ${p.ovr}</span>
-                            </div>
-                            <span class="px-2.5 py-1 rounded-lg btn-primary-gold text-[10px] uppercase shrink-0">Elegir</span>
-                        </button>`;
-                    }).join('');
-                }
-            }
-
-            const hitterSlots = HISTORIC_SLOTS.slice(0, 9);
-            const pitcherSlots = HISTORIC_SLOTS.slice(9, 16);
-
-            document.getElementById('hist-hitters-list').innerHTML = hitterSlots.map(slot => renderHistoricSlotRow(slot)).join('');
-            document.getElementById('hist-pitchers-list').innerHTML = pitcherSlots.map(slot => renderHistoricSlotRow(slot)).join('');
-        }
-
-        function renderHistoricSlotRow(slot) {
-            const entry = historicState.roster[slot];
-            if (!entry) {
-                return `<div class="p-2 rounded-xl bg-[var(--bg-elevated)]/60 border border-[var(--border-subtle)] flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <span class="w-9 py-1 rounded-lg bg-[var(--bg-surface)] text-center font-display text-xs font-bold text-[var(--text-muted)]">${slot}</span>
-                        <span class="text-xs text-[var(--text-muted)]">Vacante</span>
-                    </div>
-                    <span class="text-[10px] uppercase text-[var(--text-muted)]">Pendiente</span>
-                </div>`;
-            }
-            return `<div class="p-2 rounded-xl bg-[var(--bg-elevated)] border border-amber-400/35 flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2 min-w-0">
-                    <span class="w-9 py-1 rounded-lg btn-primary-gold text-center font-display text-xs font-bold shrink-0">${slot}</span>
-                    <div class="min-w-0">
-                        <strong class="text-xs font-bold block truncate">${entry.player.name}</strong>
-                        <span class="text-[10px] text-[var(--text-muted)]">${entry.team} • ${entry.decade}</span>
-                    </div>
-                </div>
-                <span class="px-2 py-0.5 rounded bg-amber-400/15 text-amber-400 font-display text-xs font-bold shrink-0">OVR ${entry.player.ovr}</span>
-            </div>`;
-        }
-
-        window.pickHistoricPlayer = function(playerId) {
-            const player = PLAYERS_DB.find(p => p.id === playerId);
-            if (!player) return;
-            const openSet = new Set(getOpenHistoricSlots());
-            const validOpen = getPlayerHistoricSlots(player).filter(s => openSet.has(s));
-            if (validOpen.length === 0) return;
-
-            if (validOpen.length === 1) {
-                assignHistoricPlayerToSlot(player, validOpen[0]);
-            } else {
-                document.getElementById('hist-pos-modal-player').textContent = `¿En qué posición deseas colocar a ${player.name}?`;
-                document.getElementById('hist-pos-modal-choices').innerHTML = validOpen.map(s => `
-                    <button onclick="confirmHistoricMultiPos('${player.id}', '${s}')" class="py-2.5 px-3 rounded-xl btn-primary-gold text-xs font-display font-bold uppercase">
-                        ${s}
-                    </button>
-                `).join('');
-                document.getElementById('hist-pos-modal').classList.remove('hidden');
-            }
-        };
-
-        window.confirmHistoricMultiPos = function(playerId, slot) {
-            const player = PLAYERS_DB.find(p => p.id === playerId);
-            closeHistPosModal();
-            if (player) assignHistoricPlayerToSlot(player, slot);
-        };
-
-        window.closeHistPosModal = function() {
-            document.getElementById('hist-pos-modal').classList.add('hidden');
-        };
-
-        function assignHistoricPlayerToSlot(player, slot) {
-            historicState.roster[slot] = {
-                player,
-                team: historicState.currentTeam,
-                decade: historicState.currentDecade,
-                roll: historicState.rollNumber
-            };
-            historicState.usedPlayerIds.add(player.id);
-            historicState.rollsLog.push({
-                roll: historicState.rollNumber,
-                team: historicState.currentTeam,
-                decade: historicState.currentDecade,
-                player: player.name,
-                slot,
-                ovr: player.ovr
-            });
-
-            document.getElementById('hist-player-search').value = '';
-            if (Object.keys(historicState.roster).length < 16) {
-                historicState.rollNumber += 1;
-                generateNextHistoricRoll('both');
-            } else {
-                showToast('¡Plantilla histórica de 16 jugadores completada!');
-            }
-            renderHistoricBoard();
-        }
-
-        window.finishHistoricGame = async function() {
-            const entries = HISTORIC_SLOTS.map(s => historicState.roster[s]).filter(Boolean);
-            if (entries.length < 16) return;
-
-            const avgOvr = Math.round(entries.reduce((acc, e) => acc + e.player.ovr, 0) / 16);
-            const projectedWins = Math.min(162, Math.max(95, Math.round(92 + (avgOvr - 85) * 5.2)));
-            const projectedLosses = 162 - projectedWins;
-
-            const [goalWins] = historicState.targetGoal.split('-').map(Number);
-            const metGoal = projectedWins >= goalWins;
-
-            userProfile.stars += metGoal ? 60 : 25;
-            if (projectedWins >= 155) userProfile.crowns += 2;
-            else if (metGoal) userProfile.crowns += 1;
-            await saveUserProfile();
-
-            hideAllSections();
-            document.getElementById('view-historic-results').classList.remove('hidden');
-
-            document.getElementById('hist-res-title').textContent = `${historicState.teamName.toUpperCase()}: ${projectedWins} - ${projectedLosses}`;
-            document.getElementById('hist-res-subtitle').textContent = `Manager: ${historicState.managerName} • Meta Personal: ${historicState.targetGoal} (${metGoal ? '¡META CUMPLIDA!' : 'Cerca de la meta'})`;
-            document.getElementById('hist-res-badge').textContent = `OVR HISTÓRICO: ${avgOvr}`;
-
-            document.getElementById('hist-res-wildcards-box').innerHTML = `
-                <div class="p-2.5 rounded-xl bg-[var(--bg-elevated)]"><span class="text-[10px] text-[var(--text-muted)] block uppercase">Récord Proyectado</span><strong class="font-display text-base text-amber-400">${projectedWins}-${projectedLosses}</strong></div>
-                <div class="p-2.5 rounded-xl bg-[var(--bg-elevated)]"><span class="text-[10px] text-[var(--text-muted)] block uppercase">Comodines Equipo Usados</span><strong class="font-display text-base">${historicState.teamWildcardsUsed}/3</strong></div>
-                <div class="p-2.5 rounded-xl bg-[var(--bg-elevated)]"><span class="text-[10px] text-[var(--text-muted)] block uppercase">Comodines Década Usados</span><strong class="font-display text-base">${historicState.decadeWildcardsUsed}/3</strong></div>
-                <div class="p-2.5 rounded-xl bg-[var(--bg-elevated)]"><span class="text-[10px] text-[var(--text-muted)] block uppercase">Recompensa</span><strong class="font-display text-base text-emerald-400">+${metGoal ? 60 : 25} ★</strong></div>
-            `;
-
-            const renderResList = (slots) => slots.map(s => {
-                const item = historicState.roster[s];
-                return `<div class="flex justify-between py-1 border-b border-white/5">
-                    <span><strong class="text-amber-400">${s}</strong> ${item.player.name} <span class="text-[10px] text-[var(--text-muted)]">(${item.team} ${item.decade})</span></span>
-                    <span class="font-bold">OVR ${item.player.ovr}</span>
-                </div>`;
-            }).join('');
-
-            document.getElementById('hist-res-batting').innerHTML = renderResList(HISTORIC_SLOTS.slice(0, 9));
-            document.getElementById('hist-res-rotation').innerHTML = renderResList(HISTORIC_SLOTS.slice(9, 14));
-            document.getElementById('hist-res-relievers').innerHTML = renderResList(HISTORIC_SLOTS.slice(14, 16));
-
-            document.getElementById('hist-res-rolls-log').innerHTML = historicState.rollsLog.map(r => `
-                <div class="p-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border-subtle)]">
-                    <span class="text-[10px] font-bold text-amber-400 block">Tirada #${r.roll}: ${r.team} (${r.decade})</span>
-                    <strong class="block truncate">${r.slot} — ${r.player}</strong>
-                </div>
-            `).join('');
-        };
-
-        // ================= MI CARRERA ENGINE (3 MLB CONTRACTS & SEQUENTIAL STEP-BY-STEP DRAW) =================
         const CAREER_LOCAL_KEY = 'bfc_career_save_v1';
-        const TOTAL_CAREER_STAGES = 4; // 1: Draft MiLB, 2: 1er Contrato MLB, 3: 2do Contrato MLB, 4: Contrato de Año de Retiro
-
-        const MILB_TEAMS = [
-            { id: 'milb_dur', name: 'Durham Bulls', level: 'Triple-A', aff: 'TB', city: 'Durham, NC', c1: '#002D72', c2: '#FF5910' },
-            { id: 'milb_swb', name: 'Scranton/WB RailRiders', level: 'Triple-A', aff: 'NYY', city: 'Moosic, PA', c1: '#0C2340', c2: '#C4CED4' },
-            { id: 'milb_okc', name: 'Oklahoma City Comets', level: 'Triple-A', aff: 'LAD', city: 'Oklahoma City, OK', c1: '#005A9C', c2: '#FFFFFF' },
-            { id: 'milb_nor', name: 'Norfolk Tides', level: 'Triple-A', aff: 'BAL', city: 'Norfolk, VA', c1: '#DF4601', c2: '#000000' },
-            { id: 'milb_sug', name: 'Sugar Land Space Cowboys', level: 'Triple-A', aff: 'HOU', city: 'Sugar Land, TX', c1: '#002D62', c2: '#EB6E1F' },
-            { id: 'milb_gwn', name: 'Gwinnett Stripers', level: 'Triple-A', aff: 'ATL', city: 'Lawrenceville, GA', c1: '#CE1141', c2: '#13274F' }
-        ];
-
         let careerState = {
             mode: 'SOLO',
             roomCode: null,
@@ -3682,21 +1925,19 @@
             stats: { G: 0, H: 0, HR: 0, RBI: 0, SB: 0, AB: 0, W: 0, L: 0, SO: 0, BB: 0, IP: 0, ER: 0, SV: 0 }
         };
 
-        let activeStageDraw = null;
-
-        function hasPitcherRole(player) {
-            if (!player) return false;
-            return player.pos1 === 'P' || player.pos2 === 'P';
-        }
-
         function saveCareerLocal() {
             if (!careerState) return;
             try {
                 localStorage.setItem(CAREER_LOCAL_KEY, JSON.stringify(careerState));
             } catch (e) {}
+            userProfile.activeCareer = careerState.retired ? null : careerState;
+            saveUserProfile();
         }
 
         function loadCareerLocal() {
+            if (userProfile.activeCareer && !userProfile.activeCareer.retired) {
+                return userProfile.activeCareer;
+            }
             try {
                 const raw = localStorage.getItem(CAREER_LOCAL_KEY);
                 return raw ? JSON.parse(raw) : null;
@@ -3738,7 +1979,9 @@
             try {
                 localStorage.removeItem(CAREER_LOCAL_KEY);
             } catch (e) {}
+            userProfile.activeCareer = null;
             activeStageDraw = null;
+            saveUserProfile();
             document.getElementById('career-resume-banner').classList.add('hidden');
             showToast('Partida guardada cancelada y eliminada.');
         };
@@ -3799,343 +2042,467 @@
             if (db) {
                 try {
                     await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'career_rooms', code), {
-                        roomCode: code,
+                        createdAt: Date.now(),
                         hostUid: userProfile.uid,
-                        hostName: userProfile.name,
-                        hostCareer: null,
-                        guestUid: null,
-                        guestName: null,
-                        guestCareer: null,
-                        createdAt: Date.now()
+                        hostName: userProfile.name
                     });
                 } catch (e) {}
             }
             startCareerCreation('VS', code);
-            copyToClipboard(code, `Sala VS creada: ${code} (copiada al portapapeles)`);
         };
 
         window.joinCareerVSRoom = async function() {
             const code = (document.getElementById('career-room-code-input')?.value || '').trim().toUpperCase();
-            if (!code || code.length < 4) {
-                showToast('Ingresa un código de sala válido.');
+            if (!code || code.length < 6) {
+                showToast('Ingresa un código de sala válido de 6 caracteres.');
                 return;
             }
             if (db) {
                 try {
                     const snap = await getDoc(doc(db, 'artifacts', appId, 'public', 'data', 'career_rooms', code));
                     if (!snap.exists()) {
-                        showToast('No existe ninguna sala con ese código.');
+                        showToast('La sala no existe o ha expirado.');
                         return;
                     }
                 } catch (e) {}
             }
             startCareerCreation('VS', code);
-            showToast(`Unido a la sala VS ${code}.`);
         };
 
         window.previewCreatedProspect = function() {
-            const fullName = document.getElementById('cp-fullname').value.trim();
-            const birthYear = parseInt(document.getElementById('cp-birthyear').value, 10) || 2005;
-            const jersey = Math.min(99, Math.max(0, parseInt(document.getElementById('cp-jersey').value, 10) || 27));
+            const fullName = document.getElementById('cp-fullname').value.trim() || 'Prospecto Estelar';
+            const birthYear = parseInt(document.getElementById('cp-birthyear').value) || 2005;
+            const jersey = parseInt(document.getElementById('cp-jersey').value) || 27;
             const pos1 = document.getElementById('cp-pos1').value;
             const pos2 = document.getElementById('cp-pos2').value;
 
-            if (!fullName) {
-                showToast('Escribe el nombre y apellido de tu jugador.');
-                return;
-            }
-            const age = Math.max(18, 2026 - birthYear);
-            careerState.age = age;
-            careerState.player = {
-                fullName,
-                birthYear,
-                jersey,
-                pos1,
-                pos2: pos2 && pos2 !== pos1 ? pos2 : ''
-            };
-
-            document.getElementById('cp-card-avatar').textContent = `#${jersey}`;
+            careerState.player = { fullName, birthYear, jersey, pos1, pos2: pos2 || null };
             document.getElementById('cp-card-name').textContent = fullName;
-            document.getElementById('cp-card-meta').textContent = `Edad: ${age} años • Pos: ${pos1}${careerState.player.pos2 ? '/' + careerState.player.pos2 : ''}`;
+            document.getElementById('cp-card-meta').textContent = `Edad: ${2026 - birthYear} años • Pos: ${pos1}${pos2 ? '/' + pos2 : ''} • #${jersey}`;
+            document.getElementById('cp-card-avatar').textContent = `#${jersey}`;
             document.getElementById('cp-preview-box').classList.remove('hidden');
         };
 
         window.beginCareerDraft = function() {
-            if (!careerState?.player) {
-                previewCreatedProspect();
-                if (!careerState?.player) return;
+            if (!careerState.player) {
+                window.previewCreatedProspect();
             }
             document.getElementById('career-step-create').classList.add('hidden');
             document.getElementById('career-step-stage').classList.remove('hidden');
-            saveCareerLocal();
+            careerState.stage = 1;
             renderCareerDecisionStage();
         };
-
-        function updateCareerHUD() {
-            const p = careerState.player;
-            document.getElementById('career-hud-jersey').textContent = `#${p.jersey}`;
-            document.getElementById('career-hud-name').textContent = p.fullName;
-            document.getElementById('career-hud-sub').textContent = `Edad ${careerState.age} • ${p.pos1}${p.pos2 ? '/' + p.pos2 : ''} • Etapa ${careerState.stage}/${TOTAL_CAREER_STAGES}`;
-            document.getElementById('career-hud-earnings').textContent = `$${careerState.totalEarnings.toFixed(1)}M`;
-            const totalAwards = Object.values(careerState.awards).reduce((a, b) => a + b, 0);
-            document.getElementById('career-hud-awards').textContent = totalAwards;
-            document.getElementById('career-progress-bar').style.width = `${Math.min(100, Math.round((careerState.stage / TOTAL_CAREER_STAGES) * 100))}%`;
-        }
 
         function renderCareerDecisionStage() {
-            updateCareerHUD();
-            document.getElementById('career-stage-report').classList.add('hidden');
-            document.getElementById('career-milb-report').classList.add('hidden');
-            document.getElementById('career-decision-panel').classList.remove('hidden');
-
             const stage = careerState.stage;
-            const optionsGrid = document.getElementById('career-options-grid');
+            const p = careerState.player;
+            document.getElementById('career-hud-name').textContent = p.fullName;
+            document.getElementById('career-hud-sub').textContent = `Edad ${2026 - p.birthYear + (stage - 1)} • ${p.pos1}${p.pos2 ? '/' + p.pos2 : ''} • Etapa ${stage}/${TOTAL_CAREER_STAGES}`;
+            document.getElementById('career-hud-jersey').textContent = `#${p.jersey}`;
+            document.getElementById('career-hud-earnings').textContent = `$${careerState.totalEarnings.toFixed(1)}M`;
+            document.getElementById('career-hud-awards').textContent = Object.values(careerState.awards).reduce((a, b) => a + b, 0);
 
-            if (stage === 1 && careerState.milbReport && !careerState.promotedToMLB) {
-                showMiLBDraftReport(careerState.milbReport);
-                return;
-            }
+            const pct = Math.round((stage / TOTAL_CAREER_STAGES) * 100);
+            document.getElementById('career-progress-bar').style.width = `${pct}%`;
+
+            const decisionPanel = document.getElementById('career-decision-panel');
+            const milbReport = document.getElementById('career-milb-report');
+            const stageReport = document.getElementById('career-stage-report');
+
+            decisionPanel.classList.remove('hidden');
+            milbReport.classList.add('hidden');
+            stageReport.classList.add('hidden');
+
+            const kicker = document.getElementById('career-stage-kicker');
+            const title = document.getElementById('career-stage-title');
+            const desc = document.getElementById('career-stage-desc');
+            const grid = document.getElementById('career-options-grid');
 
             if (stage === 1) {
-                document.getElementById('career-stage-kicker').textContent = 'ETAPA 1 DE 4 — LIGAS MENORES';
-                document.getElementById('career-stage-title').textContent = 'Draft de Ligas Menores (MiLB)';
-                document.getElementById('career-stage-desc').textContent = 'Selecciona la organización afiliada de Ligas Menores donde iniciarás tu desarrollo profesional.';
-
-                const shuffled = [...MILB_TEAMS].sort(() => Math.random() - 0.5).slice(0, 3);
-                optionsGrid.innerHTML = shuffled.map(t => `
-                    <button onclick="selectCareerMiLB('${t.id}')" class="card-minimal rounded-2xl p-4 text-left flex flex-col justify-between gap-3 hover:border-amber-400">
-                        <div class="flex items-center gap-3">
-                            <div class="w-11 h-11 rounded-xl flex items-center justify-center font-display font-bold text-xs shrink-0 border border-white/15" style="background:${t.c1}; color:${t.c2};">${t.level === 'Triple-A' ? 'AAA' : 'AA'}</div>
-                            <div>
-                                <span class="text-[10px] font-bold uppercase text-amber-400">${t.level} • Afiliado ${t.aff}</span>
-                                <strong class="font-display text-base block leading-tight">${t.name}</strong>
-                                <span class="text-[11px] text-[var(--text-muted)]">${t.city}</span>
-                            </div>
+                kicker.textContent = 'ETAPA 1 DE 4 — DRAFT DE LIGAS MENORES';
+                title.textContent = 'Selección de Franquicia MiLB (Triple-A)';
+                desc.textContent = 'Elige la organización de Ligas Menores donde iniciarás tu desarrollo profesional como prospecto.';
+                grid.innerHTML = MILB_TEAMS.map(t => `
+                    <button onclick="selectMiLBDraftTeam('${t.id}')" class="p-4 rounded-2xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] hover:border-amber-400 text-left space-y-2 transition group">
+                        <div class="flex items-center justify-between">
+                            <span class="px-2 py-0.5 rounded bg-amber-400/15 text-amber-400 text-[10px] font-bold uppercase">${t.level} (${t.aff})</span>
+                            <span class="text-xs text-amber-400 font-bold group-hover:translate-x-1 transition">Fichar →</span>
                         </div>
-                        <span class="w-full py-2 rounded-xl btn-primary-gold text-center text-xs uppercase">Firmar en MiLB →</span>
-                    </button>
-                `).join('');
-            } else if (stage === 2 && !careerState.selectedMLBLeague) {
-                document.getElementById('career-stage-kicker').textContent = 'ETAPA 2 DE 4 — ASCENSO A GRANDES LIGAS';
-                document.getElementById('career-stage-title').textContent = 'Elige tu Liga de Debut en MLB';
-                document.getElementById('career-stage-desc').textContent = 'Has sido promovido tras destacar en Ligas Menores. Selecciona entre la Liga Americana (AL) o la Liga Nacional (NL).';
-
-                optionsGrid.innerHTML = `
-                    <button onclick="selectCareerMLBLeague('AL')" class="card-minimal rounded-2xl p-5 text-left flex flex-col justify-between gap-3 hover:border-amber-400">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-xl flex items-center justify-center font-display font-bold text-lg shrink-0 border border-white/15" style="background:#BA0021; color:#FFFFFF;">AL</div>
-                            <div>
-                                <span class="text-[10px] font-bold uppercase text-amber-400">Liga Americana</span>
-                                <strong class="font-display text-lg block leading-tight">American League (AL)</strong>
-                                <span class="text-[11px] text-[var(--text-muted)]">15 Franquicias • East, Central y West</span>
-                            </div>
-                        </div>
-                        <span class="w-full py-2.5 rounded-xl btn-primary-gold text-center text-xs uppercase">Elegir Liga AL →</span>
-                    </button>
-
-                    <button onclick="selectCareerMLBLeague('NL')" class="card-minimal rounded-2xl p-5 text-left flex flex-col justify-between gap-3 hover:border-amber-400">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-xl flex items-center justify-center font-display font-bold text-lg shrink-0 border border-white/15" style="background:#002D72; color:#FFFFFF;">NL</div>
-                            <div>
-                                <span class="text-[10px] font-bold uppercase text-amber-400">Liga Nacional</span>
-                                <strong class="font-display text-lg block leading-tight">National League (NL)</strong>
-                                <span class="text-[11px] text-[var(--text-muted)]">15 Franquicias • East, Central y West</span>
-                            </div>
-                        </div>
-                        <span class="w-full py-2.5 rounded-xl btn-primary-blue text-center text-xs font-bold uppercase">Elegir Liga NL →</span>
-                    </button>
-                `;
-            } else if (stage === 2 && !careerState.selectedMLBDivision) {
-                const lgName = careerState.selectedMLBLeague === 'AL' ? 'American League (AL)' : 'National League (NL)';
-                document.getElementById('career-stage-kicker').textContent = `ETAPA 2 DE 4 — ${lgName.toUpperCase()}`;
-                document.getElementById('career-stage-title').textContent = 'Elige tu División en MLB';
-                document.getElementById('career-stage-desc').textContent = `Selecciona la división de la ${lgName} (EAST, CENTRAL o WEST) donde recibirás ofertas de contrato.`;
-
-                const divisions = [
-                    { id: 'EAST', label: 'División Este (EAST)', desc: 'Compite en la división más mediática de la liga.' },
-                    { id: 'CENTRAL', label: 'División Central (CENTRAL)', desc: 'Equilibrio competitivo y tradición histórica.' },
-                    { id: 'WEST', label: 'División Oeste (WEST)', desc: 'Estadios icónicos y rivales de alto poder.' }
-                ];
-
-                optionsGrid.innerHTML = divisions.map(div => `
-                    <button onclick="selectCareerMLBDivision('${div.id}')" class="card-minimal rounded-2xl p-4 text-left flex flex-col justify-between gap-3 hover:border-amber-400">
                         <div>
-                            <span class="text-[10px] font-bold uppercase text-amber-400">${careerState.selectedMLBLeague} • ${div.id}</span>
-                            <strong class="font-display text-lg block leading-tight mt-0.5">${div.label}</strong>
-                            <span class="text-[11px] text-[var(--text-muted)] block mt-1">${div.desc}</span>
+                            <strong class="font-display text-base uppercase block">${t.name}</strong>
+                            <span class="text-[11px] text-[var(--text-muted)]">${t.city}</span>
                         </div>
-                        <span class="w-full py-2 rounded-xl btn-primary-gold text-center text-xs uppercase">Elegir ${div.id} →</span>
                     </button>
                 `).join('');
-            } else {
-                const stageNames = {
-                    2: { k: `ETAPA 2 DE 4 — ${careerState.selectedMLBLeague} ${careerState.selectedMLBDivision}`, t: 'Primer Contrato en MLB', d: `Has sido promovido a las Grandes Ligas (${careerState.selectedMLBLeague} ${careerState.selectedMLBDivision}). Elige entre estas 3 franquicias para tu primer contrato.` },
-                    3: { k: 'ETAPA 3 DE 4 — SEGUNDO CONTRATO', t: 'Segundo Contrato en MLB', d: 'Entras en la etapa clave de tu carrera en Grandes Ligas. Decide si renuevas o firmas con un contendiente.' },
-                    4: { k: 'ETAPA 4 DE 4 — CONTRATO DE RETIRO', t: 'Contrato de Año de Retiro', d: 'Elige la franquicia con la que firmarás tu tercer y último contrato antes de tu ceremonia de retiro.' }
-                };
-                const info = stageNames[stage] || stageNames[4];
-                document.getElementById('career-stage-kicker').textContent = info.k;
-                document.getElementById('career-stage-title').textContent = info.t;
-                document.getElementById('career-stage-desc').textContent = info.d;
+            } else if (stage === 2 || stage === 3 || stage === 4) {
+                const stageNames = { 2: '1ER CONTRATO EN GRANDES LIGAS (MLB)', 3: '2DO CONTRATO ESTELAR EN MLB', 4: 'CONTRATO DE AÑO DE RETIRO' };
+                kicker.textContent = `ETAPA ${stage} DE 4 — ${stageNames[stage]}`;
+                title.textContent = 'Selección de Franquicia en MLB';
+                desc.textContent = 'Elige la organización de Grandes Ligas donde firmarás tu próximo contrato multianual.';
 
-                let choices = [];
-                if (stage === 2 && careerState.selectedMLBLeague && careerState.selectedMLBDivision) {
-                    const divTeams = MLB_FRANCHISES.filter(f => {
-                        const meta = MLB_TEAMS_META[f.code];
-                        return meta && meta.league === careerState.selectedMLBLeague && meta.division === careerState.selectedMLBDivision;
-                    });
-                    choices = [...divTeams].sort(() => Math.random() - 0.5).slice(0, 3);
-                } else if (careerState.currentTeam) {
-                    const currentObj = MLB_FRANCHISES.find(f => f.id === careerState.currentTeam.id) || careerState.currentTeam;
-                    const others = MLB_FRANCHISES.filter(f => f.id !== currentObj.id).sort(() => Math.random() - 0.5).slice(0, 2);
-                    choices = [currentObj, ...others];
-                } else {
-                    choices = [...MLB_FRANCHISES].sort(() => Math.random() - 0.5).slice(0, 3);
-                }
-
-                optionsGrid.innerHTML = choices.map(t => {
-                    const isStay = careerState.currentTeam && t.id === careerState.currentTeam.id;
-                    const meta = MLB_TEAMS_META[t.code];
-                    const divTag = meta ? `${meta.league} ${meta.division}` : 'MLB';
-                    return `<button onclick="selectCareerMLBTeam('${t.id}')" class="card-minimal rounded-2xl p-4 text-left flex flex-col justify-between gap-3 hover:border-amber-400">
-                        <div class="flex items-center gap-3">
-                            <div class="w-11 h-11 rounded-xl flex items-center justify-center font-display font-bold text-sm shrink-0 border border-white/15" style="background:${t.c1}; color:${t.c2};">${t.code}</div>
-                            <div>
-                                <span class="text-[10px] font-bold uppercase text-amber-400">${isStay ? 'Renovar Contrato' : divTag}</span>
-                                <strong class="font-display text-base block leading-tight">${t.name}</strong>
-                            </div>
+                grid.innerHTML = MLB_FRANCHISES.slice(0, 6).map(t => `
+                    <button onclick="selectCareerMLBTeam('${t.id}')" class="p-4 rounded-2xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] hover:border-amber-400 text-left space-y-2 transition group">
+                        <div class="flex items-center justify-between">
+                            <span class="px-2 py-0.5 rounded bg-amber-400/15 text-amber-400 text-[10px] font-bold uppercase">${t.code} • ${t.league} ${t.division}</span>
+                            <span class="text-xs text-amber-400 font-bold group-hover:translate-x-1 transition">Firmar →</span>
                         </div>
-                        <span class="w-full py-2 rounded-xl ${isStay ? 'btn-primary-blue' : 'btn-primary-gold'} text-center text-xs uppercase">${isStay ? 'Quedarse en ' + t.code : 'Firmar con ' + t.code} →</span>
-                    </button>`;
-                }).join('');
+                        <div>
+                            <strong class="font-display text-base uppercase block">${t.name}</strong>
+                            <span class="text-[11px] text-[var(--text-muted)]">Contrato profesional</span>
+                        </div>
+                    </button>
+                `).join('');
             }
+            saveCareerLocal();
         }
 
-        window.selectCareerMLBLeague = function(league) {
-            careerState.selectedMLBLeague = league;
-            saveCareerLocal();
-            renderCareerDecisionStage();
-        };
-
-        window.selectCareerMLBDivision = function(division) {
-            careerState.selectedMLBDivision = division;
-            saveCareerLocal();
-            renderCareerDecisionStage();
-        };
-
-        window.selectCareerMiLB = function(milbId) {
+        window.selectMiLBDraftTeam = function(milbId) {
             const team = MILB_TEAMS.find(t => t.id === milbId);
             if (!team) return;
-            const bonus = +(1.5 + Math.random() * 4.5).toFixed(2);
-            const draftRound = bonus >= 4.2 ? 1 : bonus >= 2.8 ? 2 : 3;
-            const draftPick = draftRound === 1 ? Math.floor(1 + Math.random() * 30) : draftRound === 2 ? Math.floor(31 + Math.random() * 35) : Math.floor(66 + Math.random() * 35);
-
-            const isPitcher = careerState.player.pos1 === 'P';
-            const milbStats = isPitcher ? [
-                { k: 'J', v: Math.floor(22 + Math.random() * 6) },
-                { k: 'G-P', v: `${Math.floor(10 + Math.random() * 6)}-${Math.floor(2 + Math.random() * 4)}` },
-                { k: 'ERA', v: (1.85 + Math.random() * 1.15).toFixed(2) },
-                { k: 'IP', v: (118 + Math.random() * 32).toFixed(1) },
-                { k: 'SO', v: Math.floor(138 + Math.random() * 48) },
-                { k: 'WHIP', v: (0.92 + Math.random() * 0.22).toFixed(2) },
-                { k: 'SV', v: 0 }
-            ] : (() => {
-                const ab = Math.floor(410 + Math.random() * 90);
-                const h = Math.floor(ab * (0.295 + Math.random() * 0.055));
-                const hr = Math.floor(16 + Math.random() * 18);
-                const rbi = Math.floor(hr * 2.5 + 22 + Math.random() * 18);
-                const sb = Math.floor(8 + Math.random() * 24);
-                const avg = (h / ab).toFixed(3).replace(/^0/, '');
-                const ops = (0.865 + Math.random() * 0.145).toFixed(3).replace(/^0/, '');
-                return [
-                    { k: 'J', v: Math.floor(110 + Math.random() * 22) },
-                    { k: 'AVG', v: avg },
-                    { k: 'H', v: h },
-                    { k: 'HR', v: hr },
-                    { k: 'RBI', v: rbi },
-                    { k: 'SB', v: sb },
-                    { k: 'OPS', v: ops }
-                ];
-            })();
-
             careerState.milbTeam = team;
+            const draftPick = Math.floor(1 + Math.random() * 30);
+            const bonus = +(1.5 + Math.random() * 4.5).toFixed(2);
             careerState.totalEarnings += bonus;
-            careerState.age += 1;
-            careerState.timeline.push({ label: `MiLB (${team.level})`, team: team.name, code: team.aff, years: 1, money: bonus });
 
-            careerState.milbReport = {
-                team,
-                bonus,
-                draftRound,
-                draftPick,
-                stats: milbStats
-            };
-            saveCareerLocal();
-            showMiLBDraftReport(careerState.milbReport);
-        };
+            const canPitch = hasPitcherRole(careerState.player);
+            const milbStats = canPitch
+                ? { G: 24, IP: '142.1', W: 12, L: 4, SO: 168, ERA: '2.54', WHIP: '1.04' }
+                : { G: 115, AB: 420, H: 132, HR: 24, RBI: 86, SB: 18, AVG: '.314' };
 
-        function showMiLBDraftReport(rep) {
-            updateCareerHUD();
             document.getElementById('career-decision-panel').classList.add('hidden');
-            document.getElementById('career-stage-report').classList.add('hidden');
-            document.getElementById('career-milb-report').classList.remove('hidden');
+            const repEl = document.getElementById('career-milb-report');
+            repEl.classList.remove('hidden');
 
-            const badge = document.getElementById('milb-report-badge');
-            badge.style.background = rep.team.c1;
-            badge.style.color = rep.team.c2;
-            badge.textContent = rep.team.level === 'Triple-A' ? 'AAA' : 'AA';
+            document.getElementById('milb-report-badge').textContent = team.aff;
+            document.getElementById('milb-report-badge').style.background = team.c1;
+            document.getElementById('milb-report-badge').style.color = team.c2;
+            document.getElementById('milb-report-team-name').textContent = team.name;
+            document.getElementById('milb-report-team-meta').textContent = `${team.level} • Afiliado ${team.aff} • ${team.city}`;
+            document.getElementById('milb-report-draft-pick').textContent = `PICK #${draftPick} GLOBAL (RONDA 1)`;
+            document.getElementById('milb-report-bonus').textContent = `Bono de Firma: $${bonus}M`;
 
-            document.getElementById('milb-report-team-name').textContent = rep.team.name;
-            document.getElementById('milb-report-team-meta').textContent = `${rep.team.level} • Afiliado ${rep.team.aff} • ${rep.team.city}`;
-            document.getElementById('milb-report-draft-pick').textContent = `PICK #${rep.draftPick} GLOBAL (RONDA ${rep.draftRound})`;
-            document.getElementById('milb-report-bonus').textContent = `Bono de Firma: $${rep.bonus.toFixed(2)}M`;
-
-            document.getElementById('milb-report-stats-grid').innerHTML = rep.stats.map(s => `
-                <div class="p-2 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
-                    <span class="text-[10px] text-[var(--text-muted)] block uppercase">${s.k}</span>
-                    <strong class="font-display text-sm">${s.v}</strong>
+            const statsKeys = Object.keys(milbStats);
+            document.getElementById('milb-report-stats-grid').innerHTML = statsKeys.map(k => `
+                <div class="p-2.5 rounded-xl bg-[var(--bg-elevated)]">
+                    <span class="text-[10px] text-[var(--text-muted)] block uppercase">${k}</span>
+                    <strong class="font-display text-sm text-amber-400">${milbStats[k]}</strong>
                 </div>
             `).join('');
 
-            document.getElementById('milb-report-scouting-note').textContent = `Tras brillar en ${rep.team.name} (${rep.team.level}), la organización ha confirmado el ascenso de ${careerState.player.fullName} a las Grandes Ligas.`;
-        }
+            saveCareerLocal();
+        };
 
         window.proceedFromMiLBToMLB = function() {
-            careerState.promotedToMLB = true;
+            document.getElementById('career-milb-report').classList.add('hidden');
             careerState.stage = 2;
-            saveCareerLocal();
             renderCareerDecisionStage();
-            showToast('¡Has sido ascendido a las Grandes Ligas (MLB)!');
         };
 
         function buildStageAwardDrawCards(years, canPitch) {
-            const defs = canPitch
-                ? [
-                    { key: 'All-Star', label: 'Juego de Estrellas (All-Star)', maxCount: years, winChance: 0.72 },
-                    { key: 'Cy Young', label: 'Premio Cy Young', maxCount: Math.min(years, 2), winChance: 0.44 },
-                    { key: 'Relevista del Año', label: 'Relevista del Año', maxCount: Math.min(years, 2), winChance: 0.38 },
-                    { key: 'Guante de Oro', label: 'Guante de Oro', maxCount: Math.min(years, 2), winChance: 0.45 },
-                    { key: 'Serie Mundial', label: 'Campeón Serie Mundial', maxCount: Math.min(years, 2), winChance: 0.38 }
-                ]
-                : [
-                    { key: 'All-Star', label: 'Juego de Estrellas (All-Star)', maxCount: years, winChance: 0.72 },
-                    { key: 'MVP', label: 'Jugador Más Valioso (MVP)', maxCount: Math.min(years, 2), winChance: 0.42 },
-                    { key: 'Bate de Plata', label: 'Bate de Plata', maxCount: Math.min(years, 2), winChance: 0.50 },
-                    { key: 'Guante de Oro', label: 'Guante de Oro', maxCount: Math.min(years, 2), winChance: 0.45 },
-                    { key: 'Serie Mundial', label: 'Campeón Serie Mundial', maxCount: Math.min(years, 2), winChance: 0.38 }
-                ];
+            const cards = [];
+            const rollChance = (base) => Math.min(0.92, base * Math.sqrt(years));
 
-            return defs.map((d, idx) => {
-                const won = Math.random() < d.winChance;
-                const count = won ? Math.max(1, Math.ceil(Math.random() * d.maxCount)) : 0;
-                return {
-                    idx,
-                    key: d.key,
-                    label: d.label,
-                    won,
-                    count,
-                    revealed: false
-                };
+            // All-Star
+            const asWon = Math.random() < rollChance(0.65);
+            cards.push({ key: 'All-Star', label: 'Selecciones al All-Star', won: asWon, count: asWon ? Math.max(1, Math.round(years * (0.35 + Math.random() * 0.45))) : 0, revealed: false });
+
+            // MVP
+            if (!canPitch || Math.random() > 0.3) {
+                const mvpWon = Math.random() < rollChance(0.18);
+        async function initAuth() {
+            checkMonthlySeasonReset();
+            if (!auth) return;
+            try {
+                await setPersistence(auth, browserLocalPersistence);
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        currentUser = user;
+                        if (!user.isAnonymous) {
+                            await hydrateProfileFromCloud(user);
+                            const lbl1 = document.getElementById('google-btn-label');
+                            const lbl2 = document.getElementById('google-splash-label');
+                            if (lbl1) lbl1.textContent = 'Google Conectado ✓';
+                            if (lbl2) lbl2.textContent = `Conectado (${userProfile.name})`;
+                        } else {
+                            userProfile.uid = user.uid;
+                        }
+                        if (db) {
+                            try {
+                                startFirestoreListeners();
+                            } catch (e) {}
+                        }
+                        updateAllProfileUI();
+                    } else {
+                        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                            await signInWithCustomToken(auth, __initial_auth_token);
+                        } else {
+                            await signInAnonymously(auth);
+                        }
+                    }
+                });
+            } catch (e) {
+                console.warn('Auth init skipped:', e);
+            }
+        }
+
+        function updateProfileViewUI() {
+            const p = userProfile;
+            const tier = getLeagueTier(p.crowns || 0);
+            document.getElementById('profile-display-name').textContent = p.name || 'Manager';
+            document.getElementById('profile-six-id').textContent = p.sixDigitId || '000000';
+            const badge = document.getElementById('profile-league-tier');
+            badge.textContent = tier.name;
+            badge.className = `px-3 py-0.5 rounded-full text-xs font-display font-bold uppercase ${tier.css}`;
+
+            document.getElementById('profile-stat-crowns').textContent = p.crowns || 0;
+            document.getElementById('profile-stat-stars').textContent = p.stars || 0;
+            document.getElementById('profile-stat-record').textContent = `${p.wins || 0}-${p.losses || 0}`;
+
+            const mainAv = document.getElementById('profile-main-avatar');
+            if (mainAv) mainAv.innerHTML = renderAvatarHTML(p, 'w-20 h-20 text-2xl');
+
+            const bestCardWrap = document.getElementById('profile-saved-career-cards');
+            const bestPill = document.getElementById('profile-best-career-ovr-pill');
+            const best = p.bestCareerCard;
+
+            if (best) {
+                bestPill.textContent = `OVR ${best.ovr} (${best.legacyTier})`;
+                bestCardWrap.innerHTML = `
+                    <div class="p-4 rounded-xl bg-[var(--bg-elevated)] border border-amber-400/40 space-y-3">
+                        <div class="flex items-center justify-between border-b border-white/10 pb-2">
+                            <div>
+                                <strong class="font-display text-base uppercase text-amber-400">${best.name}</strong>
+                                <span class="text-[11px] text-[var(--text-muted)] block">Pos: ${best.pos} • ${best.seasons} Temporadas</span>
+                            </div>
+                            <span class="font-display text-2xl font-bold text-amber-400">OVR ${best.ovr}</span>
+                        </div>
+                        <div class="grid grid-cols-4 sm:grid-cols-7 gap-2 text-center text-xs">
+                            ${(best.statsList || []).map(s => `
+                                <div class="p-2 rounded-lg bg-[var(--bg-surface)]">
+                                    <span class="text-[9px] text-[var(--text-muted)] block uppercase">${s.k}</span>
+                                    <strong class="font-display text-sm">${s.v}</strong>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="flex flex-wrap gap-1">
+                            ${(best.awardsList || []).map(a => `<span class="px-2 py-0.5 rounded bg-amber-400/15 text-amber-400 text-[10px] font-bold">${a}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            } else {
+                bestPill.textContent = 'SIN RÉCORD';
+                bestCardWrap.innerHTML = `<p class="text-xs text-[var(--text-muted)]">Aún no has completado ninguna trayectoria en Mi Carrera.</p>`;
+            }
+        }
+
+        window.openProfileEditor = function() {
+            document.getElementById('profile-view-card').classList.add('hidden');
+            document.getElementById('profile-edit-card').classList.remove('hidden');
+            document.getElementById('edit-username-input').value = userProfile.name || '';
+            const freeChanges = (userProfile.nameChanges || 0) === 0;
+            document.getElementById('name-change-cost-hint').textContent = freeChanges ? '(Primer cambio gratis • Luego 50 ★)' : '(Costo: 50 Estrellas)';
+
+            const avPrev = document.getElementById('edit-preview-avatar');
+            if (avPrev) avPrev.innerHTML = renderAvatarHTML(userProfile, 'w-12 h-12 text-sm');
+
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+            document.getElementById('edit-letters-grid').innerHTML = letters.map(l => `
+                <button onclick="setAvatarLetterDraft('${l}')" class="w-8 h-8 rounded-lg font-display font-bold text-xs bg-[var(--bg-elevated)] border border-[var(--border-subtle)] hover:border-amber-400 ${userProfile.avatarLetter === l ? 'border-amber-400 text-amber-400' : ''}">${l}</button>
+            `).join('');
+
+            const colors = ['#0C2340', '#1E3A8A', '#065F46', '#92400E', '#9D174D', '#581C87', '#18181B', '#D4AF37'];
+            document.getElementById('edit-colors-grid').innerHTML = colors.map(c => `
+                <button onclick="setAvatarColorDraft('${c}')" class="w-8 h-8 rounded-full border-2 ${userProfile.avatarBg === c ? 'border-amber-400 scale-110' : 'border-transparent'}" style="background:${c};"></button>
+            `).join('');
+
+            const ownedLogos = [null, ...(userProfile.ownedLogos || []).map(id => STORE_LOGOS.find(l => l.id === id)).filter(Boolean)];
+            document.getElementById('edit-owned-logos-grid').innerHTML = ownedLogos.map(item => {
+                const isEq = !item ? !userProfile.equippedLogo : userProfile.equippedLogo === item.id;
+                return `<button onclick="setEquippedLogoDraft('${item ? item.id : ''}')" class="p-2 rounded-xl border ${isEq ? 'border-amber-400 bg-amber-400/10' : 'border-[var(--border-subtle)] bg-[var(--bg-elevated)]'} flex items-center gap-2 text-left">
+                    <div class="w-8 h-8 rounded-lg overflow-hidden shrink-0">${item ? renderTeamCrestSVG(item, 'w-8 h-8') : '<div class=\"w-8 h-8 bg-slate-800 rounded-lg flex items-center justify-center text-[10px]\">Letra</div>'}</div>
+                    <span class="text-xs font-bold truncate">${item ? item.name : 'Usar Inicial'}</span>
+                </button>`;
+            }).join('');
+        };
+
+        window.cancelProfileEdit = function() {
+            document.getElementById('profile-edit-card').classList.add('hidden');
+            document.getElementById('profile-view-card').classList.remove('hidden');
+        };
+
+        window.setAvatarLetterDraft = function(l) {
+            userProfile.avatarLetter = l;
+            openProfileEditor();
+        };
+
+        window.setAvatarColorDraft = function(c) {
+            userProfile.avatarBg = c;
+            openProfileEditor();
+        };
+
+        window.setEquippedLogoDraft = function(id) {
+            userProfile.equippedLogo = id;
+            openProfileEditor();
+        };
+
+        window.saveProfileChanges = async function() {
+            const newName = document.getElementById('edit-username-input').value.trim();
+            if (!newName) {
+                showToast('Escribe un nombre de manager válido.');
+                return;
+            }
+            if (newName !== userProfile.name) {
+                const free = (userProfile.nameChanges || 0) === 0;
+                if (!free) {
+                    if ((userProfile.stars || 0) < 50) {
+                        showToast('Necesitas 50 Estrellas para cambiar tu nombre de nuevo.');
+                        return;
+                    }
+                    userProfile.stars -= 50;
+                }
+                userProfile.name = newName.slice(0, 18);
+                userProfile.nameChanges = (userProfile.nameChanges || 0) + 1;
+            }
+            await saveUserProfile();
+            cancelProfileEdit();
+            showToast('Perfil actualizado correctamente.');
+        };
+
+        window.copyPlayerSixDigitId = function() {
+            copyToClipboard(userProfile.sixDigitId, `ID de Jugador copiado: #${userProfile.sixDigitId}`);
+        };
+
+        window.openSettingsModal = function() {
+            document.getElementById('settings-modal').classList.remove('hidden');
+            renderSettingsThemesGrid();
+        };
+
+        window.closeSettingsModal = function() {
+            clearThemePreviewIfActive();
+            document.getElementById('settings-modal').classList.add('hidden');
+        };
+
+        function renderSettingsThemesGrid() {
+            const ownedThemes = new Set(['default', ...(userProfile.ownedThemes || [])]);
+            const grid = document.getElementById('settings-aesthetic-themes-grid');
+            if (!grid) return;
+
+            grid.innerHTML = AESTHETIC_THEMES.map(t => {
+                const isOwned = ownedThemes.has(t.id);
+                const isEquipped = displaySettings.aestheticTheme === t.id && !previewAestheticThemeId;
+                const isPreviewing = previewAestheticThemeId === t.id;
+
+                return `<div class="p-3 rounded-xl bg-[var(--bg-elevated)] border ${isPreviewing ? 'border-amber-400 ring-2 ring-amber-400/40' : 'border-[var(--border-subtle)]'} flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <div class="w-8 h-8 rounded-xl shrink-0 border border-white/20" style="background:linear-gradient(135deg, ${t.colorA} 50%, ${t.colorB} 50%);"></div>
+                        <div class="min-w-0">
+                            <strong class="text-xs font-bold block truncate">${t.name}</strong>
+                            <span class="text-[10px] text-[var(--text-muted)]">${isOwned ? (isEquipped ? 'Equipado ✓' : 'Adquirido') : t.price + ' ★'}</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        ${isOwned
+                            ? `<button onclick="setAestheticTheme('${t.id}')" class="px-2.5 py-1.5 rounded-lg ${isEquipped ? 'bg-emerald-500/20 text-emerald-400' : 'btn-primary-blue'} text-[10px] font-bold uppercase">
+                                ${isEquipped ? 'Activo' : 'Equipar'}
+                               </button>`
+                            : `<button onclick="previewStoreTheme('${t.id}')" class="px-2.5 py-1.5 rounded-lg bg-[var(--bg-surface)] border border-amber-400/40 text-amber-400 text-[10px] font-bold uppercase">
+                                ${isPreviewing ? 'Probando' : 'Probar'}
+                               </button>`
+                        }
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        window.setThemeMode = function(mode) {
+            displaySettings.themeMode = mode;
+            saveDisplaySettings();
+        };
+
+        window.setFontSize = function(size) {
+            displaySettings.fontSize = size;
+            saveDisplaySettings();
+        };
+
+        window.setFontWeight = function(weight) {
+            displaySettings.fontWeight = weight;
+            saveDisplaySettings();
+        };
+
+        window.setAestheticTheme = function(themeId) {
+            clearThemePreviewIfActive();
+            displaySettings.aestheticTheme = themeId;
+            saveDisplaySettings();
+            renderSettingsThemesGrid();
+            showToast('Tema estético aplicado.');
+        };
+
+        window.previewStoreTheme = function(themeId) {
+            previewAestheticThemeId = themeId;
+            applyDisplaySettingsToDOM();
+            renderSettingsThemesGrid();
+            const banner = document.getElementById('store-preview-banner');
+            if (banner) {
+                const theme = AESTHETIC_THEMES.find(t => t.id === themeId);
+                document.getElementById('store-preview-theme-name').textContent = theme ? theme.name : themeId;
+                banner.classList.remove('hidden');
+            }
+            showToast('Vista previa de estética aplicada temporalmente.');
+        };
+
+        window.cancelThemePreview = function() {
+            clearThemePreviewIfActive();
+            renderSettingsThemesGrid();
+            showToast('Vista previa cancelada.');
+        };
+
+        function clearThemePreviewIfActive() {
+            if (previewAestheticThemeId) {
+                previewAestheticThemeId = null;
+                applyDisplaySettingsToDOM();
+                const banner = document.getElementById('store-preview-banner');
+                if (banner) banner.classList.add('hidden');
+            }
+        }
+
+        function applyDisplaySettingsToDOM() {
+            const root = document.documentElement;
+            root.className = '';
+            const themeToApply = previewAestheticThemeId || displaySettings.aestheticTheme || 'default';
+            const themeObj = AESTHETIC_THEMES.find(t => t.id === themeToApply);
+            if (themeObj && themeObj.cssClass) {
+                root.classList.add(themeObj.cssClass);
+            }
+            if (displaySettings.themeMode === 'light') {
+                root.classList.add('light-mode');
+            }
+            root.classList.add(`font-size-${displaySettings.fontSize || 'md'}`);
+            if (displaySettings.fontWeight === 'bold') {
+                root.classList.add('font-weight-bold');
+            }
+
+            const darkBtn = document.getElementById('btn-theme-dark');
+            const lightBtn = document.getElementById('btn-theme-light');
+            if (darkBtn && lightBtn) {
+                const isLight = displaySettings.themeMode === 'light';
+                darkBtn.className = `py-2 rounded-xl text-xs font-bold uppercase transition ${!isLight ? 'bg-amber-400 text-slate-950 font-bold' : 'bg-[var(--bg-elev)] text-[var(--text-muted)]'}`;
+                lightBtn.className = `py-2 rounded-xl text-xs font-bold uppercase transition ${isLight ? 'bg-amber-400 text-slate-950 font-bold' : 'bg-[var(--bg-elev)] text-[var(--text-muted)]'}`;
+            }
+
+            ['sm', 'md', 'lg'].forEach(sz => {
+                const b = document.getElementById(`btn-fs-${sz}`);
+                if (b) {
+                    const active = (displaySettings.fontSize || 'md') === sz;
+                    b.className = `py-2 rounded-xl text-xs font-bold uppercase transition ${active ? 'bg-amber-400 text-slate-950 font-bold' : 'bg-[var(--bg-elev)] text-[var(--text-muted)]'}`;
+                }
+            });
+
+            ['normal', 'bold'].forEach(wt => {
+                const b = document.getElementById(`btn-fw-${wt}`);
+                if (b) {
+                    const active = (displaySettings.fontWeight || 'normal') === wt;
+                    b.className = `py-2 rounded-xl text-xs font-bold uppercase transition ${active ? 'bg-amber-400 text-slate-950 font-bold' : 'bg-[var(--bg-elev)] text-[var(--text-muted)]'}`;
+                }
             });
         }
 
@@ -4582,36 +2949,36 @@
 
             if (d.phase === 'batting') {
                 if (!d.battingCards.every(c => c.revealed)) {
-                    showToast('Sortea todas las estadísticas de bateo (H, HR, RBI, SB) antes de continuar.');
-                    return;
+        window.signInWithGoogle = async function() {
+            if (!auth) {
+                showToast('Autenticación en modo local.');
+                return;
+            }
+            const provider = new GoogleAuthProvider();
+            provider.setCustomParameters({ prompt: 'select_account' });
+            try {
+                let cred = null;
+                if (auth.currentUser && auth.currentUser.isAnonymous) {
+                    try {
+                        cred = await linkWithPopup(auth.currentUser, provider);
+                    } catch (linkErr) {
+                        if (linkErr.code === 'auth/credential-already-in-use' || linkErr.code === 'auth/email-already-in-use') {
+                            cred = await signInWithPopup(auth, provider);
+                        } else {
+                            throw linkErr;
+                        }
+                    }
+                } else {
+                    cred = await signInWithPopup(auth, provider);
                 }
-                d.phase = d.canPitch ? 'pitching' : 'awards';
-                renderActiveStageDrawUI();
-                return;
-            }
-
-            if (d.phase === 'pitching') {
-                if (!d.pitchingCards.every(c => c.revealed)) {
-                    showToast('Sortea todas las estadísticas de pitcheo (W, L, K, BB) antes de continuar.');
-                    return;
+                if (cred && cred.user) {
+                    currentUser = cred.user;
+                    await hydrateProfileFromCloud(cred.user);
+                    updateAllProfileUI();
+                    showToast('¡Progreso sincronizado y restaurado desde tu cuenta de Google!');
                 }
-                d.phase = 'awards';
-                renderActiveStageDrawUI();
-                return;
-            }
-
-            if (!d.awardCards.every(c => c.revealed)) {
-                showToast('Sortea todos los premios de esta etapa antes de continuar.');
-                return;
-            }
-
-            activeStageDraw = null;
-            if (careerState.stage < TOTAL_CAREER_STAGES) {
-                careerState.stage += 1;
-                saveCareerLocal();
-                renderCareerDecisionStage();
-            } else {
-                finalizeCareerRetirement();
+            } catch (err) {
+                showToast('Inicio con Google cancelado o no disponible.');
             }
         };
 
@@ -4813,7 +3180,7 @@
         function setupPWA() {
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('./sw.js', { scope: './' })
+                    navigator.serviceWorker.register('./service-worker.js', { scope: './' })
                         .then(reg => {
                             reg.update().catch(() => {});
                         })
