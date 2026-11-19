@@ -474,7 +474,7 @@
             </div>
 
             <div class="pt-4">
-                <span id="app-version-tag" class="text-[10px] font-mono tracking-widest text-[var(--text-muted)]/35 select-none">V0.001.9</span>
+                <span id="app-version-tag" class="text-[10px] font-mono tracking-widest text-[var(--text-muted)]/35 select-none">V0.002.0</span>
             </div>
         </section>
 
@@ -1580,7 +1580,7 @@
         import { getAuth, signInAnonymously, signInWithCustomToken, GoogleAuthProvider, signInWithPopup, linkWithPopup, onAuthStateChanged, setPersistence, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
         import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, addDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
 
-        const APP_VERSION = 'V0.001.9';
+        const APP_VERSION = 'V0.002.0';
 
         const userFirebaseConfig = {
             apiKey: "AIzaSyBXQlRxOsii_nf-YjRw0bakkdAG_1J1zDI",
@@ -1904,6 +1904,70 @@
         }
 
         const CAREER_LOCAL_KEY = 'bfc_career_save_v1';
+        const TOTAL_CAREER_STAGES = 4;
+        let activeStageDraw = null;
+
+        const MILB_TEAMS = [
+            { id: 'durham', name: 'Durham Bulls', level: 'Triple-A', aff: 'TB', city: 'Durham, NC', c1: '#092C5C', c2: '#F5D130' },
+            { id: 'scranton', name: 'Scranton/Wilkes-Barre RailRiders', level: 'Triple-A', aff: 'NYY', city: 'Moosic, PA', c1: '#0C2340', c2: '#FFFFFF' },
+            { id: 'okc', name: 'Oklahoma City Baseball Club', level: 'Triple-A', aff: 'LAD', city: 'Oklahoma City, OK', c1: '#005A9C', c2: '#FFFFFF' },
+            { id: 'roundrock', name: 'Round Rock Express', level: 'Triple-A', aff: 'TEX', city: 'Round Rock, TX', c1: '#003278', c2: '#C0111F' },
+            { id: 'gwinnett', name: 'Gwinnett Stripers', level: 'Triple-A', aff: 'ATL', city: 'Lawrenceville, GA', c1: '#13274F', c2: '#CE1141' },
+            { id: 'worcester', name: 'Worcester Red Sox', level: 'Triple-A', aff: 'BOS', city: 'Worcester, MA', c1: '#BD3039', c2: '#0C2340' }
+        ];
+
+        const MLB_FRANCHISES = [
+            { id: 'nyy', code: 'NYY', name: 'New York Yankees', league: 'AL', division: 'EAST', c1: '#0C2340', c2: '#FFFFFF' },
+            { id: 'lad', code: 'LAD', name: 'Los Angeles Dodgers', league: 'NL', division: 'WEST', c1: '#005A9C', c2: '#FFFFFF' },
+            { id: 'atl', code: 'ATL', name: 'Atlanta Braves', league: 'NL', division: 'EAST', c1: '#13274F', c2: '#CE1141' },
+            { id: 'hou', code: 'HOU', name: 'Houston Astros', league: 'AL', division: 'WEST', c1: '#002D62', c2: '#EB6E1F' },
+            { id: 'bos', code: 'BOS', name: 'Boston Red Sox', league: 'AL', division: 'EAST', c1: '#BD3039', c2: '#0C2340' },
+            { id: 'nym', code: 'NYM', name: 'New York Mets', league: 'NL', division: 'EAST', c1: '#002D72', c2: '#FF5910' },
+            { id: 'sd', code: 'SD', name: 'San Diego Padres', league: 'NL', division: 'WEST', c1: '#2F241D', c2: '#FFC425' },
+            { id: 'phi', code: 'PHI', name: 'Philadelphia Phillies', league: 'NL', division: 'EAST', c1: '#E81828', c2: '#002D72' },
+            { id: 'bal', code: 'BAL', name: 'Baltimore Orioles', league: 'AL', division: 'EAST', c1: '#000000', c2: '#DF4601' },
+            { id: 'tex', code: 'TEX', name: 'Texas Rangers', league: 'AL', division: 'WEST', c1: '#003278', c2: '#C0111F' }
+        ];
+
+        const MANAGER_TIPS = [
+            'Completa las 12 posiciones para descubrir el OVR oculto de tu alineación.',
+            'En 162-0 usa tus comodines de Equipo y Década estratégicamente antes de fichar.',
+            'En Mi Carrera puedes jugar como bateador o lanzar como Pitcher de doble vía.',
+            'Prueba cualquier Tema Estético gratis en la Tienda antes de comprarlo.',
+            'Conecta tu cuenta de Google para respaldar tus coronas y estrellas en la nube.'
+        ];
+
+        let gameState = {
+            mainMode: 'SOLO',
+            soloDifficulty: 'MVP',
+            league: 'MLB',
+            era: 'ACTUAL',
+            lineup: {},
+            activeSlot: null,
+            activeMatchId: null,
+            opponentName: 'CPU Manager',
+            opponentLineup: null
+        };
+
+        const HISTORIC_HITTERS = ['C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF', 'DH'];
+        const HISTORIC_PITCHERS = ['SP1', 'SP2', 'SP3', 'SP4', 'SP5', 'RP1', 'RP2'];
+        const ALL_HISTORIC_SLOTS = [...HISTORIC_HITTERS, ...HISTORIC_PITCHERS];
+
+        let historicState = {
+            playerName: 'Manager',
+            teamName: 'Immortal Legends',
+            target: '162-0',
+            round: 1,
+            roster: {},
+            usedPlayerIds: [],
+            wcTeamLeft: 3,
+            wcDecadeLeft: 3,
+            currentTeam: 'NYY',
+            currentDecade: '2020s',
+            rollsLog: [],
+            pendingPlayer: null
+        };
+
         let careerState = {
             mode: 'SOLO',
             roomCode: null,
@@ -2209,6 +2273,1082 @@
             // MVP
             if (!canPitch || Math.random() > 0.3) {
                 const mvpWon = Math.random() < rollChance(0.18);
+                cards.push({ key: 'MVP', label: 'Jugador Más Valioso (MVP)', won: mvpWon, count: mvpWon ? Math.max(1, Math.floor(1 + Math.random() * 2)) : 0, revealed: false });
+            }
+
+            // Cy Young (if Pitcher)
+            if (canPitch) {
+                const cyWon = Math.random() < rollChance(0.24);
+                cards.push({ key: 'Cy Young', label: 'Premio Cy Young', won: cyWon, count: cyWon ? Math.max(1, Math.floor(1 + Math.random() * 2)) : 0, revealed: false });
+            }
+
+            // Guante de Oro
+            const ggWon = Math.random() < rollChance(0.32);
+            cards.push({ key: 'Guante de Oro', label: 'Guante de Oro', won: ggWon, count: ggWon ? Math.max(1, Math.round(years * 0.3)) : 0, revealed: false });
+
+            // Bate de Plata
+            const ssWon = Math.random() < rollChance(0.34);
+            cards.push({ key: 'Bate de Plata', label: 'Bate de Plata', won: ssWon, count: ssWon ? Math.max(1, Math.round(years * 0.32)) : 0, revealed: false });
+
+            // Serie Mundial
+            const wsWon = Math.random() < rollChance(0.22);
+            cards.push({ key: 'Serie Mundial', label: 'Campeón Serie Mundial', won: wsWon, count: wsWon ? Math.max(1, Math.floor(1 + Math.random() * 2)) : 0, revealed: false });
+
+            return cards.map((c, idx) => ({ ...c, idx }));
+        }
+
+        function hasPitcherRole(p) {
+            return p && (p.pos1 === 'P' || p.pos2 === 'P');
+        }
+
+        function updateCareerHUD() {
+            if (!careerState || !careerState.player) return;
+            const p = careerState.player;
+            document.getElementById('career-hud-name').textContent = p.fullName;
+            document.getElementById('career-hud-sub').textContent = `Edad ${careerState.age} • ${p.pos1}${p.pos2 ? '/' + p.pos2 : ''} • Etapa ${careerState.stage}/${TOTAL_CAREER_STAGES}`;
+            document.getElementById('career-hud-jersey').textContent = `#${p.jersey}`;
+            document.getElementById('career-hud-earnings').textContent = `$${careerState.totalEarnings.toFixed(1)}M`;
+            document.getElementById('career-hud-awards').textContent = Object.values(careerState.awards).reduce((a, b) => a + b, 0);
+        }
+
+        function getLeagueTier(crowns) {
+            if (crowns >= 45) return { name: 'HALL OF FAME', css: 'tier-hof', heroCss: 'hero-tier-hof' };
+            if (crowns >= 25) return { name: 'LEYENDA', css: 'tier-legend', heroCss: 'hero-tier-legend' };
+            if (crowns >= 12) return { name: 'MVP', css: 'tier-mvp', heroCss: 'hero-tier-mvp' };
+            if (crowns >= 5) return { name: 'PRO', css: 'tier-pro', heroCss: 'hero-tier-pro' };
+            return { name: 'ROOKIE', css: 'tier-rookie', heroCss: 'hero-tier-rookie' };
+        }
+
+        function showToast(msg) {
+            const box = document.getElementById('toast-box');
+            const label = document.getElementById('toast-msg');
+            if (!box || !label) return;
+            label.textContent = msg;
+            box.classList.remove('translate-x-full', 'opacity-0');
+            clearTimeout(window.__toastTimer);
+            window.__toastTimer = setTimeout(() => {
+                box.classList.add('translate-x-full', 'opacity-0');
+            }, 3200);
+        }
+
+        function copyToClipboard(text, successMsg) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+                document.execCommand('copy');
+                showToast(successMsg || 'Copiado al portapapeles.');
+            } catch (e) {
+                showToast('No se pudo copiar.');
+            }
+            document.body.removeChild(ta);
+        }
+
+        function hideAllSections() {
+            const ids = [
+                'view-splash', 'view-home', 'view-league-select',
+                'view-historic-setup', 'view-historic-game', 'view-historic-results',
+                'view-career', 'view-vs-lobby', 'view-game', 'view-results',
+                'view-ranking', 'view-store', 'view-friends', 'view-profile'
+            ];
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            const editCard = document.getElementById('profile-edit-card');
+            if (editCard) editCard.classList.add('hidden');
+        }
+
+        window.exitToSplash = function() {
+            hideAllSections();
+            document.getElementById('view-splash').classList.remove('hidden');
+            const tipEl = document.getElementById('splash-random-tip');
+            if (tipEl) tipEl.textContent = MANAGER_TIPS[Math.floor(Math.random() * MANAGER_TIPS.length)];
+            const verEl = document.getElementById('app-version-tag');
+            if (verEl) verEl.textContent = APP_VERSION;
+        };
+
+        window.enterMainMenu = function() {
+            goHome();
+        };
+
+        window.goHome = function() {
+            clearThemePreviewIfActive();
+            hideAllSections();
+            document.getElementById('view-home').classList.remove('hidden');
+            updateAllProfileUI();
+        };
+
+        window.openSection = function(sec) {
+            clearThemePreviewIfActive();
+            hideAllSections();
+            const target = document.getElementById(`view-${sec}`);
+            if (target) target.classList.remove('hidden');
+            if (sec === 'profile') {
+                document.getElementById('profile-view-card').classList.remove('hidden');
+                updateProfileViewUI();
+            } else if (sec === 'store') {
+                renderStoreSection();
+            } else if (sec === 'ranking') {
+                renderRankingSection();
+            } else if (sec === 'friends') {
+                renderFriendsDirectory();
+            }
+        };
+
+        function renderTeamCrestSVG(item, sizeClass = 'w-10 h-10') {
+            if (!item) return '';
+            if (item.cat === 'BANDERAS') {
+                return `<div class="${sizeClass} rounded-xl flex items-center justify-center font-display font-bold text-xs text-white border border-white/20 shadow-inner" style="background: linear-gradient(135deg, ${item.c1} 50%, ${item.c2} 50%);">${item.code}</div>`;
+            }
+            return `<div class="${sizeClass} rounded-xl flex items-center justify-center font-display font-bold text-xs border border-white/20 shadow-inner" style="background:${item.c1}; color:${item.c2};">${item.code}</div>`;
+        }
+
+        function renderAvatarHTML(p, sizeClass = 'w-8 h-8 text-xs') {
+            if (p.equippedLogo) {
+                const item = STORE_LOGOS.find(l => l.id === p.equippedLogo);
+                if (item) return renderTeamCrestSVG(item, sizeClass);
+            }
+            const letter = (p.avatarLetter || (p.name ? p.name[0] : 'M')).toUpperCase();
+            return `<div class="${sizeClass} rounded-full flex items-center justify-center font-display font-bold text-white" style="background:${p.avatarBg || '#1E3A8A'};">${letter}</div>`;
+        }
+
+        function updateAllProfileUI() {
+            const p = userProfile;
+            const tier = getLeagueTier(p.crowns || 0);
+            const starsEl = document.getElementById('top-stars-count');
+            if (starsEl) starsEl.textContent = p.stars || 0;
+            const topNameEl = document.getElementById('top-player-name');
+            if (topNameEl) topNameEl.textContent = p.name || 'Manager';
+            const topAvEl = document.getElementById('top-avatar-slot');
+            if (topAvEl) topAvEl.innerHTML = renderAvatarHTML(p, 'w-6 h-6 text-[10px]');
+
+            const homeName = document.getElementById('home-player-name');
+            if (homeName) homeName.textContent = p.name || 'Manager';
+            const homeCrowns = document.getElementById('home-crowns-count');
+            if (homeCrowns) homeCrowns.textContent = p.crowns || 0;
+            const homeBadge = document.getElementById('home-league-badge');
+            if (homeBadge) {
+                homeBadge.textContent = tier.name;
+                homeBadge.className = `px-4 py-1 rounded-full text-xs sm:text-sm font-display font-bold uppercase tracking-widest ${tier.css} shadow-sm`;
+            }
+            const heroCard = document.getElementById('home-hero-card');
+            if (heroCard) {
+                heroCard.className = `px-5 py-5 rounded-2xl card-minimal ${tier.heroCss} flex flex-col items-center justify-center text-center space-y-2.5 border-amber-400/30 shadow-lg`;
+            }
+
+            const pendingMatches = allAsyncMatches.filter(m => m.status === 'pending' && m.opponentUid === p.uid);
+            const vsBadge = document.getElementById('vs-pending-badge');
+            if (vsBadge) {
+                if (pendingMatches.length > 0) {
+                    vsBadge.textContent = pendingMatches.length;
+                    vsBadge.classList.remove('hidden');
+                } else {
+                    vsBadge.classList.add('hidden');
+                }
+            }
+        }
+
+        function loadAndApplyDisplaySettings() {
+            try {
+                const raw = localStorage.getItem(SETTINGS_STORAGE_KEY);
+                if (raw) {
+                    displaySettings = { ...displaySettings, ...JSON.parse(raw) };
+                }
+            } catch (e) {}
+            applyDisplaySettingsToDOM();
+        }
+
+        function saveDisplaySettings() {
+            try {
+                localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(displaySettings));
+            } catch (e) {}
+            applyDisplaySettingsToDOM();
+        }
+
+        // ================= SOLO & VS LEAGUE FLOW =================
+        window.selectMainMode = function(mode) {
+            gameState.mainMode = mode;
+            hideAllSections();
+            if (mode === 'VS') {
+                document.getElementById('view-vs-lobby').classList.remove('hidden');
+                renderVSLobby();
+            } else {
+                document.getElementById('view-league-select').classList.remove('hidden');
+                document.getElementById('selected-mode-pill').textContent = 'MODO SOLO';
+                document.getElementById('solo-difficulty-box').classList.remove('hidden');
+                document.getElementById('btn-league-162').classList.remove('hidden');
+            }
+        };
+
+        window.setSoloDifficulty = function(diff) {
+            gameState.soloDifficulty = diff;
+            ['ROOKIE', 'MVP', 'HOF'].forEach(d => {
+                const btn = document.getElementById(`diff-${d}`);
+                if (!btn) return;
+                if (d === diff) {
+                    btn.className = 'diff-btn py-2.5 px-3 rounded-xl border border-amber-400 bg-amber-400/15 text-amber-400 text-xs font-display font-bold uppercase tracking-wider transition';
+                } else {
+                    btn.className = 'diff-btn py-2.5 px-3 rounded-xl border border-[var(--border-subtle)] text-xs font-display font-bold uppercase tracking-wider transition';
+                }
+            });
+        };
+
+        window.startLeague = function(league, era, matchId = null, opponentName = 'CPU Manager', opponentLineup = null) {
+            gameState.league = league;
+            gameState.era = era;
+            gameState.lineup = {};
+            gameState.activeSlot = null;
+            gameState.activeMatchId = matchId;
+            gameState.opponentName = opponentName;
+            gameState.opponentLineup = opponentLineup;
+
+            hideAllSections();
+            document.getElementById('view-game').classList.remove('hidden');
+            document.getElementById('game-league-title').textContent = `MLB — ${era === 'ALL_TIME' ? 'ALL TIME' : 'ACTUAL'}`;
+            document.getElementById('game-opponent-subtitle').textContent = gameState.mainMode === 'VS'
+                ? `Reto VS contra ${opponentName}`
+                : `vs CPU (${gameState.soloDifficulty})`;
+            renderLineupBuilder();
+        };
+
+        window.exitGameToMenu = function() {
+            goHome();
+        };
+
+        function getFilteredPoolForMode() {
+            return PLAYERS_DB.filter(p => gameState.era === 'ALL_TIME' ? true : p.active);
+        }
+
+        function renderLineupBuilder() {
+            const filledCount = Object.keys(gameState.lineup).length;
+            document.getElementById('lineup-progress').textContent = `${filledCount}/12`;
+            document.getElementById('btn-finish-lineup').disabled = filledCount < 12;
+
+            const nodesContainer = document.getElementById('diamond-nodes');
+            nodesContainer.innerHTML = POSITIONS.map(pos => {
+                const coord = DIAMOND_COORDS[pos] || { top: '50%', left: '50%' };
+                const player = gameState.lineup[pos];
+                const shortName = player ? player.name.split(' ').pop() : '+';
+                return `<button onclick="openPositionModal('${pos}')" style="top:${coord.top}; left:${coord.left};" class="pos-node absolute -translate-x-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-xl border ${player ? 'bg-amber-400 text-slate-950 border-white font-bold shadow-lg' : 'bg-slate-950/85 text-white border-amber-400/50 hover:border-amber-400'} text-center min-w-[54px]">
+                    <span class="block text-[9px] font-display uppercase tracking-wider opacity-80">${pos}</span>
+                    <span class="block text-[11px] font-bold truncate max-w-[68px]">${shortName}</span>
+                </button>`;
+            }).join('');
+
+            const listContainer = document.getElementById('roster-list');
+            listContainer.innerHTML = POSITIONS.map(pos => {
+                const player = gameState.lineup[pos];
+                return `<button onclick="openPositionModal('${pos}')" class="w-full p-2.5 rounded-xl bg-[var(--bg-elevated)] border ${player ? 'border-amber-400/45' : 'border-[var(--border-subtle)]'} hover:border-amber-400 flex items-center justify-between text-left transition">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-8 h-7 rounded-lg bg-amber-400/15 text-amber-400 font-display text-xs font-bold flex items-center justify-center shrink-0">${pos}</span>
+                        <div class="min-w-0">
+                            <strong class="text-xs font-bold block truncate">${player ? player.name : 'Posición Vacante'}</strong>
+                            <span class="text-[10px] text-[var(--text-muted)]">${player ? `${player.team} • ${player.decade} • OVR Oculto` : 'Toca para fichar jugador'}</span>
+                        </div>
+                    </div>
+                    <span class="text-[11px] font-bold text-amber-400 shrink-0">${player ? 'Mover ⇄' : 'Fichar +'}</span>
+                </button>`;
+            }).join('');
+        }
+
+        window.openPositionModal = function(pos) {
+            gameState.activeSlot = pos;
+            const modal = document.getElementById('player-modal');
+            modal.classList.remove('hidden');
+            document.getElementById('modal-pos-title').textContent = `Posición: ${pos}`;
+
+            const existingPlayer = gameState.lineup[pos];
+            const swapBox = document.getElementById('modal-swap-box');
+            const searchBox = document.getElementById('modal-search-box');
+
+            if (existingPlayer) {
+                swapBox.classList.remove('hidden');
+                searchBox.classList.add('hidden');
+                document.getElementById('modal-locked-player-name').textContent = existingPlayer.name;
+                const altPositions = existingPlayer.pos.filter(p => p !== pos);
+                const targetsEl = document.getElementById('modal-swap-targets');
+                if (altPositions.length === 0) {
+                    targetsEl.innerHTML = `<p class="text-xs text-[var(--text-muted)]">Este jugador solo es elegible en ${pos} y ya está fijado en tu alineación.</p>`;
+                } else {
+                    targetsEl.innerHTML = altPositions.map(targetPos => {
+                        const occupant = gameState.lineup[targetPos];
+                        const canSwap = !occupant || occupant.pos.includes(pos);
+                        if (!canSwap) {
+                            return `<div class="p-2.5 rounded-xl bg-[var(--bg-elevated)] opacity-60 text-xs">No puede intercambiar con ${occupant.name} (${targetPos})</div>`;
+                        }
+                        return `<button onclick="swapLineupPositions('${pos}', '${targetPos}')" class="p-3 rounded-xl bg-[var(--bg-elevated)] border border-amber-400/40 hover:border-amber-400 text-left text-xs font-bold flex items-center justify-between">
+                            <span>Mover a ${targetPos} ${occupant ? `(Intercambiar con ${occupant.name})` : '(Vacante)'}</span>
+                            <span class="text-amber-400">⇄</span>
+                        </button>`;
+                    }).join('');
+                }
+            } else {
+                swapBox.classList.add('hidden');
+                searchBox.classList.remove('hidden');
+                const input = document.getElementById('player-search-input');
+                input.value = '';
+                filterPlayerResults();
+            }
+        };
+
+        window.closePlayerModal = function() {
+            document.getElementById('player-modal').classList.add('hidden');
+        };
+
+        window.swapLineupPositions = function(fromPos, toPos) {
+            const pA = gameState.lineup[fromPos];
+            const pB = gameState.lineup[toPos];
+            if (!pA) return;
+            gameState.lineup[toPos] = pA;
+            if (pB) {
+                gameState.lineup[fromPos] = pB;
+            } else {
+                delete gameState.lineup[fromPos];
+            }
+            closePlayerModal();
+            renderLineupBuilder();
+            showToast(`Alineación reorganizada (${fromPos} ⇄ ${toPos}).`);
+        };
+
+        window.filterPlayerResults = function() {
+            const pos = gameState.activeSlot;
+            const query = (document.getElementById('player-search-input')?.value || '').toLowerCase().trim();
+            const usedIds = new Set(Object.values(gameState.lineup).map(p => p.id));
+
+            const matches = getFilteredPoolForMode().filter(p => {
+                if (!p.pos.includes(pos)) return false;
+                if (usedIds.has(p.id)) return false;
+                if (!query) return true;
+                return p.name.toLowerCase().includes(query) || p.team.toLowerCase().includes(query);
+            });
+
+            const container = document.getElementById('player-search-results');
+            if (matches.length === 0) {
+                container.innerHTML = `<p class="text-xs text-[var(--text-muted)] text-center py-4">No hay jugadores disponibles con ese filtro.</p>`;
+                return;
+            }
+            container.innerHTML = matches.map(p => `
+                <button onclick="signPlayerToSlot('${p.id}')" class="w-full p-2.5 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] hover:border-amber-400 flex items-center justify-between text-left transition">
+                    <div>
+                        <strong class="text-xs font-bold block">${p.name}</strong>
+                        <span class="text-[10px] text-[var(--text-muted)]">${p.team} • ${p.decade} • Pos: ${p.pos.join('/')}</span>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-lg btn-primary-gold text-[10px] font-bold uppercase">Fichar</span>
+                </button>
+            `).join('');
+        };
+
+        window.signPlayerToSlot = function(playerId) {
+            const player = PLAYERS_DB.find(p => p.id === playerId);
+            if (!player || !gameState.activeSlot) return;
+            gameState.lineup[gameState.activeSlot] = player;
+            closePlayerModal();
+            renderLineupBuilder();
+        };
+
+        function generateAILineup() {
+            const pool = getFilteredPoolForMode();
+            const aiLineup = {};
+            const used = new Set();
+            const diffMin = gameState.soloDifficulty === 'HOF' ? 94 : gameState.soloDifficulty === 'MVP' ? 90 : 85;
+
+            POSITIONS.forEach(pos => {
+                let candidates = pool.filter(p => p.pos.includes(pos) && !used.has(p.id) && p.ovr >= diffMin);
+                if (candidates.length === 0) {
+                    candidates = pool.filter(p => p.pos.includes(pos) && !used.has(p.id));
+                }
+                const pick = candidates[Math.floor(Math.random() * candidates.length)] || pool.find(p => p.pos.includes(pos));
+                if (pick) {
+                    aiLineup[pos] = pick;
+                    used.add(pick.id);
+                }
+            });
+            return aiLineup;
+        }
+
+        function calcTeamOVR(lineupObj) {
+            const vals = POSITIONS.map(pos => lineupObj[pos]?.ovr || 85);
+            return Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
+        }
+
+        window.handleLineupSubmit = async function() {
+            if (Object.keys(gameState.lineup).length < 12) return;
+
+            if (gameState.mainMode === 'VS') {
+                if (gameState.activeMatchId) {
+                    // Completing a pending challenge
+                    simulateAndShowSeries(
+                        userProfile.name,
+                        gameState.lineup,
+                        gameState.opponentName,
+                        gameState.opponentLineup
+                    );
+                    if (db) {
+                        try {
+                            await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'matches', gameState.activeMatchId), {
+                                status: 'completed',
+                                defenderLineup: gameState.lineup,
+                                completedAt: Date.now()
+                            });
+                        } catch (e) {}
+                    }
+                } else {
+                    // Sending a new challenge
+                    if (db && gameState.opponentUid) {
+                        try {
+                            await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'matches'), {
+                                challengerUid: userProfile.uid,
+                                challengerName: userProfile.name,
+                                challengerLineup: gameState.lineup,
+                                opponentUid: gameState.opponentUid,
+                                opponentName: gameState.opponentName,
+                                era: gameState.era,
+                                status: 'pending',
+                                createdAt: Date.now()
+                            });
+                        } catch (e) {}
+                    }
+                    showToast(`¡Reto enviado a ${gameState.opponentName}!`);
+                    goHome();
+                }
+                return;
+            }
+
+            const aiLineup = generateAILineup();
+            simulateAndShowSeries(userProfile.name, gameState.lineup, `CPU (${gameState.soloDifficulty})`, aiLineup);
+        };
+
+        async function simulateAndShowSeries(nameA, lineupA, nameB, lineupB) {
+            const ovrA = calcTeamOVR(lineupA);
+            const ovrB = calcTeamOVR(lineupB);
+            let winsA = 0, winsB = 0;
+            const games = [];
+
+            while (winsA < 4 && winsB < 4) {
+                const gameNum = games.length + 1;
+                const probA = 0.5 + (ovrA - ovrB) * 0.035;
+                const aWon = Math.random() < Math.min(0.85, Math.max(0.15, probA));
+                const runsW = Math.floor(4 + Math.random() * 6);
+                const runsL = Math.max(0, runsW - Math.floor(1 + Math.random() * 4));
+                if (aWon) {
+                    winsA++;
+                    games.push({ num: gameNum, winner: nameA, score: `${runsW}-${runsL}`, aWon: true });
+                } else {
+                    winsB++;
+                    games.push({ num: gameNum, winner: nameB, score: `${runsL}-${runsW}`, aWon: false });
+                }
+            }
+
+            const userWon = winsA === 4;
+            if (userWon) {
+                userProfile.wins = (userProfile.wins || 0) + 1;
+                userProfile.crowns = (userProfile.crowns || 0) + 3;
+                userProfile.stars = (userProfile.stars || 0) + 50;
+            } else {
+                userProfile.losses = (userProfile.losses || 0) + 1;
+                userProfile.stars = (userProfile.stars || 0) + 15;
+            }
+            await saveUserProfile();
+
+            const winLineup = userWon ? lineupA : lineupB;
+            const hitters = ['C', '1B', '2B', 'SS', '3B', 'LF', 'CF', 'RF', 'DH'].map(p => winLineup[p]).filter(Boolean);
+            hitters.sort((a, b) => b.ovr - a.ovr);
+            const mvp = hitters[0] || { name: 'Jugador Estrella', ovr: 95 };
+            const cy = winLineup['SP1'] || { name: 'Abridor As', ovr: 95 };
+
+            hideAllSections();
+            document.getElementById('view-results').classList.remove('hidden');
+            document.getElementById('result-winner-banner').textContent = `CAMPEÓN: ${userWon ? nameA : nameB}`;
+            document.getElementById('result-series-score').textContent = `${winsA} - ${winsB}`;
+            document.getElementById('result-reward-badge').textContent = userWon
+                ? '+3 Coronas • +50 Estrellas'
+                : '+15 Estrellas de Participación';
+
+            document.getElementById('result-mvp-name').textContent = mvp.name;
+            document.getElementById('result-mvp-stats').textContent = `OVR ${mvp.ovr} • .${Math.floor(330 + Math.random() * 90)} AVG, ${Math.floor(3 + Math.random() * 4)} HR, ${Math.floor(7 + Math.random() * 6)} RBI`;
+            document.getElementById('result-cy-name').textContent = cy.name;
+            document.getElementById('result-cy-stats').textContent = `OVR ${cy.ovr} • 2-0, 1.${Math.floor(10 + Math.random() * 85)} ERA, ${Math.floor(14 + Math.random() * 9)} K`;
+
+            document.getElementById('result-games-grid').innerHTML = games.map(g => `
+                <div class="p-2.5 rounded-xl bg-[var(--bg-elevated)] border ${g.aWon ? 'border-emerald-500/40' : 'border-rose-500/40'} text-center">
+                    <span class="text-[10px] font-bold uppercase text-[var(--text-muted)] block">Juego ${g.num}</span>
+                    <strong class="font-display text-base ${g.aWon ? 'text-emerald-400' : 'text-rose-400'}">${g.score}</strong>
+                    <span class="text-[10px] block truncate">${g.winner}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('res-teamA-label').textContent = nameA;
+            document.getElementById('res-teamA-ovr').textContent = `OVR ${ovrA}`;
+            document.getElementById('res-teamA-list').innerHTML = POSITIONS.map(pos => {
+                const pl = lineupA[pos];
+                return `<div class="flex justify-between py-0.5 border-b border-white/5"><span><strong class="text-amber-400">${pos}</strong> ${pl?.name || '-'}</span><span class="font-bold">${pl?.ovr || '-'}</span></div>`;
+            }).join('');
+
+            document.getElementById('res-teamB-label').textContent = nameB;
+            document.getElementById('res-teamB-ovr').textContent = `OVR ${ovrB}`;
+            document.getElementById('res-teamB-list').innerHTML = POSITIONS.map(pos => {
+                const pl = lineupB[pos];
+                return `<div class="flex justify-between py-0.5 border-b border-white/5"><span><strong class="text-amber-400">${pos}</strong> ${pl?.name || '-'}</span><span class="font-bold">${pl?.ovr || '-'}</span></div>`;
+            }).join('');
+        }
+
+        window.shareSeriesResultCard = function() {
+            const banner = document.getElementById('result-winner-banner').textContent;
+            const score = document.getElementById('result-series-score').textContent;
+            const mvp = document.getElementById('result-mvp-name').textContent;
+            const text = `⚾ BASEBALL FINAL CUP 🏆\n${banner} (${score})\nMVP de la Serie: ${mvp}`;
+            if (navigator.share) {
+                navigator.share({ title: 'Resultado Serie Final', text }).catch(() => copyToClipboard(text, '¡Resultado copiado!'));
+            } else {
+                copyToClipboard(text, '¡Resultado copiado al portapapeles!');
+            }
+        };
+
+        window.returnAfterMatch = function() {
+            goHome();
+        };
+
+        // ================= 162-0 HISTORIC LINEUP ENGINE =================
+        window.openHistoricSetup = function() {
+            hideAllSections();
+            document.getElementById('view-historic-setup').classList.remove('hidden');
+            document.getElementById('hist-player-name').value = userProfile.name || 'Manager';
+            setHistoricTarget('162-0');
+        };
+
+        window.setHistoricTarget = function(target) {
+            historicState.target = target;
+            ['162-0', '150-12', '140-20'].forEach(t => {
+                const btn = document.getElementById(`hist-target-${t}`);
+                if (!btn) return;
+                if (t === target) {
+                    btn.className = 'py-2.5 px-3 rounded-xl border border-amber-400 bg-amber-400/15 text-amber-400 text-xs font-display font-bold uppercase';
+                } else {
+                    btn.className = 'py-2.5 px-3 rounded-xl border border-[var(--border-subtle)] text-xs font-display font-bold uppercase';
+                }
+            });
+        };
+
+        function rollValidHistoricCombo(excludeTeam = null, excludeDecade = null) {
+            const usedIds = new Set(historicState.usedPlayerIds);
+            const openSlots = ALL_HISTORIC_SLOTS.filter(s => !historicState.roster[s]);
+            const validPairs = [];
+
+            PLAYERS_DB.forEach(p => {
+                if (usedIds.has(p.id)) return;
+                const mappedSlots = mapPlayerToHistoricSlots(p).filter(s => openSlots.includes(s));
+                if (mappedSlots.length > 0) {
+                    validPairs.push({ team: p.team, decade: p.decade });
+                }
+            });
+
+            let filtered = validPairs.filter(pair => (!excludeTeam || pair.team !== excludeTeam) && (!excludeDecade || pair.decade !== excludeDecade));
+            if (filtered.length === 0) filtered = validPairs;
+            if (filtered.length === 0) return { team: 'NYY', decade: '2020s' };
+            return filtered[Math.floor(Math.random() * filtered.length)];
+        }
+
+        function mapPlayerToHistoricSlots(player) {
+            const slots = [];
+            player.pos.forEach(pos => {
+                if (HISTORIC_HITTERS.includes(pos)) {
+                    slots.push(pos);
+                } else if (pos === 'SP1') {
+                    slots.push('SP1', 'SP2', 'SP3', 'SP4', 'SP5');
+                } else if (pos === 'RP' || pos === 'CP') {
+                    slots.push('RP1', 'RP2');
+                }
+            });
+            return [...new Set(slots)];
+        }
+
+        window.startHistoricGame = function() {
+            const pName = document.getElementById('hist-player-name').value.trim() || userProfile.name || 'Manager';
+            const tName = document.getElementById('hist-team-name').value.trim() || 'Immortal Legends';
+            const firstCombo = rollValidHistoricCombo();
+
+            historicState = {
+                playerName: pName,
+                teamName: tName,
+                target: historicState.target || '162-0',
+                round: 1,
+                roster: {},
+                usedPlayerIds: [],
+                wcTeamLeft: 3,
+                wcDecadeLeft: 3,
+                currentTeam: firstCombo.team,
+                currentDecade: firstCombo.decade,
+                rollsLog: [],
+                pendingPlayer: null
+            };
+
+            hideAllSections();
+            document.getElementById('view-historic-game').classList.remove('hidden');
+            renderHistoricBoard();
+        };
+
+        window.useHistoricWildcard = function(type) {
+            if (type === 'team') {
+                if (historicState.wcTeamLeft <= 0) {
+                    showToast('No te quedan comodines de Equipo.');
+                    return;
+                }
+                const next = rollValidHistoricCombo(historicState.currentTeam, null);
+                historicState.currentTeam = next.team;
+                historicState.currentDecade = next.decade;
+                historicState.wcTeamLeft--;
+                showToast(`Comodín usado: Nuevo equipo ${next.team} — ${next.decade}`);
+            } else {
+                if (historicState.wcDecadeLeft <= 0) {
+                    showToast('No te quedan comodines de Década.');
+                    return;
+                }
+                const next = rollValidHistoricCombo(null, historicState.currentDecade);
+                historicState.currentTeam = next.team;
+                historicState.currentDecade = next.decade;
+                historicState.wcDecadeLeft--;
+                showToast(`Comodín usado: Nueva década ${next.team} — ${next.decade}`);
+            }
+            renderHistoricBoard();
+        };
+
+        function renderHistoricBoard() {
+            const filledCount = Object.keys(historicState.roster).length;
+            document.getElementById('hist-game-header-title').textContent = `162-0 — ${historicState.teamName}`;
+            document.getElementById('hist-game-header-sub').textContent = `Meta: ${historicState.target} • Tirada ${Math.min(16, historicState.round)} / 16`;
+            document.getElementById('hist-progress-count').textContent = `${filledCount}/16`;
+            document.getElementById('btn-hist-simulate').disabled = filledCount < 16;
+
+            document.getElementById('hist-roll-round-label').textContent = filledCount >= 16 ? 'PLANTILLA COMPLETA' : `Tirada #${historicState.round} de 16`;
+            document.getElementById('hist-roll-team').textContent = historicState.currentTeam;
+            document.getElementById('hist-roll-decade').textContent = historicState.currentDecade;
+
+            const teamLogo = STORE_LOGOS.find(l => l.code === historicState.currentTeam);
+            document.getElementById('hist-roll-crest').innerHTML = teamLogo
+                ? renderTeamCrestSVG(teamLogo, 'w-12 h-12')
+                : `<div class="w-12 h-12 bg-amber-400/20 flex items-center justify-center font-display font-bold text-amber-400">${historicState.currentTeam}</div>`;
+
+            document.getElementById('hist-wc-team-left').textContent = historicState.wcTeamLeft;
+            document.getElementById('hist-wc-decade-left').textContent = historicState.wcDecadeLeft;
+            document.getElementById('hist-wc-team-btn').disabled = historicState.wcTeamLeft <= 0 || filledCount >= 16;
+            document.getElementById('hist-wc-decade-btn').disabled = historicState.wcDecadeLeft <= 0 || filledCount >= 16;
+
+            const search = (document.getElementById('hist-player-search')?.value || '').toLowerCase().trim();
+            const openSlots = ALL_HISTORIC_SLOTS.filter(s => !historicState.roster[s]);
+            const usedIds = new Set(historicState.usedPlayerIds);
+
+            const candidates = PLAYERS_DB.filter(p => {
+                if (usedIds.has(p.id)) return false;
+                if (p.team !== historicState.currentTeam || p.decade !== historicState.currentDecade) return false;
+                const validSlots = mapPlayerToHistoricSlots(p).filter(s => openSlots.includes(s));
+                if (validSlots.length === 0) return false;
+                if (search && !p.name.toLowerCase().includes(search)) return false;
+                return true;
+            });
+
+            const candGrid = document.getElementById('hist-candidates-grid');
+            if (filledCount >= 16) {
+                candGrid.innerHTML = `<p class="text-xs text-emerald-400 font-bold col-span-full py-2">¡Las 16 posiciones están completas! Presiona "Finalizar Partida".</p>`;
+            } else if (candidates.length === 0) {
+                candGrid.innerHTML = `<p class="text-xs text-amber-400 col-span-full py-2">No hay jugadores libres para ${historicState.currentTeam} (${historicState.currentDecade}). Usa un comodín para cambiar de equipo o década.</p>`;
+            } else {
+                candGrid.innerHTML = candidates.map(p => {
+                    const validSlots = mapPlayerToHistoricSlots(p).filter(s => openSlots.includes(s));
+                    return `<button onclick="pickHistoricCandidate('${p.id}')" class="p-2.5 rounded-xl bg-[var(--bg-primary)] border border-[var(--border-subtle)] hover:border-amber-400 text-left flex items-center justify-between transition">
+                        <div class="min-w-0">
+                            <strong class="text-xs font-bold block truncate">${p.name}</strong>
+                            <span class="text-[10px] text-[var(--text-muted)]">Puestos libres: ${validSlots.join(', ')}</span>
+                        </div>
+                        <span class="px-2 py-1 rounded-lg btn-primary-gold text-[10px] font-bold uppercase shrink-0">Elegir</span>
+                    </button>`;
+                }).join('');
+            }
+
+            document.getElementById('hist-hitters-list').innerHTML = HISTORIC_HITTERS.map(slot => {
+                const pl = historicState.roster[slot];
+                return `<div class="p-2 rounded-xl bg-[var(--bg-elevated)] border ${pl ? 'border-amber-400/40' : 'border-[var(--border-subtle)]'} flex items-center justify-between text-xs">
+                    <span><strong class="font-display text-amber-400 mr-2">${slot}</strong> ${pl ? pl.name : '<span class="text-[var(--text-muted)]">Vacante</span>'}</span>
+                    <span class="text-[10px] text-[var(--text-muted)]">${pl ? `${pl.team} • ${pl.decade}` : ''}</span>
+                </div>`;
+            }).join('');
+
+            document.getElementById('hist-pitchers-list').innerHTML = HISTORIC_PITCHERS.map(slot => {
+                const pl = historicState.roster[slot];
+                return `<div class="p-2 rounded-xl bg-[var(--bg-elevated)] border ${pl ? 'border-amber-400/40' : 'border-[var(--border-subtle)]'} flex items-center justify-between text-xs">
+                    <span><strong class="font-display text-amber-400 mr-2">${slot}</strong> ${pl ? pl.name : '<span class="text-[var(--text-muted)]">Vacante</span>'}</span>
+                    <span class="text-[10px] text-[var(--text-muted)]">${pl ? `${pl.team} • ${pl.decade}` : ''}</span>
+                </div>`;
+            }).join('');
+        }
+
+        window.pickHistoricCandidate = function(playerId) {
+            const player = PLAYERS_DB.find(p => p.id === playerId);
+            if (!player) return;
+            const openSlots = ALL_HISTORIC_SLOTS.filter(s => !historicState.roster[s]);
+            const validSlots = mapPlayerToHistoricSlots(player).filter(s => openSlots.includes(s));
+            if (validSlots.length === 0) return;
+
+            if (validSlots.length === 1) {
+                assignHistoricPlayerToSlot(player, validSlots[0]);
+            } else {
+                historicState.pendingPlayer = player;
+                document.getElementById('hist-pos-modal-player').textContent = `¿En qué posición deseas colocar a ${player.name}?`;
+                document.getElementById('hist-pos-modal-choices').innerHTML = validSlots.map(s => `
+                    <button onclick="confirmHistoricSlotChoice('${s}')" class="py-2.5 px-3 rounded-xl btn-primary-gold font-display text-sm font-bold uppercase">${s}</button>
+                `).join('');
+                document.getElementById('hist-pos-modal').classList.remove('hidden');
+            }
+        };
+
+        window.closeHistPosModal = function() {
+            document.getElementById('hist-pos-modal').classList.add('hidden');
+            historicState.pendingPlayer = null;
+        };
+
+        window.confirmHistoricSlotChoice = function(slot) {
+            if (!historicState.pendingPlayer) return;
+            const pl = historicState.pendingPlayer;
+            closeHistPosModal();
+            assignHistoricPlayerToSlot(pl, slot);
+        };
+
+        function assignHistoricPlayerToSlot(player, slot) {
+            historicState.roster[slot] = player;
+            historicState.usedPlayerIds.push(player.id);
+            historicState.rollsLog.push({
+                round: historicState.round,
+                team: historicState.currentTeam,
+                decade: historicState.currentDecade,
+                player: player.name,
+                slot
+            });
+
+            if (Object.keys(historicState.roster).length < 16) {
+                historicState.round++;
+                const nextCombo = rollValidHistoricCombo();
+                historicState.currentTeam = nextCombo.team;
+                historicState.currentDecade = nextCombo.decade;
+            }
+            document.getElementById('hist-player-search').value = '';
+            renderHistoricBoard();
+        }
+
+        window.finishHistoricGame = async function() {
+            const players = Object.values(historicState.roster);
+            const avgOvr = Math.round(players.reduce((a, b) => a + b.ovr, 0) / players.length);
+            const projectedWins = Math.min(162, Math.max(115, Math.round(162 - (99 - avgOvr) * 2.6)));
+            const projectedLosses = 162 - projectedWins;
+
+            userProfile.stars += 40;
+            if (projectedWins >= 150) userProfile.crowns += 2;
+            await saveUserProfile();
+
+            hideAllSections();
+            document.getElementById('view-historic-results').classList.remove('hidden');
+            document.getElementById('hist-res-title').textContent = `RÉCORD PROYECTADO: ${projectedWins} - ${projectedLosses}`;
+            document.getElementById('hist-res-subtitle').textContent = `Franquicia: ${historicState.teamName} • Meta personal: ${historicState.target}`;
+            document.getElementById('hist-res-badge').textContent = `OVR HISTÓRICO: ${avgOvr}`;
+
+            document.getElementById('hist-res-wildcards-box').innerHTML = `
+                <div class="p-2.5 rounded-xl bg-[var(--bg-elevated)]"><span class="text-[10px] text-[var(--text-muted)] block uppercase">Manager</span><strong class="font-display text-sm">${historicState.playerName}</strong></div>
+                <div class="p-2.5 rounded-xl bg-[var(--bg-elevated)]"><span class="text-[10px] text-[var(--text-muted)] block uppercase">Comodines Equipo Usados</span><strong class="font-display text-sm text-amber-400">${3 - historicState.wcTeamLeft} / 3</strong></div>
+                <div class="p-2.5 rounded-xl bg-[var(--bg-elevated)]"><span class="text-[10px] text-[var(--text-muted)] block uppercase">Comodines Década Usados</span><strong class="font-display text-sm text-amber-400">${3 - historicState.wcDecadeLeft} / 3</strong></div>
+                <div class="p-2.5 rounded-xl bg-[var(--bg-elevated)]"><span class="text-[10px] text-[var(--text-muted)] block uppercase">Recompensa</span><strong class="font-display text-sm text-emerald-400">+40 ★</strong></div>
+            `;
+
+            document.getElementById('hist-res-batting').innerHTML = HISTORIC_HITTERS.map(s => {
+                const pl = historicState.roster[s];
+                return `<div class="flex justify-between py-0.5 border-b border-white/5"><span><strong class="text-amber-400">${s}</strong> ${pl?.name || '-'}</span><span class="font-bold">OVR ${pl?.ovr || '-'}</span></div>`;
+            }).join('');
+
+            document.getElementById('hist-res-rotation').innerHTML = ['SP1', 'SP2', 'SP3', 'SP4', 'SP5'].map(s => {
+                const pl = historicState.roster[s];
+                return `<div class="flex justify-between py-0.5 border-b border-white/5"><span><strong class="text-amber-400">${s}</strong> ${pl?.name || '-'}</span><span class="font-bold">OVR ${pl?.ovr || '-'}</span></div>`;
+            }).join('');
+
+            document.getElementById('hist-res-relievers').innerHTML = ['RP1', 'RP2'].map(s => {
+                const pl = historicState.roster[s];
+                return `<div class="flex justify-between py-0.5 border-b border-white/5"><span><strong class="text-amber-400">${s}</strong> ${pl?.name || '-'}</span><span class="font-bold">OVR ${pl?.ovr || '-'}</span></div>`;
+            }).join('');
+
+            document.getElementById('hist-res-rolls-log').innerHTML = historicState.rollsLog.map(r => `
+                <div class="p-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border-subtle)]">
+                    <span class="text-amber-400 font-bold">#${r.round} (${r.team} • ${r.decade})</span>
+                    <span class="block truncate">${r.slot}: ${r.player}</span>
+                </div>
+            `).join('');
+        };
+
+        // ================= STORE, RANKING, FRIENDS & VS LOBBY =================
+        window.filterStoreTab = function(tab) {
+            activeStoreTab = tab;
+            ['MLB', 'BANDERAS', 'TEMAS'].forEach(t => {
+                const btn = document.getElementById(`store-tab-${t}`);
+                if (!btn) return;
+                if (t === tab) {
+                    btn.className = 'store-tab px-4 py-2 rounded-xl bg-amber-400 text-xs font-bold uppercase';
+                } else {
+                    btn.className = 'store-tab px-4 py-2 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs font-bold uppercase';
+                }
+            });
+            renderStoreSection();
+        };
+
+        function renderStoreSection() {
+            const grid = document.getElementById('store-items-grid');
+            if (!grid) return;
+
+            if (activeStoreTab === 'TEMAS') {
+                const ownedThemes = new Set(['default', ...(userProfile.ownedThemes || [])]);
+                grid.innerHTML = AESTHETIC_THEMES.map(t => {
+                    const isOwned = ownedThemes.has(t.id);
+                    const isEquipped = displaySettings.aestheticTheme === t.id && !previewAestheticThemeId;
+                    return `<div class="card-minimal rounded-2xl p-3.5 flex flex-col justify-between gap-3">
+                        <div class="space-y-2">
+                            <div class="w-full h-14 rounded-xl border border-white/15" style="background:linear-gradient(135deg, ${t.colorA} 45%, ${t.colorB} 100%);"></div>
+                            <strong class="text-xs font-bold block">${t.name}</strong>
+                            <span class="text-[10px] text-[var(--text-muted)] block">${t.desc}</span>
+                        </div>
+                        <div class="space-y-1.5">
+                            ${isOwned
+                                ? `<button onclick="setAestheticTheme('${t.id}')" class="w-full py-2 rounded-xl ${isEquipped ? 'bg-emerald-500/20 text-emerald-400' : 'btn-primary-blue'} text-xs font-bold uppercase">${isEquipped ? 'Equipado ✓' : 'Equipar'}</button>`
+                                : `<button onclick="buyStoreTheme('${t.id}')" class="w-full py-2 rounded-xl btn-primary-gold text-xs font-bold uppercase">Comprar (${t.price} ★)</button>
+                                   <button onclick="previewStoreTheme('${t.id}')" class="w-full py-1.5 rounded-xl bg-[var(--bg-elevated)] text-[10px] font-bold uppercase text-amber-400">Probar Vista Previa</button>`
+                            }
+                        </div>
+                    </div>`;
+                }).join('');
+                return;
+            }
+
+            const ownedLogos = new Set(userProfile.ownedLogos || []);
+            const items = STORE_LOGOS.filter(l => l.cat === activeStoreTab);
+            grid.innerHTML = items.map(item => {
+                const isOwned = ownedLogos.has(item.id);
+                const isEq = userProfile.equippedLogo === item.id;
+                return `<div class="card-minimal rounded-2xl p-3.5 flex flex-col items-center text-center justify-between gap-3">
+                    ${renderTeamCrestSVG(item, 'w-14 h-14 text-sm')}
+                    <div>
+                        <strong class="text-xs font-bold block">${item.name}</strong>
+                        <span class="text-[10px] text-amber-400 font-bold">${isOwned ? 'En tu colección' : item.price + ' ★'}</span>
+                    </div>
+                    ${isOwned
+                        ? `<button onclick="equipStoreLogo('${item.id}')" class="w-full py-2 rounded-xl ${isEq ? 'bg-emerald-500/20 text-emerald-400' : 'btn-primary-blue'} text-xs font-bold uppercase">${isEq ? 'Equipado ✓' : 'Equipar'}</button>`
+                        : `<button onclick="buyStoreLogo('${item.id}')" class="w-full py-2 rounded-xl btn-primary-gold text-xs font-bold uppercase">Comprar</button>`
+                    }
+                </div>`;
+            }).join('');
+        }
+
+        window.buyStoreLogo = async function(id) {
+            const item = STORE_LOGOS.find(l => l.id === id);
+            if (!item) return;
+            if ((userProfile.stars || 0) < item.price) {
+                showToast('No tienes suficientes Estrellas.');
+                return;
+            }
+            userProfile.stars -= item.price;
+            userProfile.ownedLogos = [...new Set([...(userProfile.ownedLogos || []), id])];
+            userProfile.equippedLogo = id;
+            await saveUserProfile();
+            updateAllProfileUI();
+            renderStoreSection();
+            showToast(`¡Compraste y equipaste ${item.name}!`);
+        };
+
+        window.equipStoreLogo = async function(id) {
+            userProfile.equippedLogo = id;
+            await saveUserProfile();
+            updateAllProfileUI();
+            renderStoreSection();
+            showToast('Emblema equipado en tu perfil.');
+        };
+
+        window.buyStoreTheme = async function(id) {
+            const theme = AESTHETIC_THEMES.find(t => t.id === id);
+            if (!theme) return;
+            if ((userProfile.stars || 0) < theme.price) {
+                showToast('No tienes suficientes Estrellas para este tema.');
+                return;
+            }
+            userProfile.stars -= theme.price;
+            userProfile.ownedThemes = [...new Set([...(userProfile.ownedThemes || []), id])];
+            await saveUserProfile();
+            setAestheticTheme(id);
+            updateAllProfileUI();
+            renderStoreSection();
+            showToast(`¡Tema "${theme.name}" desbloqueado!`);
+        };
+
+        function renderRankingSection() {
+            const listEl = document.getElementById('ranking-list');
+            if (!listEl) return;
+
+            const mockManagers = [
+                { uid: 'cpu_1', name: 'Babe_Ruth_NY', crowns: 52, avatarLetter: 'B', avatarBg: '#0C2340' },
+                { uid: 'cpu_2', name: 'Pedro_Ace45', crowns: 38, avatarLetter: 'P', avatarBg: '#BD3039' },
+                { uid: 'cpu_3', name: 'Ohtani_MVP17', crowns: 27, avatarLetter: 'O', avatarBg: '#005A9C' },
+                { uid: 'cpu_4', name: 'Caribe_Slugger', crowns: 14, avatarLetter: 'C', avatarBg: '#065F46' },
+                { uid: 'cpu_5', name: 'Rookie_Prospect', crowns: 4, avatarLetter: 'R', avatarBg: '#92400E' }
+            ];
+
+            const combined = [...mockManagers];
+            allPublicUsers.forEach(u => {
+                if (u.uid !== userProfile.uid) combined.push(u);
+            });
+            combined.push({
+                uid: userProfile.uid,
+                name: `${userProfile.name} (Tú)`,
+                crowns: userProfile.crowns || 0,
+                avatarLetter: userProfile.avatarLetter,
+                avatarBg: userProfile.avatarBg,
+                equippedLogo: userProfile.equippedLogo
+            });
+
+            combined.sort((a, b) => (b.crowns || 0) - (a.crowns || 0));
+
+            listEl.innerHTML = combined.map((u, idx) => {
+                const tier = getLeagueTier(u.crowns || 0);
+                const isMe = u.uid === userProfile.uid;
+                return `<div class="card-minimal rounded-xl p-3 flex items-center justify-between ${isMe ? 'border-amber-400 bg-amber-400/10' : ''}">
+                    <div class="flex items-center gap-3">
+                        <span class="font-display text-base font-bold w-6 text-center ${idx < 3 ? 'text-amber-400' : 'text-[var(--text-muted)]'}">#${idx + 1}</span>
+                        ${renderAvatarHTML(u, 'w-9 h-9 text-xs')}
+                        <div>
+                            <strong class="text-xs font-bold block">${u.name}</strong>
+                            <span class="px-2 py-0.5 rounded text-[9px] font-display font-bold uppercase ${tier.css}">${tier.name}</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <strong class="font-display text-base text-amber-400">${u.crowns || 0}</strong>
+                        <span class="block text-[10px] text-[var(--text-muted)]">Coronas</span>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderFriendsDirectory() {
+            const q = (document.getElementById('friend-search-input')?.value || '').toLowerCase().replace('#', '').trim();
+            const searchBox = document.getElementById('friends-search-results');
+            const myListBox = document.getElementById('my-friends-list');
+
+            const sampleDirectory = [
+                { uid: 'f_101', sixDigitId: '482910', name: 'Manager_RD', crowns: 19, avatarLetter: 'M', avatarBg: '#002D62' },
+                { uid: 'f_102', sixDigitId: '739104', name: 'BronxBomber99', crowns: 31, avatarLetter: 'B', avatarBg: '#0C2340' },
+                { uid: 'f_103', sixDigitId: '192837', name: 'TokyoSamurai', crowns: 24, avatarLetter: 'T', avatarBg: '#BC002D' }
+            ];
+            const pool = [...sampleDirectory, ...allPublicUsers.filter(u => u.uid !== userProfile.uid)];
+            const myFriendIds = new Set((userProfile.friends || []).map(f => f.uid));
+
+            const filtered = pool.filter(u => {
+                if (!q) return true;
+                return (u.name || '').toLowerCase().includes(q) || (u.sixDigitId || '').includes(q);
+            });
+
+            searchBox.innerHTML = filtered.map(u => {
+                const added = myFriendIds.has(u.uid);
+                return `<div class="p-2.5 rounded-xl bg-[var(--bg-elevated)] flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-2.5">
+                        ${renderAvatarHTML(u, 'w-8 h-8 text-xs')}
+                        <div>
+                            <strong class="block">${u.name}</strong>
+                            <span class="text-[10px] text-[var(--text-muted)] font-mono">#${u.sixDigitId || '000000'} • ${u.crowns || 0} Coronas</span>
+                        </div>
+                    </div>
+                    <button onclick="addFriendUser('${u.uid}', '${u.name}', '${u.sixDigitId || '000000'}')" ${added ? 'disabled' : ''} class="px-3 py-1.5 rounded-lg ${added ? 'bg-emerald-500/20 text-emerald-400' : 'btn-primary-gold'} text-[10px] font-bold uppercase">
+                        ${added ? 'Amigo ✓' : 'Agregar +'}
+                    </button>
+                </div>`;
+            }).join('');
+
+            const friends = userProfile.friends || [];
+            if (friends.length === 0) {
+                myListBox.innerHTML = `<p class="text-xs text-[var(--text-muted)]">Aún no tienes amigos agregados.</p>`;
+            } else {
+                myListBox.innerHTML = friends.map(f => `
+                    <div class="p-2.5 rounded-xl bg-[var(--bg-elevated)] flex items-center justify-between text-xs">
+                        <div>
+                            <strong class="block">${f.name}</strong>
+                            <span class="text-[10px] text-[var(--text-muted)] font-mono">ID: #${f.sixDigitId}</span>
+                        </div>
+                        <button onclick="challengeFriendToSeries('${f.uid}', '${f.name}')" class="px-3 py-1.5 rounded-lg btn-primary-blue text-[10px] font-bold uppercase">Retar Serie ⚾</button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        window.addFriendUser = async function(uid, name, sixDigitId) {
+            const friends = userProfile.friends || [];
+            if (friends.some(f => f.uid === uid)) return;
+            userProfile.friends = [...friends, { uid, name, sixDigitId }];
+            await saveUserProfile();
+            renderFriendsDirectory();
+            showToast(`${name} agregado a tu lista de amigos.`);
+        };
+
+        window.challengeFriendToSeries = function(uid, name) {
+            gameState.mainMode = 'VS';
+            gameState.opponentUid = uid;
+            startLeague('MLB', 'ALL_TIME', null, name, null);
+        };
+
+        function renderVSLobby() {
+            const pendingEl = document.getElementById('vs-pending-list');
+            const friendsEl = document.getElementById('vs-friends-challenge-list');
+
+            const pending = allAsyncMatches.filter(m => m.status === 'pending' && m.opponentUid === userProfile.uid);
+            if (pending.length === 0) {
+                pendingEl.innerHTML = `<p class="text-xs text-[var(--text-muted)]">No tienes partidas pendientes en este momento.</p>`;
+            } else {
+                pendingEl.innerHTML = pending.map(m => `
+                    <div class="p-3 rounded-xl bg-[var(--bg-elevated)] border border-amber-400/40 flex items-center justify-between text-xs">
+                        <div>
+                            <strong class="block text-amber-400">Reto de ${m.challengerName}</strong>
+                            <span class="text-[10px] text-[var(--text-muted)]">MLB ${m.era}</span>
+                        </div>
+                        <button onclick="acceptPendingVSMatch('${m.id}')" class="px-3.5 py-2 rounded-xl btn-primary-gold text-[10px] font-bold uppercase">Aceptar y Jugar</button>
+                    </div>
+                `).join('');
+            }
+
+            const friends = userProfile.friends || [];
+            if (friends.length === 0) {
+                friendsEl.innerHTML = `<p class="text-xs text-[var(--text-muted)]">Agrega amigos para enviarles un reto de Serie Final.</p>`;
+            } else {
+                friendsEl.innerHTML = friends.map(f => `
+                    <div class="p-2.5 rounded-xl bg-[var(--bg-elevated)] flex items-center justify-between text-xs">
+                        <strong>${f.name} (#${f.sixDigitId})</strong>
+                        <button onclick="challengeFriendToSeries('${f.uid}', '${f.name}')" class="px-3 py-1.5 rounded-lg btn-primary-gold text-[10px] font-bold uppercase">Enviar Reto</button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        window.acceptPendingVSMatch = function(matchId) {
+            const match = allAsyncMatches.find(m => m.id === matchId);
+            if (!match) return;
+            gameState.mainMode = 'VS';
+            startLeague('MLB', match.era || 'ALL_TIME', match.id, match.challengerName, match.challengerLineup);
+        };
+
+        function startFirestoreListeners() {
+            if (!db) return;
+            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'users'), (snap) => {
+                allPublicUsers = snap.docs.map(d => d.data());
+                updateAllProfileUI();
+            }, () => {});
+
+            onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'matches'), (snap) => {
+                allAsyncMatches = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                updateAllProfileUI();
+            }, () => {});
+        }
+
+        // ================= AUTHENTICATION & GOOGLE SIGN-IN =================
         async function initAuth() {
             checkMonthlySeasonReset();
             if (!auth) return;
@@ -2949,6 +4089,39 @@
 
             if (d.phase === 'batting') {
                 if (!d.battingCards.every(c => c.revealed)) {
+                    showToast('Sortea las 4 estadísticas de bateo antes de continuar.');
+                    return;
+                }
+                d.phase = d.canPitch ? 'pitching' : 'awards';
+                renderActiveStageDrawUI();
+                return;
+            }
+
+            if (d.phase === 'pitching') {
+                if (!d.pitchingCards.every(c => c.revealed)) {
+                    showToast('Sortea las 4 estadísticas de pitcheo antes de continuar.');
+                    return;
+                }
+                d.phase = 'awards';
+                renderActiveStageDrawUI();
+                return;
+            }
+
+            if (d.phase === 'awards') {
+                if (!d.awardCards.every(c => c.revealed)) {
+                    showToast('Abre todas las tarjetas de premios antes de continuar.');
+                    return;
+                }
+                activeStageDraw = null;
+                if (careerState.stage >= TOTAL_CAREER_STAGES) {
+                    finalizeCareerRetirement();
+                } else {
+                    careerState.stage++;
+                    renderCareerDecisionStage();
+                }
+            }
+        };
+
         window.signInWithGoogle = async function() {
             if (!auth) {
                 showToast('Autenticación en modo local.');
